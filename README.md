@@ -2,43 +2,101 @@
 
 **מערכת מידע לניתוח טכניקת אימון באמצעות ראייה ממוחשבת והפקת דוחות מעקב למאמני כושר**
 
-פרויקט גמר – החוג למערכות מידע, אוניברסיטת חיפה.
+פרויקט גמר של 4 סטודנטים בחוג למערכות מידע, אוניברסיטת חיפה, בשנה"ל תשפ"ח (2027–2028).
 
-FitVision AI מזהה את שלד המתאמן ממצלמת הטלפון, סופרת חזרות, נותנת משוב טכניקה בזמן אמת, ומפיקה למאמן הכושר דוח סיכום אנליטי לכל אימון. ניתוח הווידאו רץ כולו בדפדפן (MediaPipe), כך שהווידאו לא נשלח לשרת ולא נשמר בו – לשרת עוברים נתונים מספריים בלבד.
+FitVision AI מזהה את שלד המתאמן ממצלמת הטלפון ונותנת לו משוב טכניקה בזמן אמת. המערכת סופרת את החזרות, שומרת כל אימון ברמת הסט, החזרה ואירוע השגיאה, ומפיקה למאמן הכושר דוח מעקב אנליטי. ניתוח הווידאו רץ כולו בדפדפן, ולשרת עוברים נתונים מספריים בלבד: הווידאו לא נשלח לשרת ולא נשמר בו.
+
+## מסמך האפיון
+
+| קובץ | תיאור |
+| --- | --- |
+| [`docs/FitVision-AI-מסמך-אפיון.docx`](docs/) | המסמך המלא בקובץ Word אחד, מימין לשמאל |
+| [`docs/FitVision-AI-מסמך-אפיון.pdf`](docs/) | אותו מסמך כקובץ PDF |
+| `docs/*.md` | המקור לכל פרק, בקובצי Markdown |
+
+**תוכן המסמך**
+
+0. [תקציר ומבנה המסמך](docs/00-תקציר-ומבנה-המסמך.md)
+1. [מבוא](docs/01-מבוא.md)
+2. [סקירת מצב קיים ופתרונות קיימים](docs/02-סקירת-מצב-קיים.md)
+3. [ניתוח דרישות](docs/03-ניתוח-דרישות.md): 20 User Stories ו-14 דרישות לא פונקציונליות
+4. [ניתוח ותכן המערכת](docs/04-ניתוח-ותכן.md): ארכיטקטורה, DFD, ERD, כללים עסקיים, RBAC ואלגוריתם
+5. [אפיון ממשק המשתמש](docs/05-ממשק-משתמש.md)
+6. [סביבת פיתוח וטכנולוגיות](docs/06-טכנולוגיות.md)
+7. [תוכנית עבודה וניהול הפרויקט](docs/07-תוכנית-עבודה.md): Scrum, ‏10 ספרינטים ו-113 SP
+8. [ניהול סיכונים](docs/08-ניהול-סיכונים.md): ‏R-01 עד R-08
+9. [תוכנית בדיקות והערכה](docs/09-תוכנית-בדיקות.md): ‏TC-01 עד TC-10, דיוק מול 40 סרטונים ו-SUS
+10. [סטטוס בסוף סמסטר א' ותוכנית לסמסטר ב'](docs/10-סטטוס-ותוכנית-המשך.md)
+- [ביבליוגרפיה](docs/11-ביבליוגרפיה.md) ו[נספחים](docs/12-נספחים.md): ‏API, ‏SUS, ‏PoC וקבצי תכן
+
+## ארכיטקטורה
+
+![ארכיטקטורת המערכת](diagrams/figures/fig-4.1-architecture.png)
+
+| שכבה | טכנולוגיה |
+| --- | --- |
+| לקוח | React 19, TypeScript, Vite, PWA, TanStack Query, Recharts; שמירה ב-IndexedDB בניתוק רשת |
+| מנוע ראייה | MediaPipe Pose Landmarker‏ (`@mediapipe/tasks-vision`) ב-Web Worker, במצב VIDEO; שלד על Canvas; world landmarks לעומק |
+| שרת | Python 3.12, FastAPI, Pydantic v2, SQLAlchemy 2.0, Alembic, Uvicorn, Argon2, JWT, APScheduler |
+| מסד נתונים | SQL Server 2022 Express ב-Docker, עם 17 טבלאות מנורמלות |
+| דוחות | Jinja2 עם `dir="rtl"`; ‏PDF דרך Chromium ו-Playwright; ‏Excel דרך openpyxl |
+| בדיקות ו-CI | pytest, ‏Vitest ו-React Testing Library, ‏Postman, ‏GitHub Actions, ‏ESLint, ‏Prettier, ‏Ruff |
+
+**תרגילי ה-MVP:** סקוואט ולחיצת כתפיים מצולמים מהחזית; לאנג'ים וכפיפת מרפקים מצולמים מהצד.
+
+**שחקנים:** מתאמן (בטלפון), מאמן כושר ומנהל מערכת (במחשב), עם הרשאות מבוססות-תפקידים (RBAC).
+
+## תרשימים
+
+| קובץ draw.io | תכולה |
+| --- | --- |
+| [`FitVision_UseCase.drawio`](diagrams/drawio/FitVision_UseCase.drawio) | 3 שחקנים ו-20 מקרי שימוש |
+| [`FitVision_DFD.drawio`](diagrams/drawio/FitVision_DFD.drawio) | רמה 0; רמה 1 עם 7 תהליכים, 6 מאגרים ו-24 זרימות (F1 עד F24) |
+| [`FitVision_ERD.drawio`](diagrams/drawio/FitVision_ERD.drawio) | 17 טבלאות, כולל `consent_at` ו-`invite_code` |
+| [`FitVision_Wireframes.drawio`](diagrams/drawio/FitVision_Wireframes.drawio) | 5 מסכים: 3 בטלפון ו-2 במחשב |
+
+האיורים שבמסמך נמצאים ב-`diagrams/figures/`, ותמונות המסכים ב-`diagrams/wireframes/`.
+
+![מסכי המתאמן](diagrams/wireframes/screens-1-3-trainee.png)
 
 ## מבנה המאגר
 
 | תיקייה | תוכן |
 | --- | --- |
-| [`docs/`](docs/) | מסמך האפיון: תקציר ומבנה, ופרקים 1–7 (Markdown) |
-| [`diagrams/drawio/`](diagrams/drawio/) | קבצי draw.io לעריכה: Use Case, DFD, ERD, Wireframes |
-| [`diagrams/figures/`](diagrams/figures/) | האיורים מתוך המסמך (PNG) |
-| [`diagrams/wireframes/`](diagrams/wireframes/) | תמונות 5 מסכי הממשק |
-| [`tools/`](tools/) | סקריפטי Python שמייצרים את קבצי ה-draw.io ואת תמונות המסכים |
+| `docs/` | מסמך האפיון: Markdown, ‏Word ו-PDF |
+| `diagrams/drawio/` | ארבעת קובצי ה-draw.io לעריכה |
+| `diagrams/figures/` | האיורים שבמסמך (PNG) |
+| `diagrams/wireframes/` | תמונות 5 מסכי הממשק |
+| `poc/` | הוכחת ההיתכנות (T-03): MediaPipe ב-Web Worker וספירת חזרות בסקוואט |
+| `tools/` | סקריפטים שמייצרים את התרשימים, את תמונות המסכים ואת קובצי ה-Word וה-PDF |
 
-## פרקי המסמך
+## הוראות הרצה
 
-0. [תקציר ומבנה המסמך](docs/00-תקציר-ומבנה-המסמך.md)
-1. [מבוא](docs/01-מבוא.md)
-2. [סקירת מצב קיים ופתרונות קיימים](docs/02-סקירת-מצב-קיים.md)
-3. [ניתוח דרישות](docs/03-ניתוח-דרישות.md)
-4. [ניתוח ותכן המערכת](docs/04-ניתוח-ותכן.md)
-5. [אפיון ממשק המשתמש](docs/05-ממשק-משתמש.md)
-6. [סביבת פיתוח וטכנולוגיות](docs/06-טכנולוגיות.md)
-7. [תוכנית עבודה וניהול הפרויקט](docs/07-תוכנית-עבודה.md)
+**הוכחת ההיתכנות (PoC)**
 
-## עיקרי המערכת
+```bash
+cd poc
+npm install
+npm test        # 8 בדיקות יחידה
+npm run dev     # בטלפון יש לגשת בכתובת HTTPS כדי שהמצלמה תופעל
+```
 
-- **שחקנים:** מתאמן (טלפון), מאמן כושר ומנהל מערכת (מחשב), בהרשאות מבוססות-תפקידים (RBAC).
-- **תרגילי MVP:** סקוואט ולחיצת כתפיים (צילום מהחזית), לאנג'ים וכפיפת מרפקים (צילום מהצד).
-- **מחסנית טכנולוגית:** React ו-TypeScript, MediaPipe Pose Landmarker בדפדפן, Python עם FastAPI, SQL Server (17 טבלאות), דוחות PDF דרך Chromium ו-Excel דרך openpyxl.
+**יצירה מחדש של התוצרים**
 
-## עבודה עם הקבצים
+```bash
+python3 tools/generate_drawio.py                                   # ארבעת קובצי ה-draw.io (נוצרים בתיקייה הנוכחית)
+python3 tools/render_wireframes.py diagrams/drawio/FitVision_Wireframes.drawio out/   # תמונות המסכים (Playwright)
+python3 tools/build_docx.py                                        # docs/FitVision-AI-מסמך-אפיון.docx (pandoc)
+python3 tools/docx_to_pdf.py docs/FitVision-AI-מסמך-אפיון.docx docs/FitVision-AI-מסמך-אפיון.pdf   # LibreOffice
+```
 
-- **פתיחת תרשימים:** את קבצי ה-`.drawio` פותחים ב-[app.diagrams.net](https://app.diagrams.net) (File → Open) או בתוסף draw.io ל-VS Code.
-- **יצירה מחדש של התרשימים:** `python3 tools/generate_drawio.py` (מייצר את ארבעת קבצי ה-draw.io).
-- **יצירה מחדש של תמונות המסכים:** `python3 tools/render_wireframes.py diagrams/drawio/FitVision_Wireframes.drawio` (דורש Playwright).
+את קובצי ה-`.drawio` פותחים ב-[app.diagrams.net](https://app.diagrams.net) או בתוסף draw.io ל-VS Code.
 
 ## צוות
 
-4 סטודנטים – פירוט התפקידים בפרק 7.4.
+| # | תפקיד | Story Points |
+| --- | --- | --- |
+| 1 | מפתח Full-Stack מוביל, ארכיטקטורה ו-SQL Server | 33 |
+| 2 | Frontend, ‏UI/UX, ‏PWA וייצוא דוחות | 34 |
+| 3 | אלגוריתמים, MediaPipe ב-Web Worker וכיול כללים | 34 |
+| 4 | מנהל איכות, בדיקות ו-PMO (Scrum Master) | 12, ועוד ניהול ובדיקות |

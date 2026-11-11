@@ -39,7 +39,7 @@ def note(d, text, x, y, w, h):
 # =====================================================================
 # 1. USE CASE
 # =====================================================================
-uc = D("Use Case Diagram", 1600, 1350)
+uc = D("Use Case Diagram", 1600, 1200)
 ACT = "shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontStyle=1;fontSize=14;"
 UC = "ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;"
 UCS = "ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;"   # system / included
@@ -47,76 +47,58 @@ UCX = "ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;font
 ASSOC = "endArrow=none;html=1;strokeColor=#333333;"
 INC = "endArrow=open;dashed=1;html=1;endFill=0;fontSize=11;labelBackgroundColor=#ffffff;strokeColor=#9673a6;fontColor=#6a3d9a;"
 EXT = "endArrow=open;dashed=1;html=1;endFill=0;fontSize=11;labelBackgroundColor=#ffffff;strokeColor=#b58900;fontColor=#8a6d00;"
-GEN = "endArrow=block;endFill=0;html=1;endSize=14;strokeColor=#333333;"
 
-uc.v("<b>FitVision AI</b> – גבולות המערכת", 200, 40, 1140, 1240,
+# 3 actors, 20 use cases – identical to figure 3.1 in the specification document
+uc.v("<b>FitVision AI</b> – גבולות המערכת", 200, 40, 1140, 1100,
      "rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#475569;verticalAlign=top;fontSize=18;strokeWidth=2;")
-user = uc.v("משתמש רשום", 80, 100, 30, 60, ACT)
-trainee = uc.v("מתאמן<br>(Trainee)", 80, 560, 30, 60, ACT)
-trainer = uc.v("מאמן כושר<br>(Trainer)", 1420, 500, 30, 60, ACT)
-admin = uc.v("מנהל מערכת<br>(Admin)", 1420, 1060, 30, 60, ACT)
+trainee = uc.v("מתאמן<br>(Trainee)", 80, 400, 30, 60, ACT)
+trainer = uc.v("מאמן כושר<br>(Trainer)", 1420, 330, 30, 60, ACT)
+admin = uc.v("מנהל מערכת<br>(Admin)", 1420, 960, 30, 60, ACT)
 
 W, H = 210, 64
-login = uc.v("התחברות למערכת", 250, 80, W, H, UC)
-reset = uc.v("איפוס סיסמה", 540, 80, W, H, UCX)
-profile = uc.v("ניהול פרופיל אישי", 250, 170, W, H, UC)
-logout = uc.v("התנתקות", 540, 170, W, H, UC)
-
-register = uc.v("הרשמה למערכת", 250, 290, W, H, UC)
-metrics = uc.v("עדכון מדדים גופניים ויעדים", 250, 380, W, H, UC)
-request = uc.v("שליחת בקשת שיוך למאמן", 250, 470, W, H, UC)
-workout = uc.v("<b>ביצוע אימון מונחה מצלמה</b>", 250, 600, W, 74, UC + "strokeWidth=2;")
-history = uc.v("צפייה בהיסטוריית אימונים", 250, 730, W, H, UC)
-
-pose = uc.v("זיהוי שלד וניתוח טכניקה", 560, 470, W, H, UCS)
-count = uc.v("ספירת חזרות אוטומטית", 560, 560, W, H, UCS)
-feedback = uc.v("הצגת משוב בזמן אמת", 560, 650, W, H, UCS)
-logdata = uc.v("שמירת נתוני האימון (לוגים)", 560, 740, W, H, UCS)
-autorep = uc.v("הפקת דוח סיכום אוטומטי", 560, 840, W, H, UCS)
-
-viewrep = uc.v("<b>צפייה בדוח אימון</b>", 820, 840, W, 70, UC + "strokeWidth=2;")
-approve = uc.v("אישור / דחיית בקשת שיוך", 1100, 290, W, H, UC)
-dash = uc.v("צפייה בדשבורד מתאמנים", 1100, 380, W, H, UC)
-plan = uc.v("הגדרת תוכנית אימון ויעדים", 1100, 470, W, H, UC)
-trend = uc.v("צפייה במגמות התקדמות", 1100, 560, W, H, UC)
-addnote = uc.v("הוספת הערות מאמן לדוח", 1100, 720, W, H, UCX)
-export = uc.v("ייצוא דוח (PDF / Excel)", 1100, 810, W, H, UCX)
-send = uc.v("שליחת הדוח למתאמן", 1100, 900, W, H, UCX)
-
-users_m = uc.v("ניהול משתמשים והרשאות", 1100, 1020, W, H, UC)
-ex_m = uc.v("ניהול מאגר תרגילים וכללי טכניקה", 1100, 1105, W, H, UC)
-mon = uc.v("ניטור מערכת ויומן פעולות", 820, 1105, W, H, UC)
+# trainee (5)
+register = uc.v("הרשמה למערכת", 250, 100, W, H, UC)
+profile = uc.v("עדכון פרופיל ויעדים", 250, 190, W, H, UC)
+request = uc.v("בקשת שיוך למאמן", 250, 280, W, H, UC)
+workout = uc.v("<b>ביצוע אימון במצלמה</b>", 250, 400, W, 74, UC + "strokeWidth=2;")
+history = uc.v("צפייה בהיסטוריה", 250, 520, W, H, UC)
+# included in every workout (4)
+pose = uc.v("זיהוי שלד וטכניקה", 560, 300, W, H, UCS)
+count = uc.v("ספירת חזרות", 560, 390, W, H, UCS)
+feedback = uc.v("משוב בזמן אמת", 560, 480, W, H, UCS)
+autorep = uc.v("הפקת דוח אוטומטי", 560, 570, W, H, UCS)
+# trainer (5 + 3 extensions)
+viewrep = uc.v("<b>צפייה בדוח אימון</b>", 560, 720, W, 70, UC + "strokeWidth=2;")
+approve = uc.v("אישור בקשת שיוך", 1100, 100, W, H, UC)
+dash = uc.v("דשבורד והתראות", 1100, 190, W, H, UC)
+plan = uc.v("בניית תוכנית אימון", 1100, 280, W, H, UC)
+trend = uc.v("מגמות התקדמות", 1100, 370, W, H, UC)
+addnote = uc.v("הוספת הערות מאמן", 250, 640, W, H, UCX)
+export = uc.v("ייצוא PDF / Excel", 250, 730, W, H, UCX)
+send = uc.v("שליחת דוח למתאמן", 250, 820, W, H, UCX)
+# admin (3)
+users_m = uc.v("ניהול משתמשים", 1100, 880, W, H, UC)
+ex_m = uc.v("ניהול תרגילים וכללים", 1100, 970, W, H, UC)
+mon = uc.v("יומן פעולות", 1100, 1060, W, H, UC)
 
 # associations
-for t in (login, profile, logout):
-    uc.e(user, t, style=ASSOC)
-for t in (register, metrics, request, workout, history):
+for t in (register, profile, request, workout, history):
     uc.e(trainee, t, style=ASSOC)
-uc.e(trainee, viewrep, style=ASSOC, pts=[(95, 875)])
-for t in (approve, dash, plan, trend):
+for t in (approve, dash, plan, trend, viewrep):
     uc.e(trainer, t, style=ASSOC)
-uc.e(trainer, viewrep, style=ASSOC)
-for t in (users_m, ex_m):
+for t in (users_m, ex_m, mon):
     uc.e(admin, t, style=ASSOC)
-uc.e(admin, mon, style=ASSOC, pts=[(1435, 1250), (925, 1250)])
-
-# generalization
-uc.e(trainee, user, style=GEN)
-uc.e(trainer, user, style=GEN + "exitX=0.5;exitY=0;", pts=[(1435, 15), (95, 15)])
-uc.e(admin, user, style=GEN + "exitX=1;exitY=0.5;", pts=[(1500, 1090), (1500, 15), (95, 15)])
 
 # include / extend
-for t in (pose, count, feedback, logdata, autorep):
+for t in (pose, count, feedback, autorep):
     uc.e(workout, t, "«include»", INC)
-uc.e(reset, login, "«extend»", EXT)
 uc.e(autorep, viewrep, "מזין", "endArrow=open;dashed=1;html=1;fontSize=11;labelBackgroundColor=#ffffff;strokeColor=#999999;")
 for t in (addnote, export, send):
     uc.e(t, viewrep, "«extend»", EXT)
-uc.e(request, approve, "מזין", "endArrow=open;dashed=1;html=1;fontSize=11;labelBackgroundColor=#ffffff;strokeColor=#999999;", pts=[(355, 270), (1205, 270)])
 
 # legend
-uc.v("<b>מקרא</b><br>🔵 Use Case ראשי<br>🟣 Use Case מערכתי (נכלל – «include»)<br>🟡 Use Case מרחיב (אופציונלי – «extend»)<br>▷ הכללה (Generalization): כל השחקנים יורשים את פעולות ה\"משתמש הרשום\"",
-     1360, 1180, 230, 140, "rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;align=right;verticalAlign=top;spacing=8;fontSize=11;")
+uc.v("<b>מקרא</b><br>🔵 Use Case ראשי<br>🟣 נכלל תמיד באימון – «include»<br>🟡 פעולת מאמן אופציונלית – «extend»<br>- - מזין: הדוח נוצר מנתוני האימון<br>3 שחקנים · 20 מקרי שימוש",
+     1360, 1040, 230, 130, "rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;align=right;verticalAlign=top;spacing=8;fontSize=11;")
 
 save("FitVision_UseCase.drawio", [uc])
 
@@ -153,7 +135,7 @@ c.e(P0, ad, "יומן פעולות ומצב מערכת", FLOW + "exitX=0.7;exitY
 note(c, "הערה: הווידאו הגולמי מעובד בזמן אמת ואינו נשמר במערכת – נשמרים רק נתונים מספריים (זוויות, חזרות, שגיאות). החלטה זו מצמצמת סיכוני פרטיות ונפח אחסון.", 300, 560, 700, 70)
 
 # --- Level 1
-L = D("DFD רמה 1", 1900, 1250)
+L = D("DFD רמה 1", 1900, 1250)  # 7 processes, 6 stores, 24 flows (F1–F24 = table 4.2)
 L.v("<b>DFD רמה 1 – פירוק תהליכי המערכת</b>", 600, -40, 700, 30, "text;html=1;fontSize=18;align=center;")
 admin_e = L.v("מנהל מערכת", 640, 0, 160, 60, EXTS)
 trainee_e = L.v("מתאמן", 20, 520, 140, 80, EXTS)
@@ -176,32 +158,30 @@ D4 = store(L, "D4", "אימונים, סטים וחזרות", 860, 700, 220)
 D5 = store(L, "D5", "אירועי שגיאת טכניקה", 1160, 700, 220)
 D6 = store(L, "D6", "דוחות והערות", 1360, 880, 220)
 
-L.e(trainee_e, P1, "פרטי הרשמה, פרופיל ויעדים", FLOW)
-L.e(admin_e, P1, "ניהול משתמשים והרשאות", FLOW)
-L.e(admin_e, P2, "תרגילים וספי זוויות", FLOW)
-L.e(trainer_t, P1, "אישור שיוך מתאמן", FLOW + "exitX=0.5;exitY=0;entryX=0.5;entryY=0;", pts=[(1720, 105), (385, 105)])
-L.e(trainer_t, P2, "תוכנית אימון ויעדים", FLOW)
-L.e(P1, D1, "רשומת משתמש ושיוך", FLOW)
-L.e(P2, D2, "כללי טכניקה", FLOW)
-L.e(P2, D3, "תוכנית אימון", FLOW)
-L.e(trainee_e, P3, "זרם וידאו ממצלמה", FLOW)
-L.e(P3, P4, "נקודות ציון שלד<br>(33 Landmarks)", FLOW)
-L.e(D2, P4, "ספי זוויות לתרגיל", FLOW)
-L.e(P4, trainee_e, "משוב בזמן אמת<br>(קולי / חזותי)", FLOW + "exitX=0.5;exitY=1;entryX=0.5;entryY=1;", pts=[(765, 650), (90, 650)])
-L.e(P4, P5, "חזרות, זוויות ושגיאות", FLOW)
-L.e(D3, P5, "תרגילים מתוכננים", FLOW)
-L.e(D1, P5, "מזהה מתאמן", FLOW + "exitX=1;exitY=1;")
-L.e(P5, D4, "סשן, סטים וחזרות", FLOW)
-L.e(P5, D5, "אירועי שגיאה", FLOW)
-L.e(D4, P6, "נתוני אימון נוכחי + היסטוריה", FLOW)
-L.e(D5, P6, "שגיאות מצטברות", FLOW)
-L.e(D1, P6, "פרופיל ויעדי מתאמן", FLOW + "exitX=0;exitY=0.5;entryX=0.5;entryY=0;", pts=[(240, 340), (240, 790), (1105, 790)])
-L.e(P6, D6, "דוח סיכום", FLOW)
-L.e(D6, P7, "דוח שמור", FLOW)
-L.e(trainer_b, P7, "הערות מאמן ובקשת ייצוא", FLOW + "exitX=0;exitY=0.25;entryX=1;entryY=0.25;")
-L.e(P7, trainer_b, "דוח PDF / Excel", FLOW + "exitX=1;exitY=0.75;entryX=0;entryY=0.75;")
-L.e(P7, trainee_b, "סיכום אימון רשמי", FLOW)
-L.e(P7, D6, "הערות מאמן", FLOW + "exitX=0.8;exitY=0;entryX=0.8;entryY=1;")
+L.e(trainee_e, P1, "F1 · פרטי הרשמה, פרופיל ויעדים", FLOW)
+L.e(admin_e, P1, "F3 · ניהול משתמשים והרשאות", FLOW)
+L.e(admin_e, P2, "F4 · תרגילים וספי זוויות", FLOW)
+L.e(trainer_t, P1, "F2 · אישור שיוך מתאמן", FLOW + "exitX=0.5;exitY=0;entryX=0.5;entryY=0;", pts=[(1720, 105), (385, 105)])
+L.e(trainer_t, P2, "F5 · תוכנית אימון ויעדים", FLOW)
+L.e(P1, D1, "F6 · רשומת משתמש ושיוך", FLOW)
+L.e(P2, D2, "F8 · כללי טכניקה", FLOW)
+L.e(P2, D3, "F7 · תוכנית אימון", FLOW)
+L.e(trainee_e, P3, "F11 · פריימים ממצלמה (במכשיר בלבד)", FLOW)
+L.e(P3, P4, "F12 · נקודות ציון שלד<br>(33 Landmarks)", FLOW)
+L.e(D2, P4, "F9 · ספי זוויות לתרגיל", FLOW)
+L.e(P4, trainee_e, "F13 · משוב בזמן אמת<br>(קולי / חזותי)", FLOW + "exitX=0.5;exitY=1;entryX=0.5;entryY=1;", pts=[(765, 650), (90, 650)])
+L.e(P4, P5, "F14 · חזרות, זוויות ושגיאות", FLOW)
+L.e(D3, P5, "F10 · תרגילים מתוכננים", FLOW)
+L.e(P5, D4, "F15 · סשן, סטים וחזרות", FLOW)
+L.e(P5, D5, "F16 · אירועי שגיאה", FLOW)
+L.e(D4, P6, "F17 · נתוני אימון נוכחי + היסטוריה", FLOW)
+L.e(D5, P6, "F18 · שגיאות מצטברות", FLOW)
+L.e(P6, D6, "F19 · דוח Draft", FLOW)
+L.e(D6, P7, "F20 · דוח שמור", FLOW)
+L.e(trainer_b, P7, "F22 · הערות מאמן ובקשת ייצוא", FLOW + "exitX=0;exitY=0.25;entryX=1;entryY=0.25;")
+L.e(P7, trainer_b, "F23 · דוח PDF / Excel", FLOW + "exitX=1;exitY=0.75;entryX=0;entryY=0.75;")
+L.e(P7, trainee_b, "F24 · סיכום אימון רשמי", FLOW)
+L.e(P7, D6, "F21 · הערות מאמן וסטטוס", FLOW + "exitX=0.8;exitY=0;entryX=0.8;entryY=1;")
 note(L, "* ישות חיצונית כפולה – מופיעה פעמיים לשיפור הקריאות בלבד.<br>סימון: Gane &amp; Sarson. מלבן מעוגל = תהליך, מלבן פתוח = מאגר נתונים, מלבן צהוב = ישות חיצונית.", 20, 1150, 560, 70)
 
 save("FitVision_DFD.drawio", [c, L])
@@ -347,7 +327,7 @@ for i, (name, sets) in enumerate([("סקוואט", "4 × 12"), ("לאנג'ים",
     txt(m1, sets, 42, y, 80, 30, 13, "#64748b", "left")
 btn(m1, "▶  התחל אימון", 32, 376, 326, 44, "#2563eb")
 card(m1, 16, 448, 358, 150)
-txt(m1, "האימון האחרון · 26.10", 32, 456, 326, 24, 12, "#64748b")
+txt(m1, "האימון האחרון · 22.5", 32, 456, 326, 24, 12, "#64748b")
 txt(m1, "84%", 32, 480, 120, 40, 28, "#16a34a", "left", True)
 txt(m1, "ציון טכניקה", 190, 480, 168, 20, 12, "#64748b")
 txt(m1, "↑ 6% לעומת הממוצע", 190, 500, 168, 20, 12, "#16a34a")
@@ -494,7 +474,7 @@ btn(w3, "ייצוא PDF ⬇", 340, 14, 150, 36, "#dc2626")
 btn(w3, "ייצוא Excel ⬇", 180, 14, 150, 36, "#0891b2")
 btn(w3, "✉ שלח למתאמן", 20, 14, 150, 36, "#16a34a")
 card(w3, 20, 80, 1240, 56)
-txt(w3, "<b>מתאמן:</b> יוסי כהן &nbsp;&nbsp;·&nbsp;&nbsp; <b>מאמן:</b> רון אברהם &nbsp;&nbsp;·&nbsp;&nbsp; <b>תאריך:</b> 26.10.2026, 18:05 &nbsp;&nbsp;·&nbsp;&nbsp; <b>תוכנית:</b> גוף מלא A &nbsp;&nbsp;·&nbsp;&nbsp; <b>משך:</b> 42 דק'", 40, 80, 1200, 56, 14)
+txt(w3, "<b>מתאמן:</b> יוסי כהן &nbsp;&nbsp;·&nbsp;&nbsp; <b>מאמן:</b> רון אברהם &nbsp;&nbsp;·&nbsp;&nbsp; <b>תאריך:</b> 22.5.2028, 18:05 &nbsp;&nbsp;·&nbsp;&nbsp; <b>תוכנית:</b> גוף מלא A &nbsp;&nbsp;·&nbsp;&nbsp; <b>משך:</b> 42 דק'", 40, 80, 1200, 56, 14)
 kp = [('סה"כ חזרות', "164", "מתוך 166 מתוכננות", "#64748b"), ("חזרות תקינות", "137", "84% מסך החזרות", "#64748b"),
       ("ציון טכניקה ממוצע", "84%", "↑ 6% לעומת האימון הקודם", "#16a34a"), ("תרגילים שבוצעו", "4 / 4", "15 סטים", "#64748b")]
 for i, (t, v, s, col) in enumerate(kp):
