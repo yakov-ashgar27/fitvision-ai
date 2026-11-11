@@ -40,7 +40,10 @@ FitVision AI מזהה את שלד המתאמן ממצלמת הטלפון ונו�
 | שרת | Python 3.12, FastAPI, Pydantic v2, SQLAlchemy 2.0, Alembic, Uvicorn, Argon2, JWT, APScheduler |
 | מסד נתונים | SQL Server 2022 Express ב-Docker, עם 17 טבלאות מנורמלות |
 | דוחות | Jinja2 עם `dir="rtl"`; ‏PDF דרך Chromium ו-Playwright; ‏Excel דרך openpyxl |
-| בדיקות ו-CI | pytest, ‏Vitest ו-React Testing Library, ‏Postman, ‏GitHub Actions, ‏ESLint, ‏Prettier, ‏Ruff |
+| מטמון ותור משימות | Redis 7 ותור RQ עם Worker נפרד; קבצים סטטיים דרך CDN |
+| בדיקות ו-CI | pytest, ‏Vitest ו-React Testing Library, ‏Postman, ‏GitHub Actions, ‏Lighthouse CI, ‏ESLint, ‏Prettier, ‏Ruff |
+
+**ביצועים:** שלד מסך בזמן טעינה, עדכון אופטימי, פיצול קוד, רשימות וירטואליות, ‏CDN ודחיסה, אינדקסים ומטמון, ותקציב ביצועים שנבדק ב-CI ואצל משתמשים אמיתיים. הפירוט בסעיף 6.3.
 
 **תרגילי ה-MVP:** סקוואט ולחיצת כתפיים מצולמים מהחזית; לאנג'ים וכפיפת מרפקים מצולמים מהצד.
 
