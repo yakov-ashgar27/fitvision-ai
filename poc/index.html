@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FitVision AI – PoC</title>
+    <style>
+      body { margin: 0; font-family: system-ui, sans-serif; background: #0f172a; color: #f8fafc; }
+      #stage { position: relative; width: 100vw; max-width: 640px; margin: 0 auto; }
+      video, canvas { width: 100%; display: block; transform: scaleX(-1); }
+      canvas { position: absolute; inset: 0; }
+      #hud { display: flex; justify-content: space-between; padding: 12px 16px; font-size: 18px; }
+      #count { font-size: 40px; font-weight: 700; }
+      #status { padding: 0 16px 12px; color: #94a3b8; font-size: 14px; }
+      button { margin: 12px 16px; padding: 12px 20px; font-size: 16px; border-radius: 8px; border: 0; background: #2563eb; color: #fff; }
+    </style>
+  </head>
+  <body>
+    <div id="hud">
+      <div>חזרות: <span id="count">0</span> <small>(חלקיות: <span id="partial">0</span>)</small></div>
+      <div>זווית ברך: <span id="angle">–</span>°</div>
+    </div>
+    <div id="stage">
+      <video id="video" playsinline muted></video>
+      <canvas id="overlay"></canvas>
+    </div>
+    <div id="status">סקוואט · מבט חזית · הווידאו מעובד במכשיר בלבד ואינו נשלח לשרת</div>
+    <button id="start">הפעל מצלמה</button>
+    <div id="metrics" style="padding:0 16px;color:#94a3b8;font-size:13px"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
