@@ -14,7 +14,7 @@
  [32m✓[39m src/engine/engine.test.ts[2m > [22mshoulder press (front view)[2m > [22mcounts presses that lower to shoulder height
  [32m✓[39m src/engine/engine.test.ts[2m > [22mtracking[2m > [22mignores frames without a body and reports lost tracking
  [32m✓[39m src/offline/sync.test.ts[2m > [22moffline queue (NFR-12)[2m > [22mkeeps sets while offline and syncs them once, in order, when the network returns
- [32m✓[39m src/offline/sync.test.ts[2m > [22moffline queue (NFR-12)[2m > [22mlinks the summary to a report built by the background worker[33m 305[2mms[22m[39m
+ [32m✓[39m src/offline/sync.test.ts[2m > [22moffline queue (NFR-12)[2m > [22mlinks the summary to a report built by the background worker[33m 310[2mms[22m[39m
  [32m✓[39m src/engine/coach.test.ts[2m > [22mcoach (varied cues, first-trial feedback)[2m > [22mgives one cue per rule per rep, and never the same wording twice in a row
  [32m✓[39m src/engine/coach.test.ts[2m > [22mcoach (varied cues, first-trial feedback)[2m > [22masks to finish the way down when the arm was not straightened
  [32m✓[39m src/engine/coach.test.ts[2m > [22mcoach (varied cues, first-trial feedback)[2m > [22mmarks the last rep and the end of the set
@@ -26,6 +26,6 @@
 
 [2m Test Files [22m [1m[32m6 passed[39m[22m[90m (6)[39m
 [2m      Tests [22m [1m[32m22 passed[39m[22m[90m (22)[39m
-[2m   Start at [22m 15:53:23
-[2m   Duration [22m 4.58s[2m (transform 242ms, setup 285ms, collect 541ms, tests 506ms, environment 2.05s, prepare 410ms)[22m
+[2m   Start at [22m 15:59:24
+[2m   Duration [22m 5.65s[2m (transform 334ms, setup 366ms, collect 699ms, tests 565ms, environment 2.57s, prepare 526ms)[22m
 

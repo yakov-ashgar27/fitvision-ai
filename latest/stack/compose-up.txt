@@ -1,21 +1,21 @@
- Volume fitvision-ai_reports Creating 
- Volume fitvision-ai_reports Created 
- Container fitvision-ai-redis-1 Creating 
+ Volume fitvision-ai_mssql Creating 
+ Volume fitvision-ai_mssql Created 
  Container fitvision-ai-db-1 Creating 
- Container fitvision-ai-redis-1 Created 
+ Container fitvision-ai-redis-1 Creating 
  Container fitvision-ai-db-1 Created 
+ Container fitvision-ai-redis-1 Created 
  Container fitvision-ai-api-1 Creating 
  Container fitvision-ai-api-1 Created 
- Container fitvision-ai-web-1 Creating 
  Container fitvision-ai-worker-1 Creating 
- Container fitvision-ai-web-1 Created 
+ Container fitvision-ai-web-1 Creating 
  Container fitvision-ai-worker-1 Created 
- Container fitvision-ai-redis-1 Starting 
+ Container fitvision-ai-web-1 Created 
  Container fitvision-ai-db-1 Starting 
+ Container fitvision-ai-redis-1 Starting 
  Container fitvision-ai-redis-1 Started 
  Container fitvision-ai-db-1 Started 
- Container fitvision-ai-redis-1 Waiting 
  Container fitvision-ai-db-1 Waiting 
+ Container fitvision-ai-redis-1 Waiting 
  Container fitvision-ai-redis-1 Healthy 
  Container fitvision-ai-db-1 Healthy 
  Container fitvision-ai-api-1 Starting 

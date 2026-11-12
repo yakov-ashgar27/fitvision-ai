@@ -1,4 +1,36 @@
-[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[33m                                     [100%][0m
+[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[31mF[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[31m                                    [100%][0m
+=================================== FAILURES ===================================
+[31m[1m________________________ test_stale_sessions_are_closed ________________________[0m
+
+api = <conftest.Api object at 0x7b14e9fb9d30>
+client = <starlette.testclient.TestClient object at 0x7b14e9fbad50>
+
+    def test_stale_sessions_are_closed(api, client):
+        """Workouts left open (app closed mid-workout) are closed by the hourly job: empty ones removed, others Aborted."""
+        from app import models as m
+        from app.db import SessionLocal
+        from app.tasks import job_close_stale_sessions
+    
+        tt, _rt, _ids = api.pair()
+        old = iso(now() - timedelta(days=1))
+>       empty = client.post("/api/sessions", json={"started_at": old}, headers=api.h(tt)).json()["session_id"]
+[1m[31mE       KeyError: 'session_id'[0m
+
+[1m[31mtests/test_flow.py[0m:139: KeyError
+----------------------------- Captured stderr call -----------------------------
+2026-11-12 15:59:13,526 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:13,638 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:13,641 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:13,647 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
+2026-11-12 15:59:13,652 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:13,655 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 409 Conflict"
+------------------------------ Captured log call -------------------------------
+[32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+[32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+[32mINFO    [0m httpx:_client.py:1025 HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+[32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
+[32mINFO    [0m httpx:_client.py:1025 HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
+[32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 409 Conflict"
 [33m=============================== warnings summary ===============================[0m
 ../../../../../../opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/starlette/testclient.py:40
   /opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/starlette/testclient.py:40: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
@@ -8,35 +40,35 @@
 ==================================== PASSES ====================================
 [32m[1m__________________________ test_register_login_and_me __________________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:13,358 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:13,458 INFO httpx HTTP Request: POST http://testserver/api/auth/login "HTTP/1.1 200 OK"
-2026-11-12 15:53:13,465 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:07,222 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:07,338 INFO httpx HTTP Request: POST http://testserver/api/auth/login "HTTP/1.1 200 OK"
+2026-11-12 15:59:07,346 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/login "HTTP/1.1 200 OK"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
 [32m[1m___________________________ test_register_rules_us01 ___________________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:13,616 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 422 Unprocessable Entity"
-2026-11-12 15:53:13,718 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:13,720 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 409 Conflict"
+2026-11-12 15:59:07,511 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 422 Unprocessable Entity"
+2026-11-12 15:59:07,623 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:07,626 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 409 Conflict"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 422 Unprocessable Entity"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 409 Conflict"
 [32m[1m________________________ test_password_is_argon2_nfr05 _________________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:13,967 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:07,903 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32m[1m________________ test_disabled_user_is_locked_immediately_us18 _________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:14,222 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:14,226 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
-2026-11-12 15:53:14,328 INFO httpx HTTP Request: POST http://testserver/api/auth/login "HTTP/1.1 200 OK"
-2026-11-12 15:53:14,335 INFO httpx HTTP Request: PATCH http://testserver/api/admin/users/2 "HTTP/1.1 200 OK"
-2026-11-12 15:53:14,337 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 401 Unauthorized"
-2026-11-12 15:53:14,434 INFO httpx HTTP Request: POST http://testserver/api/auth/login "HTTP/1.1 403 Forbidden"
+2026-11-12 15:59:08,180 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:08,185 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:08,297 INFO httpx HTTP Request: POST http://testserver/api/auth/login "HTTP/1.1 200 OK"
+2026-11-12 15:59:08,305 INFO httpx HTTP Request: PATCH http://testserver/api/admin/users/2 "HTTP/1.1 200 OK"
+2026-11-12 15:59:08,307 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 401 Unauthorized"
+2026-11-12 15:59:08,415 INFO httpx HTTP Request: POST http://testserver/api/auth/login "HTTP/1.1 403 Forbidden"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
@@ -46,26 +78,26 @@
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/login "HTTP/1.1 403 Forbidden"
 [32m[1m_____________________________ test_no_token_is_401 _____________________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:14,588 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 401 Unauthorized"
-2026-11-12 15:53:14,589 INFO httpx HTTP Request: GET http://testserver/api/dashboard "HTTP/1.1 401 Unauthorized"
+2026-11-12 15:59:08,579 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 401 Unauthorized"
+2026-11-12 15:59:08,580 INFO httpx HTTP Request: GET http://testserver/api/dashboard "HTTP/1.1 401 Unauthorized"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: GET http://testserver/api/me "HTTP/1.1 401 Unauthorized"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: GET http://testserver/api/dashboard "HTTP/1.1 401 Unauthorized"
 [32m[1m___________________________ test_profile_ranges_us02 ___________________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:14,834 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:14,838 INFO httpx HTTP Request: PUT http://testserver/api/me/profile "HTTP/1.1 422 Unprocessable Entity"
-2026-11-12 15:53:14,845 INFO httpx HTTP Request: PUT http://testserver/api/me/profile "HTTP/1.1 200 OK"
+2026-11-12 15:59:08,859 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:08,864 INFO httpx HTTP Request: PUT http://testserver/api/me/profile "HTTP/1.1 422 Unprocessable Entity"
+2026-11-12 15:59:08,871 INFO httpx HTTP Request: PUT http://testserver/api/me/profile "HTTP/1.1 200 OK"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: PUT http://testserver/api/me/profile "HTTP/1.1 422 Unprocessable Entity"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: PUT http://testserver/api/me/profile "HTTP/1.1 200 OK"
 [32m[1m__________________ test_consent_required_before_camera_nfr08 ___________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:15,118 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:15,123 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 409 Conflict"
-2026-11-12 15:53:15,127 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:15,135 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:09,149 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:09,153 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 409 Conflict"
+2026-11-12 15:59:09,158 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:09,167 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 409 Conflict"
@@ -73,17 +105,17 @@
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
 [32m[1m___________________ test_workout_scores_and_report_tc01_tc05 ___________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:15,377 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:15,478 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:15,482 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
-2026-11-12 15:53:15,488 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
-2026-11-12 15:53:15,494 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:15,499 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
-2026-11-12 15:53:15,502 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:15,506 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
-2026-11-12 15:53:15,519 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
-2026-11-12 15:53:15,549 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
-2026-11-12 15:53:15,553 INFO httpx HTTP Request: GET http://testserver/api/reports/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:09,449 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:09,564 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:09,568 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:09,576 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
+2026-11-12 15:59:09,583 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:09,590 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
+2026-11-12 15:59:09,594 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:09,600 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:09,615 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
+2026-11-12 15:59:09,639 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
+2026-11-12 15:59:09,646 INFO httpx HTTP Request: GET http://testserver/api/reports/1 "HTTP/1.1 200 OK"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
@@ -98,17 +130,17 @@
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: GET http://testserver/api/reports/1 "HTTP/1.1 200 OK"
 [32m[1m_________________ test_offline_replay_is_idempotent_tc03_nfr12 _________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:15,836 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:15,949 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:15,953 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
-2026-11-12 15:53:15,958 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
-2026-11-12 15:53:15,962 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:15,965 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
-2026-11-12 15:53:15,969 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:15,973 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
-2026-11-12 15:53:15,979 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
-2026-11-12 15:53:15,982 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 200 OK"
-2026-11-12 15:53:15,984 INFO httpx HTTP Request: GET http://testserver/api/sessions/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:09,919 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:10,033 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:10,036 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:10,042 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
+2026-11-12 15:59:10,047 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:10,051 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
+2026-11-12 15:59:10,056 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:10,061 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:10,080 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
+2026-11-12 15:59:10,085 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 200 OK"
+2026-11-12 15:59:10,088 INFO httpx HTTP Request: GET http://testserver/api/sessions/1 "HTTP/1.1 200 OK"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
@@ -123,19 +155,19 @@
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: GET http://testserver/api/sessions/1 "HTTP/1.1 200 OK"
 [32m[1m________________________ test_aborted_session_br12_tc04 ________________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:16,240 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:16,338 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:16,341 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
-2026-11-12 15:53:16,346 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
-2026-11-12 15:53:16,351 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:16,354 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
-2026-11-12 15:53:16,360 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:16,365 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
-2026-11-12 15:53:16,370 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
-2026-11-12 15:53:16,372 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:16,376 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
-2026-11-12 15:53:16,381 INFO httpx HTTP Request: POST http://testserver/api/sessions/2/sets "HTTP/1.1 201 Created"
-2026-11-12 15:53:16,392 INFO httpx HTTP Request: POST http://testserver/api/sessions/2/finish "HTTP/1.1 200 OK"
+2026-11-12 15:59:10,363 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:10,477 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:10,480 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:10,486 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
+2026-11-12 15:59:10,491 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:10,495 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
+2026-11-12 15:59:10,499 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:10,504 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:10,511 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
+2026-11-12 15:59:10,513 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:10,520 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:10,526 INFO httpx HTTP Request: POST http://testserver/api/sessions/2/sets "HTTP/1.1 201 Created"
+2026-11-12 15:59:10,539 INFO httpx HTTP Request: POST http://testserver/api/sessions/2/finish "HTTP/1.1 200 OK"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
@@ -152,29 +184,29 @@
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/sessions/2/finish "HTTP/1.1 200 OK"
 [32m[1m_______________________ test_report_lifecycle_br10_tc06 ________________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:16,631 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:16,729 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:16,732 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
-2026-11-12 15:53:16,737 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
-2026-11-12 15:53:16,740 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:16,743 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
-2026-11-12 15:53:16,746 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:16,750 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
-2026-11-12 15:53:16,754 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
-2026-11-12 15:53:16,763 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
-2026-11-12 15:53:16,769 INFO httpx HTTP Request: POST http://testserver/api/reports/1/notes "HTTP/1.1 201 Created"
-2026-11-12 15:53:16,771 INFO httpx HTTP Request: GET http://testserver/api/reports/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:17,205 INFO httpx HTTP Request: POST http://testserver/api/reports/1/export/pdf "HTTP/1.1 200 OK"
-2026-11-12 15:53:17,221 INFO httpx HTTP Request: GET http://testserver/api/reports/1/files/pdf "HTTP/1.1 200 OK"
-2026-11-12 15:53:17,235 INFO httpx HTTP Request: POST http://testserver/api/reports/1/export/xlsx "HTTP/1.1 200 OK"
-2026-11-12 15:53:17,239 INFO httpx HTTP Request: GET http://testserver/api/reports/1/files/xlsx "HTTP/1.1 200 OK"
-2026-11-12 15:53:17,247 INFO httpx HTTP Request: POST http://testserver/api/reports/1/export/json "HTTP/1.1 200 OK"
-2026-11-12 15:53:17,250 INFO httpx HTTP Request: GET http://testserver/api/reports/1/files/json "HTTP/1.1 200 OK"
-2026-11-12 15:53:17,256 INFO httpx HTTP Request: POST http://testserver/api/reports/1/send "HTTP/1.1 200 OK"
-2026-11-12 15:53:17,258 INFO httpx HTTP Request: GET http://testserver/api/reports/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:17,262 INFO httpx HTTP Request: GET http://testserver/api/me/reports "HTTP/1.1 200 OK"
-2026-11-12 15:53:17,267 INFO httpx HTTP Request: GET http://testserver/api/reports/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:17,269 INFO httpx HTTP Request: GET http://testserver/api/me/reports "HTTP/1.1 200 OK"
+2026-11-12 15:59:10,816 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:10,930 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:10,933 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:10,938 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
+2026-11-12 15:59:10,943 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:10,947 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
+2026-11-12 15:59:10,951 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:10,956 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:10,964 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
+2026-11-12 15:59:10,978 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
+2026-11-12 15:59:10,985 INFO httpx HTTP Request: POST http://testserver/api/reports/1/notes "HTTP/1.1 201 Created"
+2026-11-12 15:59:10,990 INFO httpx HTTP Request: GET http://testserver/api/reports/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:11,600 INFO httpx HTTP Request: POST http://testserver/api/reports/1/export/pdf "HTTP/1.1 200 OK"
+2026-11-12 15:59:11,637 INFO httpx HTTP Request: GET http://testserver/api/reports/1/files/pdf "HTTP/1.1 200 OK"
+2026-11-12 15:59:11,665 INFO httpx HTTP Request: POST http://testserver/api/reports/1/export/xlsx "HTTP/1.1 200 OK"
+2026-11-12 15:59:11,670 INFO httpx HTTP Request: GET http://testserver/api/reports/1/files/xlsx "HTTP/1.1 200 OK"
+2026-11-12 15:59:11,678 INFO httpx HTTP Request: POST http://testserver/api/reports/1/export/json "HTTP/1.1 200 OK"
+2026-11-12 15:59:11,682 INFO httpx HTTP Request: GET http://testserver/api/reports/1/files/json "HTTP/1.1 200 OK"
+2026-11-12 15:59:11,690 INFO httpx HTTP Request: POST http://testserver/api/reports/1/send "HTTP/1.1 200 OK"
+2026-11-12 15:59:11,694 INFO httpx HTTP Request: GET http://testserver/api/reports/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:11,700 INFO httpx HTTP Request: GET http://testserver/api/me/reports "HTTP/1.1 200 OK"
+2026-11-12 15:59:11,707 INFO httpx HTTP Request: GET http://testserver/api/reports/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:11,710 INFO httpx HTTP Request: GET http://testserver/api/me/reports "HTTP/1.1 200 OK"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
@@ -201,18 +233,18 @@
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: GET http://testserver/api/me/reports "HTTP/1.1 200 OK"
 [32m[1m__________________________ test_xlsx_is_right_to_left __________________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:17,508 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:17,608 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:17,611 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
-2026-11-12 15:53:17,615 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
-2026-11-12 15:53:17,619 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:17,622 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
-2026-11-12 15:53:17,625 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:17,629 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
-2026-11-12 15:53:17,633 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
-2026-11-12 15:53:17,642 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
-2026-11-12 15:53:17,656 INFO httpx HTTP Request: POST http://testserver/api/reports/1/export/xlsx "HTTP/1.1 200 OK"
-2026-11-12 15:53:17,660 INFO httpx HTTP Request: GET http://testserver/api/reports/1/files/xlsx "HTTP/1.1 200 OK"
+2026-11-12 15:59:11,985 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:12,105 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:12,109 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:12,114 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
+2026-11-12 15:59:12,119 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:12,123 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
+2026-11-12 15:59:12,127 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:12,133 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:12,139 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
+2026-11-12 15:59:12,155 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
+2026-11-12 15:59:12,172 INFO httpx HTTP Request: POST http://testserver/api/reports/1/export/xlsx "HTTP/1.1 200 OK"
+2026-11-12 15:59:12,176 INFO httpx HTTP Request: GET http://testserver/api/reports/1/files/xlsx "HTTP/1.1 200 OK"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
@@ -228,29 +260,29 @@
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: GET http://testserver/api/reports/1/files/xlsx "HTTP/1.1 200 OK"
 [32m[1m_____________________ test_trend_after_three_sessions_br04 _____________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:18,647 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:18,745 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:18,748 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
-2026-11-12 15:53:18,752 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
-2026-11-12 15:53:18,756 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:18,759 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
-2026-11-12 15:53:18,762 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:18,766 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
-2026-11-12 15:53:18,771 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
-2026-11-12 15:53:18,784 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
-2026-11-12 15:53:18,786 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:18,790 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
-2026-11-12 15:53:18,794 INFO httpx HTTP Request: POST http://testserver/api/sessions/2/sets "HTTP/1.1 201 Created"
-2026-11-12 15:53:18,804 INFO httpx HTTP Request: POST http://testserver/api/sessions/2/finish "HTTP/1.1 200 OK"
-2026-11-12 15:53:18,805 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:18,809 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
-2026-11-12 15:53:18,814 INFO httpx HTTP Request: POST http://testserver/api/sessions/3/sets "HTTP/1.1 201 Created"
-2026-11-12 15:53:18,823 INFO httpx HTTP Request: POST http://testserver/api/sessions/3/finish "HTTP/1.1 200 OK"
-2026-11-12 15:53:18,825 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:18,828 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
-2026-11-12 15:53:18,833 INFO httpx HTTP Request: POST http://testserver/api/sessions/4/sets "HTTP/1.1 201 Created"
-2026-11-12 15:53:18,841 INFO httpx HTTP Request: POST http://testserver/api/sessions/4/finish "HTTP/1.1 200 OK"
-2026-11-12 15:53:18,844 INFO httpx HTTP Request: GET http://testserver/api/reports/4 "HTTP/1.1 200 OK"
+2026-11-12 15:59:12,451 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:12,565 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:12,568 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:12,573 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
+2026-11-12 15:59:12,578 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:12,582 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
+2026-11-12 15:59:12,586 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:12,592 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:12,598 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
+2026-11-12 15:59:12,612 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
+2026-11-12 15:59:12,614 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:12,619 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:12,625 INFO httpx HTTP Request: POST http://testserver/api/sessions/2/sets "HTTP/1.1 201 Created"
+2026-11-12 15:59:12,638 INFO httpx HTTP Request: POST http://testserver/api/sessions/2/finish "HTTP/1.1 200 OK"
+2026-11-12 15:59:12,641 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:12,646 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:12,652 INFO httpx HTTP Request: POST http://testserver/api/sessions/3/sets "HTTP/1.1 201 Created"
+2026-11-12 15:59:12,665 INFO httpx HTTP Request: POST http://testserver/api/sessions/3/finish "HTTP/1.1 200 OK"
+2026-11-12 15:59:12,667 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:12,673 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:12,678 INFO httpx HTTP Request: POST http://testserver/api/sessions/4/sets "HTTP/1.1 201 Created"
+2026-11-12 15:59:12,691 INFO httpx HTTP Request: POST http://testserver/api/sessions/4/finish "HTTP/1.1 200 OK"
+2026-11-12 15:59:12,695 INFO httpx HTTP Request: GET http://testserver/api/reports/4 "HTTP/1.1 200 OK"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
@@ -277,16 +309,16 @@
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: GET http://testserver/api/reports/4 "HTTP/1.1 200 OK"
 [32m[1m________________ test_plan_visible_to_trainee_immediately_us11 _________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:19,077 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:19,171 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:19,173 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
-2026-11-12 15:53:19,178 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
-2026-11-12 15:53:19,181 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:19,184 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
-2026-11-12 15:53:19,199 INFO httpx HTTP Request: POST http://testserver/api/plans "HTTP/1.1 201 Created"
-2026-11-12 15:53:19,204 INFO httpx HTTP Request: GET http://testserver/api/plans/active "HTTP/1.1 200 OK"
-2026-11-12 15:53:19,300 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:19,304 INFO httpx HTTP Request: POST http://testserver/api/plans "HTTP/1.1 403 Forbidden"
+2026-11-12 15:59:12,967 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:13,082 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:13,085 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:13,092 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
+2026-11-12 15:59:13,097 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:13,101 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
+2026-11-12 15:59:13,120 INFO httpx HTTP Request: POST http://testserver/api/plans "HTTP/1.1 201 Created"
+2026-11-12 15:59:13,128 INFO httpx HTTP Request: GET http://testserver/api/plans/active "HTTP/1.1 200 OK"
+2026-11-12 15:59:13,239 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:13,244 INFO httpx HTTP Request: POST http://testserver/api/plans "HTTP/1.1 403 Forbidden"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
@@ -300,20 +332,20 @@
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/plans "HTTP/1.1 403 Forbidden"
 [32m[1m_______________________________ test_role_matrix _______________________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:19,536 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:19,632 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:19,635 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
-2026-11-12 15:53:19,640 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
-2026-11-12 15:53:19,645 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:19,742 INFO httpx HTTP Request: POST http://testserver/api/auth/login "HTTP/1.1 200 OK"
-2026-11-12 15:53:19,746 INFO httpx HTTP Request: GET http://testserver/api/dashboard "HTTP/1.1 403 Forbidden"
-2026-11-12 15:53:19,749 INFO httpx HTTP Request: GET http://testserver/api/admin/users "HTTP/1.1 403 Forbidden"
-2026-11-12 15:53:19,752 INFO httpx HTTP Request: GET http://testserver/api/admin/audit-log "HTTP/1.1 403 Forbidden"
-2026-11-12 15:53:19,755 INFO httpx HTTP Request: GET http://testserver/api/dashboard "HTTP/1.1 403 Forbidden"
-2026-11-12 15:53:19,757 INFO httpx HTTP Request: GET http://testserver/api/sessions?trainee_id=2 "HTTP/1.1 403 Forbidden"
-2026-11-12 15:53:19,761 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
-2026-11-12 15:53:19,763 INFO httpx HTTP Request: POST http://testserver/api/exercises/1/rules "HTTP/1.1 403 Forbidden"
-2026-11-12 15:53:19,766 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 403 Forbidden"
+2026-11-12 15:59:13,932 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:14,046 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:14,049 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:14,055 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
+2026-11-12 15:59:14,060 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:14,174 INFO httpx HTTP Request: POST http://testserver/api/auth/login "HTTP/1.1 200 OK"
+2026-11-12 15:59:14,178 INFO httpx HTTP Request: GET http://testserver/api/dashboard "HTTP/1.1 403 Forbidden"
+2026-11-12 15:59:14,182 INFO httpx HTTP Request: GET http://testserver/api/admin/users "HTTP/1.1 403 Forbidden"
+2026-11-12 15:59:14,186 INFO httpx HTTP Request: GET http://testserver/api/admin/audit-log "HTTP/1.1 403 Forbidden"
+2026-11-12 15:59:14,190 INFO httpx HTTP Request: GET http://testserver/api/dashboard "HTTP/1.1 403 Forbidden"
+2026-11-12 15:59:14,194 INFO httpx HTTP Request: GET http://testserver/api/sessions?trainee_id=2 "HTTP/1.1 403 Forbidden"
+2026-11-12 15:59:14,199 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
+2026-11-12 15:59:14,202 INFO httpx HTTP Request: POST http://testserver/api/exercises/1/rules "HTTP/1.1 403 Forbidden"
+2026-11-12 15:59:14,206 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 403 Forbidden"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
@@ -331,19 +363,19 @@
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 403 Forbidden"
 [32m[1m_____________ test_unassigned_trainer_gets_403_and_is_logged_tc08 ______________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:20,002 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:20,111 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:20,114 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
-2026-11-12 15:53:20,119 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
-2026-11-12 15:53:20,123 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:20,224 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:20,228 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
-2026-11-12 15:53:20,231 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:20,235 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
-2026-11-12 15:53:20,240 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
-2026-11-12 15:53:20,250 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
-2026-11-12 15:53:20,253 INFO httpx HTTP Request: GET http://testserver/api/reports/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:20,257 INFO httpx HTTP Request: GET http://testserver/api/reports/1 "HTTP/1.1 403 Forbidden"
+2026-11-12 15:59:14,481 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:14,594 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:14,597 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:14,603 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
+2026-11-12 15:59:14,608 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:14,729 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:14,734 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
+2026-11-12 15:59:14,738 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:14,743 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:14,749 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
+2026-11-12 15:59:14,763 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
+2026-11-12 15:59:14,767 INFO httpx HTTP Request: GET http://testserver/api/reports/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:14,772 INFO httpx HTTP Request: GET http://testserver/api/reports/1 "HTTP/1.1 403 Forbidden"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
@@ -360,24 +392,24 @@
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: GET http://testserver/api/reports/1 "HTTP/1.1 403 Forbidden"
 [32m[1m____________ test_trainer_sees_only_sessions_since_assignment_br09 _____________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:20,554 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:20,558 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
-2026-11-12 15:53:20,561 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:20,566 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
-2026-11-12 15:53:20,571 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
-2026-11-12 15:53:20,581 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
-2026-11-12 15:53:20,676 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:20,679 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
-2026-11-12 15:53:20,683 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
-2026-11-12 15:53:20,687 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:20,689 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:20,693 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
-2026-11-12 15:53:20,697 INFO httpx HTTP Request: POST http://testserver/api/sessions/2/sets "HTTP/1.1 201 Created"
-2026-11-12 15:53:20,707 INFO httpx HTTP Request: POST http://testserver/api/sessions/2/finish "HTTP/1.1 200 OK"
-2026-11-12 15:53:20,712 INFO httpx HTTP Request: GET http://testserver/api/sessions?trainee_id=2 "HTTP/1.1 200 OK"
-2026-11-12 15:53:20,715 INFO httpx HTTP Request: GET http://testserver/api/reports/1 "HTTP/1.1 403 Forbidden"
-2026-11-12 15:53:20,720 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:20,724 INFO httpx HTTP Request: GET http://testserver/api/reports/2 "HTTP/1.1 403 Forbidden"
+2026-11-12 15:59:15,043 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:15,047 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
+2026-11-12 15:59:15,052 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:15,065 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:15,072 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
+2026-11-12 15:59:15,085 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
+2026-11-12 15:59:15,199 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:15,202 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:15,207 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
+2026-11-12 15:59:15,213 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:15,215 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:15,220 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:15,226 INFO httpx HTTP Request: POST http://testserver/api/sessions/2/sets "HTTP/1.1 201 Created"
+2026-11-12 15:59:15,239 INFO httpx HTTP Request: POST http://testserver/api/sessions/2/finish "HTTP/1.1 200 OK"
+2026-11-12 15:59:15,245 INFO httpx HTTP Request: GET http://testserver/api/sessions?trainee_id=2 "HTTP/1.1 200 OK"
+2026-11-12 15:59:15,249 INFO httpx HTTP Request: GET http://testserver/api/reports/1 "HTTP/1.1 403 Forbidden"
+2026-11-12 15:59:15,255 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:15,259 INFO httpx HTTP Request: GET http://testserver/api/reports/2 "HTTP/1.1 403 Forbidden"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
@@ -399,21 +431,21 @@
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: GET http://testserver/api/reports/2 "HTTP/1.1 403 Forbidden"
 [32m[1m_____________ test_one_active_assignment_br09_and_invite_lock_tc07 _____________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:20,988 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:21,087 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:21,089 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
-2026-11-12 15:53:21,095 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
-2026-11-12 15:53:21,100 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:21,197 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:21,200 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
-2026-11-12 15:53:21,203 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 409 Conflict"
-2026-11-12 15:53:21,298 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:21,303 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 404 Not Found"
-2026-11-12 15:53:21,306 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 404 Not Found"
-2026-11-12 15:53:21,309 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 404 Not Found"
-2026-11-12 15:53:21,312 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 404 Not Found"
-2026-11-12 15:53:21,315 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 404 Not Found"
-2026-11-12 15:53:21,316 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 429 Too Many Requests"
+2026-11-12 15:59:15,561 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:15,675 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:15,679 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:15,684 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
+2026-11-12 15:59:15,689 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:15,808 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:15,812 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:15,815 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 409 Conflict"
+2026-11-12 15:59:15,929 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:15,933 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 404 Not Found"
+2026-11-12 15:59:15,937 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 404 Not Found"
+2026-11-12 15:59:15,942 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 404 Not Found"
+2026-11-12 15:59:15,945 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 404 Not Found"
+2026-11-12 15:59:15,950 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 404 Not Found"
+2026-11-12 15:59:15,952 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 429 Too Many Requests"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
@@ -432,18 +464,18 @@
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 429 Too Many Requests"
 [32m[1m_____________________ test_dashboard_one_request_and_cache _____________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:22,817 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:22,915 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:22,917 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
-2026-11-12 15:53:22,922 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
-2026-11-12 15:53:22,926 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:22,929 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
-2026-11-12 15:53:22,932 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:22,936 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
-2026-11-12 15:53:22,942 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
-2026-11-12 15:53:22,954 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
-2026-11-12 15:53:22,969 INFO httpx HTTP Request: GET http://testserver/api/dashboard "HTTP/1.1 200 OK"
-2026-11-12 15:53:22,971 INFO httpx HTTP Request: GET http://testserver/api/dashboard "HTTP/1.1 200 OK"
+2026-11-12 15:59:17,658 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:17,777 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:17,780 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:17,786 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
+2026-11-12 15:59:17,791 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:17,795 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
+2026-11-12 15:59:17,799 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:17,804 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:17,811 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
+2026-11-12 15:59:17,827 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
+2026-11-12 15:59:17,846 INFO httpx HTTP Request: GET http://testserver/api/dashboard "HTTP/1.1 200 OK"
+2026-11-12 15:59:17,849 INFO httpx HTTP Request: GET http://testserver/api/dashboard "HTTP/1.1 200 OK"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
@@ -459,25 +491,25 @@
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: GET http://testserver/api/dashboard "HTTP/1.1 200 OK"
 [32m[1m_______________________________ test_alerts_tc09 _______________________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:23,221 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:23,325 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:23,329 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
-2026-11-12 15:53:23,334 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
-2026-11-12 15:53:23,340 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:23,346 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
-2026-11-12 15:53:23,356 INFO httpx HTTP Request: POST http://testserver/api/plans "HTTP/1.1 201 Created"
-2026-11-12 15:53:23,361 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:23,366 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
-2026-11-12 15:53:23,373 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
-2026-11-12 15:53:23,385 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
-2026-11-12 15:53:23,387 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:23,392 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
-2026-11-12 15:53:23,398 INFO httpx HTTP Request: POST http://testserver/api/sessions/2/sets "HTTP/1.1 201 Created"
-2026-11-12 15:53:23,413 INFO httpx HTTP Request: POST http://testserver/api/sessions/2/finish "HTTP/1.1 200 OK"
-2026-11-12 15:53:23,416 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:23,421 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
-2026-11-12 15:53:23,428 INFO httpx HTTP Request: POST http://testserver/api/sessions/3/sets "HTTP/1.1 201 Created"
-2026-11-12 15:53:23,441 INFO httpx HTTP Request: POST http://testserver/api/sessions/3/finish "HTTP/1.1 200 OK"
+2026-11-12 15:59:18,126 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:18,248 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:18,251 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:18,257 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
+2026-11-12 15:59:18,265 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:18,271 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
+2026-11-12 15:59:18,282 INFO httpx HTTP Request: POST http://testserver/api/plans "HTTP/1.1 201 Created"
+2026-11-12 15:59:18,286 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:18,291 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:18,299 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
+2026-11-12 15:59:18,313 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
+2026-11-12 15:59:18,315 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:18,320 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:18,327 INFO httpx HTTP Request: POST http://testserver/api/sessions/2/sets "HTTP/1.1 201 Created"
+2026-11-12 15:59:18,341 INFO httpx HTTP Request: POST http://testserver/api/sessions/2/finish "HTTP/1.1 200 OK"
+2026-11-12 15:59:18,344 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:18,349 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:18,357 INFO httpx HTTP Request: POST http://testserver/api/sessions/3/sets "HTTP/1.1 201 Created"
+2026-11-12 15:59:18,371 INFO httpx HTTP Request: POST http://testserver/api/sessions/3/finish "HTTP/1.1 200 OK"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
@@ -500,18 +532,18 @@
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/sessions/3/finish "HTTP/1.1 200 OK"
 [32m[1m_______________________________ test_trends_us17 _______________________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:23,696 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:23,801 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:23,804 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
-2026-11-12 15:53:23,809 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
-2026-11-12 15:53:23,814 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:23,817 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
-2026-11-12 15:53:23,820 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:23,824 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
-2026-11-12 15:53:23,829 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
-2026-11-12 15:53:23,841 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
-2026-11-12 15:53:23,845 INFO httpx HTTP Request: GET http://testserver/api/trainees/2/trends?weeks=4 "HTTP/1.1 200 OK"
-2026-11-12 15:53:23,847 INFO httpx HTTP Request: GET http://testserver/api/me/trends?weeks=12 "HTTP/1.1 200 OK"
+2026-11-12 15:59:18,644 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:18,761 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:18,764 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:18,770 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
+2026-11-12 15:59:18,775 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:18,779 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
+2026-11-12 15:59:18,783 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:18,789 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:18,795 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
+2026-11-12 15:59:18,808 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
+2026-11-12 15:59:18,812 INFO httpx HTTP Request: GET http://testserver/api/trainees/2/trends?weeks=4 "HTTP/1.1 200 OK"
+2026-11-12 15:59:18,815 INFO httpx HTTP Request: GET http://testserver/api/me/trends?weeks=12 "HTTP/1.1 200 OK"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
@@ -527,13 +559,13 @@
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: GET http://testserver/api/me/trends?weeks=12 "HTTP/1.1 200 OK"
 [32m[1m___________ test_rule_change_applies_without_code_change_nfr13_tc10 ____________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:24,097 INFO httpx HTTP Request: POST http://testserver/api/auth/login "HTTP/1.1 200 OK"
-2026-11-12 15:53:24,208 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:24,212 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
-2026-11-12 15:53:24,216 INFO httpx HTTP Request: GET http://testserver/api/exercises/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:24,224 INFO httpx HTTP Request: PUT http://testserver/api/rules/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:24,227 INFO httpx HTTP Request: GET http://testserver/api/exercises/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:24,229 INFO httpx HTTP Request: PUT http://testserver/api/rules/1 "HTTP/1.1 422 Unprocessable Entity"
+2026-11-12 15:59:19,089 INFO httpx HTTP Request: POST http://testserver/api/auth/login "HTTP/1.1 200 OK"
+2026-11-12 15:59:19,200 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:19,205 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
+2026-11-12 15:59:19,209 INFO httpx HTTP Request: GET http://testserver/api/exercises/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:19,219 INFO httpx HTTP Request: PUT http://testserver/api/rules/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:19,222 INFO httpx HTTP Request: GET http://testserver/api/exercises/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:19,225 INFO httpx HTTP Request: PUT http://testserver/api/rules/1 "HTTP/1.1 422 Unprocessable Entity"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/login "HTTP/1.1 200 OK"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
@@ -544,12 +576,12 @@
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: PUT http://testserver/api/rules/1 "HTTP/1.1 422 Unprocessable Entity"
 [32m[1m___________________ test_admin_users_and_audit_log_us18_us20 ___________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:24,479 INFO httpx HTTP Request: POST http://testserver/api/auth/login "HTTP/1.1 200 OK"
-2026-11-12 15:53:24,582 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:24,588 INFO httpx HTTP Request: PATCH http://testserver/api/admin/users/2 "HTTP/1.1 200 OK"
-2026-11-12 15:53:24,592 INFO httpx HTTP Request: GET http://testserver/api/admin/audit-log?action=role_change "HTTP/1.1 200 OK"
-2026-11-12 15:53:24,593 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
-2026-11-12 15:53:24,595 INFO httpx HTTP Request: PATCH http://testserver/api/admin/users/1 "HTTP/1.1 409 Conflict"
+2026-11-12 15:59:19,523 INFO httpx HTTP Request: POST http://testserver/api/auth/login "HTTP/1.1 200 OK"
+2026-11-12 15:59:19,633 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:19,640 INFO httpx HTTP Request: PATCH http://testserver/api/admin/users/2 "HTTP/1.1 200 OK"
+2026-11-12 15:59:19,644 INFO httpx HTTP Request: GET http://testserver/api/admin/audit-log?action=role_change "HTTP/1.1 200 OK"
+2026-11-12 15:59:19,647 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:19,649 INFO httpx HTTP Request: PATCH http://testserver/api/admin/users/1 "HTTP/1.1 409 Conflict"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/login "HTTP/1.1 200 OK"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
@@ -559,19 +591,19 @@
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: PATCH http://testserver/api/admin/users/1 "HTTP/1.1 409 Conflict"
 [32m[1m__________________________ test_delete_account_nfr08 ___________________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:24,839 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:24,943 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
-2026-11-12 15:53:24,946 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
-2026-11-12 15:53:24,954 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
-2026-11-12 15:53:24,959 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
-2026-11-12 15:53:24,962 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
-2026-11-12 15:53:24,966 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
-2026-11-12 15:53:24,970 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
-2026-11-12 15:53:24,975 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
-2026-11-12 15:53:24,986 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
-2026-11-12 15:53:24,996 INFO httpx HTTP Request: DELETE http://testserver/api/me "HTTP/1.1 202 Accepted"
-2026-11-12 15:53:25,000 INFO httpx HTTP Request: POST http://testserver/api/auth/login "HTTP/1.1 401 Unauthorized"
-2026-11-12 15:53:25,007 INFO httpx HTTP Request: GET http://testserver/api/dashboard "HTTP/1.1 200 OK"
+2026-11-12 15:59:19,930 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:20,043 INFO httpx HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
+2026-11-12 15:59:20,046 INFO httpx HTTP Request: GET http://testserver/api/me "HTTP/1.1 200 OK"
+2026-11-12 15:59:20,064 INFO httpx HTTP Request: POST http://testserver/api/assignments "HTTP/1.1 201 Created"
+2026-11-12 15:59:20,071 INFO httpx HTTP Request: PATCH http://testserver/api/assignments/1 "HTTP/1.1 200 OK"
+2026-11-12 15:59:20,075 INFO httpx HTTP Request: GET http://testserver/api/exercises "HTTP/1.1 200 OK"
+2026-11-12 15:59:20,079 INFO httpx HTTP Request: POST http://testserver/api/me/consent "HTTP/1.1 200 OK"
+2026-11-12 15:59:20,084 INFO httpx HTTP Request: POST http://testserver/api/sessions "HTTP/1.1 201 Created"
+2026-11-12 15:59:20,091 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/sets "HTTP/1.1 201 Created"
+2026-11-12 15:59:20,104 INFO httpx HTTP Request: POST http://testserver/api/sessions/1/finish "HTTP/1.1 200 OK"
+2026-11-12 15:59:20,117 INFO httpx HTTP Request: DELETE http://testserver/api/me "HTTP/1.1 202 Accepted"
+2026-11-12 15:59:20,120 INFO httpx HTTP Request: POST http://testserver/api/auth/login "HTTP/1.1 401 Unauthorized"
+2026-11-12 15:59:20,130 INFO httpx HTTP Request: GET http://testserver/api/dashboard "HTTP/1.1 200 OK"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/auth/register "HTTP/1.1 201 Created"
@@ -588,24 +620,24 @@
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: GET http://testserver/api/dashboard "HTTP/1.1 200 OK"
 [32m[1m_____________________________ test_rum_and_health ______________________________[0m
 ----------------------------- Captured stderr call -----------------------------
-2026-11-12 15:53:25,176 INFO httpx HTTP Request: GET http://testserver/api/health "HTTP/1.1 200 OK"
-2026-11-12 15:53:25,177 INFO fitvision.rum {"rum": "LCP", "value": 1800.0, "page": "/", "device": null, "role": null}
-2026-11-12 15:53:25,178 INFO httpx HTTP Request: POST http://testserver/api/metrics/rum "HTTP/1.1 204 No Content"
+2026-11-12 15:59:20,292 INFO httpx HTTP Request: GET http://testserver/api/health "HTTP/1.1 200 OK"
+2026-11-12 15:59:20,294 INFO fitvision.rum {"rum": "LCP", "value": 1800.0, "page": "/", "device": null, "role": null}
+2026-11-12 15:59:20,294 INFO httpx HTTP Request: POST http://testserver/api/metrics/rum "HTTP/1.1 204 No Content"
 ------------------------------ Captured log call -------------------------------
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: GET http://testserver/api/health "HTTP/1.1 200 OK"
 [32mINFO    [0m fitvision.rum:metrics.py:24 {"rum": "LCP", "value": 1800.0, "page": "/", "device": null, "role": null}
 [32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST http://testserver/api/metrics/rum "HTTP/1.1 204 No Content"
 ============================= slowest 10 durations =============================
-0.96s call     tests/test_flow.py::test_trend_after_three_sessions_br04
-0.73s call     tests/test_flow.py::test_report_lifecycle_br10_tc06
-0.54s call     tests/test_trainer_admin.py::test_demo_seed_runs
-0.42s call     tests/test_rbac.py::test_one_active_assignment_br09_and_invite_lock_tc07
-0.35s call     tests/test_rbac.py::test_unassigned_trainer_gets_403_and_is_logged_tc08
-0.33s call     tests/test_rbac.py::test_role_matrix
-0.32s call     tests/test_trainer_admin.py::test_alerts_tc09
-0.32s call     tests/test_flow.py::test_plan_visible_to_trainee_immediately_us11
-0.31s call     tests/test_auth.py::test_disabled_user_is_locked_immediately_us18
-0.27s call     tests/test_rbac.py::test_trainer_sees_only_sessions_since_assignment_br09
+1.01s call     tests/test_flow.py::test_report_lifecycle_br10_tc06
+0.69s call     tests/test_trainer_admin.py::test_demo_seed_runs
+0.50s call     tests/test_rbac.py::test_one_active_assignment_br09_and_invite_lock_tc07
+0.41s call     tests/test_rbac.py::test_unassigned_trainer_gets_403_and_is_logged_tc08
+0.39s call     tests/test_flow.py::test_plan_visible_to_trainee_immediately_us11
+0.39s call     tests/test_rbac.py::test_role_matrix
+0.37s call     tests/test_trainer_admin.py::test_alerts_tc09
+0.36s call     tests/test_flow.py::test_trend_after_three_sessions_br04
+0.35s call     tests/test_auth.py::test_disabled_user_is_locked_immediately_us18
+0.33s call     tests/test_rbac.py::test_trainer_sees_only_sessions_since_assignment_br09
 [36m[1m=========================== short test summary info ============================[0m
 [32mPASSED[0m tests/test_auth.py::[1mtest_register_login_and_me[0m
 [32mPASSED[0m tests/test_auth.py::[1mtest_register_rules_us01[0m
@@ -643,3 +675,4 @@
 [32mPASSED[0m tests/test_trainer_admin.py::[1mtest_rum_and_health[0m
 [32mPASSED[0m tests/test_trainer_admin.py::[1mtest_seventeen_tables_with_indexes[0m
 [32mPASSED[0m tests/test_trainer_admin.py::[1mtest_demo_seed_runs[0m
+[31mFAILED[0m tests/test_flow.py::[1mtest_stale_sessions_are_closed[0m - KeyError: 'session_id'

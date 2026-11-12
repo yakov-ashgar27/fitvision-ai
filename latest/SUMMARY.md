@@ -1,9 +1,9 @@
-# CI 2c688e8 on main
+# CI d8cff26 on main
 | job | result |
 | --- | --- |
-| server | success |
-| server-mssql | success |
+| server | failure |
+| server-mssql | failure |
 | client | success |
 | e2e | success |
-| stack | cancelled |
+| stack | success |
 | cloud-image | success |
