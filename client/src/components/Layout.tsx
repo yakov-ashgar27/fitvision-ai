@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { useOnline } from "../lib/hooks";
 import { onChange, pendingCount } from "../offline/sync";
+import InstallApp from "./InstallApp";
 
 const NAV: Record<string, [string, string][]> = {
   Trainee: [["/", "בית"], ["/history", "היסטוריה"], ["/reports", "דוחות"], ["/settings", "הגדרות"]],
@@ -44,7 +45,10 @@ export function Layout({ children }: { children: ReactNode }) {
       </header>
       {!online && <div className="banner warn">אין חיבור לרשת · אימונים נשמרים במכשיר ויסונכרנו אוטומטית</div>}
       {online && pending > 0 && <div className="banner">מסנכרן {pending} אימונים שנשמרו במכשיר…</div>}
-      <main className="main">{children}</main>
+      <main className="main">
+        <InstallApp />
+        {children}
+      </main>
     </div>
   );
 }
