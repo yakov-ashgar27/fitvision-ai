@@ -1,8 +1,0 @@
-18 tables: AuditLog, ExerciseSets, Exercises, FormErrorEvents, Goals, PlanExercises, Repetitions, ReportDeliveries, Reports, TechniqueRules, TraineeProfiles, TrainerNotes, TrainerProfiles, TrainerTraineeAssignments, Users, WorkoutPlans, WorkoutSessions, alembic_version
-WorkoutSessions [('IX_Sessions_trainee_started', ['trainee_id', 'started_at'], False)]
-ExerciseSets [('UQ_Sets_session_setnum', ['session_id', 'set_number'], True)]
-TrainerTraineeAssignments [('IX_Assign_trainee_status', ['trainee_id', 'status'], False), ('IX_Assign_trainer_status', ['trainer_id', 'status'], False)]
-AuditLog [('IX_Audit_created', ['created_at'], False), ('IX_Audit_user_created', ['user_id', 'created_at'], False)]
-FormErrorEvents [('IX_Errors_set_rule', ['set_id', 'rule_id'], False)]
-exercises: ['סקוואט', "לאנג'ים", 'כפיפת מרפקים', 'לחיצת כתפיים']
-sessions: 22 reports: 22
