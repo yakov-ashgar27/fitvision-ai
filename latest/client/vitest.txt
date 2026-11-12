@@ -13,7 +13,7 @@
  [32m✓[39m src/engine/engine.test.ts[2m > [22mshoulder press (front view)[2m > [22mcounts presses that lower to shoulder height
  [32m✓[39m src/engine/engine.test.ts[2m > [22mtracking[2m > [22mignores frames without a body and reports lost tracking
  [32m✓[39m src/offline/sync.test.ts[2m > [22moffline queue (NFR-12)[2m > [22mkeeps sets while offline and syncs them once, in order, when the network returns
- [32m✓[39m src/offline/sync.test.ts[2m > [22moffline queue (NFR-12)[2m > [22mlinks the summary to a report built by the background worker[33m 306[2mms[22m[39m
+ [32m✓[39m src/offline/sync.test.ts[2m > [22moffline queue (NFR-12)[2m > [22mlinks the summary to a report built by the background worker[33m 305[2mms[22m[39m
  [32m✓[39m src/pages/Login.test.tsx[2m > [22mLogin[2m > [22mshows the server's Hebrew error message
  [32m✓[39m src/pages/trainee/Setup.test.ts[2m > [22msetup body check (R-02)[2m > [22mfront view needs both sides
  [32m✓[39m src/pages/trainee/Setup.test.ts[2m > [22msetup body check (R-02)[2m > [22mside view is satisfied by the side facing the camera
@@ -22,6 +22,6 @@
 
 [2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
 [2m      Tests [22m [1m[32m18 passed[39m[22m[90m (18)[39m
-[2m   Start at [22m 13:56:23
-[2m   Duration [22m 5.00s[2m (transform 312ms, setup 344ms, collect 665ms, tests 565ms, environment 2.17s, prepare 445ms)[22m
+[2m   Start at [22m 14:02:48
+[2m   Duration [22m 4.59s[2m (transform 346ms, setup 270ms, collect 701ms, tests 549ms, environment 1.88s, prepare 462ms)[22m
 
