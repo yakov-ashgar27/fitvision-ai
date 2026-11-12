@@ -1,0 +1,12 @@
+name: probe
+on: { push: { branches: [ci-probe] } }
+permissions: { contents: write }
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          mkdir out && (python3 --version; node --version; pip download fastapi -d /tmp/x -q && echo pip-ok) > out/report.txt 2>&1
+          git config user.name ci && git config user.email ci@users.noreply.github.com
+          git checkout --orphan ci-reports && git rm -rqf . && cp out/report.txt . && git add report.txt && git commit -qm probe && git push -f origin ci-reports
