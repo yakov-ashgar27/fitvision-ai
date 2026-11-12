@@ -3,8 +3,8 @@
  * "saved" immediately (optimistic, 6.3.1); a background loop pushes it to the server when the network allows.
  * Re-sending a set is safe: the server's unique (session_id, set_number) index makes it idempotent.
  */
-import { api, ApiError } from "../api/client";
-import type { SessionSummary, SetIn } from "../api/types";
+import { api, ApiError, waitForJob } from "../api/client";
+import type { Job, SessionSummary, SetIn } from "../api/types";
 import { store } from "./db";
 
 export interface LocalSet extends SetIn {
@@ -114,14 +114,28 @@ async function syncOne(localId: string): Promise<void> {
   const fresh = await store.get<LocalWorkout>(localId);
   if (!fresh || fresh.sets.some((x) => !x.synced)) return; // the next round sends the rest first
   if (fresh.finish && !fresh.finish.synced) {
-    const res = await api<{ report_id: number | null }>(`/sessions/${serverId}/finish`, {
-      method: "POST",
-      json: { status: fresh.finish.status, ended_at: fresh.finish.endedAt },
-    });
+    const res = await api<{ report_id: number | null; report_job: string | null; report_queued: boolean }>(
+      `/sessions/${serverId}/finish`,
+      { method: "POST", json: { status: fresh.finish.status, ended_at: fresh.finish.endedAt } },
+    );
     await patch(localId, (x) => {
       if (x.finish) x.finish.synced = true;
       x.reportId = res.report_id;
     });
+    if (res.report_id === null && res.report_queued && res.report_job) {
+      // the report is built by the background worker (6.3.2): wait for it, then link the summary to it
+      try {
+        const job = await waitForJob({ job_id: res.report_job, status: "queued" } satisfies Job, 30_000);
+        const rid = (job.result as { report_id?: number | null } | null)?.report_id ?? null;
+        if (rid !== null) {
+          await patch(localId, (x) => {
+            x.reportId = rid;
+          });
+        }
+      } catch {
+        /* the report still appears under "reports"; the summary simply shows no link */
+      }
+    }
   }
 }
 

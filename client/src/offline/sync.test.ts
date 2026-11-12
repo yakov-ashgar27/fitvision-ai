@@ -33,4 +33,24 @@ describe("offline queue (NFR-12)", () => {
     await sync(); // nothing left to send
     expect(calls).toHaveLength(4);
   });
+
+  it("links the summary to a report built by the background worker", async () => {
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => {
+      const body = url.endsWith("/sessions")
+        ? { session_id: 8 }
+        : url.endsWith("/finish")
+          ? { report_id: null, report_job: "j1", report_queued: true }
+          : url.endsWith("/jobs/j1")
+            ? { job_id: "j1", status: "finished", result: { report_id: 9 } }
+            : {};
+      return new Response(JSON.stringify(body), { status: 200, headers: { "content-type": "application/json" } });
+    }));
+    const w = await startWorkout(1, null);
+    await addSet(w.localId, setBody);
+    await finishWorkout(w.localId, "Done");
+    await sync();
+    const after = (await getWorkout(w.localId))!;
+    expect(isSynced(after)).toBe(true);
+    expect(after.reportId).toBe(9);
+  });
 });
