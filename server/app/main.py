@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+import mimetypes
 import os
 from pathlib import Path
 
@@ -44,6 +45,9 @@ def create_app() -> FastAPI:
         return {"status": "ok"}
 
     # Optional: serve the built client from the same process (single-command demo, no nginx needed)
+    # the pose worker loads MediaPipe with importScripts() and WebAssembly.instantiateStreaming(), which reject wrong MIME types
+    mimetypes.add_type("text/javascript", ".js")
+    mimetypes.add_type("application/wasm", ".wasm")
     static_dir = os.getenv("STATIC_DIR")
     if static_dir and Path(static_dir).is_dir():
         root = Path(static_dir).resolve()

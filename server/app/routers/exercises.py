@@ -36,7 +36,7 @@ def exercise_cached(db: Session, exercise_id: int) -> dict | None:
 def list_exercises(include_inactive: bool = False, user: m.User = Depends(current_user), db: Session = Depends(get_db)):
     q = select(m.Exercise).options(selectinload(m.Exercise.rules)).order_by(m.Exercise.exercise_id)
     if not (include_inactive and user.role == "Admin"):
-        q = q.where(m.Exercise.is_active.is_(True))
+        q = q.where(m.Exercise.is_active)
     return [_exercise_payload(e) for e in db.scalars(q)]
 
 

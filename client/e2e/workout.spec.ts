@@ -45,8 +45,10 @@ test("offline set is kept on the phone and synced later (TC-03, NFR-12)", async 
   await page.getByRole("button", { name: "התחלה" }).first().click();
   await page.getByTestId("consent-box").check();
   await page.getByTestId("consent-ok").click();
+  await expect(page.getByTestId("start-set")).toBeEnabled();
+  await page.waitForLoadState("networkidle"); // live and summary screens are prefetched on the setup screen
+  await context.setOffline(true); // signal lost before the set starts
   await page.getByTestId("start-set").click();
-  await context.setOffline(true);
   await expect(page.getByTestId("skip-rest")).toBeVisible({ timeout: 60_000 });
   await page.getByTestId("end-workout").click();
   await expect(page.getByTestId("sync-status")).toContainText("נשמר במכשיר");

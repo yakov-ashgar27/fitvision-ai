@@ -33,7 +33,7 @@ def _out(db: Session, p: m.WorkoutPlan) -> dict:
 def _apply(db: Session, plan: m.WorkoutPlan, data: PlanIn, trainer: m.User) -> None:
     ex_ids = {e.exercise_id for e in data.exercises}
     found = set(db.scalars(select(m.Exercise.exercise_id).where(m.Exercise.exercise_id.in_(ex_ids),
-                                                                 m.Exercise.is_active.is_(True))))
+                                                                 m.Exercise.is_active)))
     if found != ex_ids:
         raise HTTPException(422, "תרגיל לא קיים או לא פעיל")
     plan.name, plan.start_date, plan.end_date, plan.notes = data.name, data.start_date, data.end_date, data.notes

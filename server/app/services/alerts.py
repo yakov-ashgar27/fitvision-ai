@@ -81,7 +81,7 @@ def get_for_trainer(db: Session, trainer_id: int) -> list[dict]:
 
 
 def refresh_all(db: Session) -> int:
-    trainers = db.scalars(select(m.User.user_id).where(m.User.role == "Trainer", m.User.is_active.is_(True))).all()
+    trainers = db.scalars(select(m.User.user_id).where(m.User.role == "Trainer", m.User.is_active)).all()
     for tid in trainers:
         cache.set_json(cache.k_alerts(tid), compute_for_trainer(db, tid), ALERT_TTL)
     return len(trainers)

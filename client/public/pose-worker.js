@@ -7,7 +7,7 @@
 /* global importScripts */
 self.module = { exports: {} };
 self.exports = self.module.exports;
-importScripts("./mediapipe/vision_bundle.cjs");
+importScripts("./mediapipe/vision_bundle.js");
 const { FilesetResolver, PoseLandmarker } = self.module.exports;
 
 let landmarker = null;

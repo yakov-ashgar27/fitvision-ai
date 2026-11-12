@@ -20,7 +20,7 @@ if (!bundle) {
   console.error("vision bundle not found in @mediapipe/tasks-vision");
   process.exit(1);
 }
-copyFileSync(join(pkg, bundle), join(out, "vision_bundle.cjs"));
+copyFileSync(join(pkg, bundle), join(out, "vision_bundle.js"));
 cpSync(join(pkg, "wasm"), join(out, "wasm"), { recursive: true });
 
 const MODELS = {

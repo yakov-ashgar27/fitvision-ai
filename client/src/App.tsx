@@ -1,4 +1,5 @@
 import { lazy, ReactNode, Suspense } from "react";
+import ErrorBoundary from "./components/ErrorBoundary";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "./auth/AuthContext";
 import { Layout } from "./components/Layout";
@@ -46,26 +47,28 @@ function HomeRoute() {
 
 export default function App() {
   return (
-    <Suspense fallback={<SkeletonRows />}>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/diag" element={<Diag />} />
-        <Route path="/" element={<HomeRoute />} />
-        <Route path="/workout/setup" element={<Guard roles={["Trainee"]} bare><Setup /></Guard>} />
-        <Route path="/workout/live" element={<Guard roles={["Trainee"]} bare><Live /></Guard>} />
-        <Route path="/workout/summary/:localId" element={<Guard roles={["Trainee"]}><Summary /></Guard>} />
-        <Route path="/history" element={<Guard roles={["Trainee"]}><History /></Guard>} />
-        <Route path="/reports" element={<Guard roles={["Trainee"]}><MyReports /></Guard>} />
-        <Route path="/reports/:id" element={<Guard roles={["Trainee", "Trainer"]}><ReportPage /></Guard>} />
-        <Route path="/trainer" element={<Guard roles={["Trainer"]}><Dashboard /></Guard>} />
-        <Route path="/trainer/trainees/:id" element={<Guard roles={["Trainer"]}><TraineePage /></Guard>} />
-        <Route path="/admin/users" element={<Guard roles={["Admin"]}><Users /></Guard>} />
-        <Route path="/admin/exercises" element={<Guard roles={["Admin"]}><Exercises /></Guard>} />
-        <Route path="/admin/audit" element={<Guard roles={["Admin"]}><Audit /></Guard>} />
-        <Route path="/settings" element={<Guard><Settings /></Guard>} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Suspense>
+    <ErrorBoundary>
+      <Suspense fallback={<SkeletonRows />}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/diag" element={<Diag />} />
+          <Route path="/" element={<HomeRoute />} />
+          <Route path="/workout/setup" element={<Guard roles={["Trainee"]} bare><Setup /></Guard>} />
+          <Route path="/workout/live" element={<Guard roles={["Trainee"]} bare><Live /></Guard>} />
+          <Route path="/workout/summary/:localId" element={<Guard roles={["Trainee"]}><Summary /></Guard>} />
+          <Route path="/history" element={<Guard roles={["Trainee"]}><History /></Guard>} />
+          <Route path="/reports" element={<Guard roles={["Trainee"]}><MyReports /></Guard>} />
+          <Route path="/reports/:id" element={<Guard roles={["Trainee", "Trainer"]}><ReportPage /></Guard>} />
+          <Route path="/trainer" element={<Guard roles={["Trainer"]}><Dashboard /></Guard>} />
+          <Route path="/trainer/trainees/:id" element={<Guard roles={["Trainer"]}><TraineePage /></Guard>} />
+          <Route path="/admin/users" element={<Guard roles={["Admin"]}><Users /></Guard>} />
+          <Route path="/admin/exercises" element={<Guard roles={["Admin"]}><Exercises /></Guard>} />
+          <Route path="/admin/audit" element={<Guard roles={["Admin"]}><Audit /></Guard>} />
+          <Route path="/settings" element={<Guard><Settings /></Guard>} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
+    </ErrorBoundary>
   );
 }

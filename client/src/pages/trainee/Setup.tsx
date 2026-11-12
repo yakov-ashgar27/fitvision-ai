@@ -10,6 +10,11 @@ import { CAMERA_TIPS, loadWorkout } from "../../workout";
 const KEY_POINTS = [0, 11, 12, 13, 14, 15, 16, 23, 24, 25, 26, 27, 28];
 
 export default function Setup() {
+  // the gym may have no signal: fetch the live and summary screens now, so the workout never waits on the network
+  useEffect(() => {
+    void import("./Live");
+    void import("./Summary");
+  }, []);
   const { user, refresh } = useAuth();
   const nav = useNavigate();
   const w = loadWorkout();
