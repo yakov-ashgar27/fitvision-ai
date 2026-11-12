@@ -5,3 +5,8 @@ node_modules/
 poc/dist/
 docs/.combined.md
 .env
+
+# local runs
+*.tsbuildinfo
+server/*.db
+server/.venv/
