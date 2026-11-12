@@ -1,8 +1,9 @@
-# CI 4cbe4b9 on main
+# CI d976b74 on main
 | job | result |
 | --- | --- |
 | server | success |
 | server-mssql | success |
+| server-postgres | success |
 | client | success |
 | e2e | success |
 | stack | success |
