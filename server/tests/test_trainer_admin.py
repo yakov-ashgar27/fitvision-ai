@@ -109,8 +109,12 @@ def test_seventeen_tables_with_indexes(db):
     else:
         idx = {i["name"] for i in insp.get_indexes("WorkoutSessions")}
     assert "IX_Sessions_trainee_started" in idx, (idx, engine.url.render_as_string(hide_password=True))
-    uq = insp.get_unique_constraints("ExerciseSets")
-    assert any(set(u["column_names"]) == {"session_id", "set_number"} for u in uq)
+    try:
+        uq = insp.get_unique_constraints("ExerciseSets")
+    except NotImplementedError:  # SQL Server reflects unique constraints as unique indexes
+        uq = []
+    uq += [i for i in insp.get_indexes("ExerciseSets") if i.get("unique")]
+    assert any(set(u["column_names"]) == {"session_id", "set_number"} for u in uq), uq
 
 
 def test_demo_seed_runs(db):

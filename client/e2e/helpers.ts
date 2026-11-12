@@ -17,6 +17,13 @@ export async function register(page: Page, email: string, role: "Trainee" | "Tra
   await page.getByLabel('דוא"ל').fill(email);
   await page.getByLabel("סיסמה (8 תווים לפחות)").fill("Passw0rd!");
   await page.getByRole("button", { name: "יצירת חשבון" }).click();
+  await signedIn(page);
+}
+
+/** Waits until the app has stored the token and left the auth pages, so the next page.goto is authenticated. */
+async function signedIn(page: Page) {
+  await page.waitForURL((u) => !/\/(login|register)$/.test(u.pathname), { timeout: 20_000 });
+  await page.waitForFunction(() => !!localStorage.getItem("fv:token"));
 }
 
 export async function login(page: Page, email: string, password = "Demo1234!") {
@@ -24,4 +31,5 @@ export async function login(page: Page, email: string, password = "Demo1234!") {
   await page.getByLabel('דוא"ל').fill(email);
   await page.getByLabel("סיסמה").fill(password);
   await page.getByRole("button", { name: "כניסה" }).click();
+  await signedIn(page);
 }

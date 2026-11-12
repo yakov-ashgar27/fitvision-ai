@@ -73,7 +73,7 @@ jobs:
           tables = sorted(insp.get_table_names())
           print(len(tables), "tables:", ", ".join(tables))
           for t in ("WorkoutSessions", "ExerciseSets", "TrainerTraineeAssignments", "AuditLog", "FormErrorEvents"):
-              print(t, [i["name"] for i in insp.get_indexes(t)], [u["name"] for u in insp.get_unique_constraints(t)])
+              print(t, [(i["name"], i["column_names"], bool(i.get("unique"))) for i in insp.get_indexes(t)])
           with engine.connect() as c:
               print("exercises:", c.execute(text("SELECT name FROM Exercises")).scalars().all())
               print("sessions:", c.execute(text("SELECT COUNT(*) FROM WorkoutSessions")).scalar(),
@@ -121,23 +121,29 @@ jobs:
         with: { node-version: 22 }
       - uses: actions/download-artifact@v4
         with: { name: client-dist, path: client/dist }
-      - run: pip install -r server/requirements.txt 2>&1 | tail -n 2
-      - run: python -m playwright install --with-deps chromium > /dev/null
+      - run: mkdir -p out && set -o pipefail && pip install -r server/requirements.txt 2>&1 | tail -n 5 | tee out/e2e-setup.txt
+      - run: set -o pipefail; python -m playwright install --with-deps chromium 2>&1 | tail -n 5 | tee -a out/e2e-setup.txt
       - working-directory: client
-        run: (npm ci 2>/dev/null || npm install) > /dev/null && npx playwright install chromium > /dev/null
+        run: set -o pipefail; ((npm ci 2>/dev/null || npm install) && npx playwright install chromium) 2>&1 | tail -n 10 | tee -a ../out/e2e-setup.txt
       - name: camera video of a person (fake webcam for MediaPipe)
+        continue-on-error: true
         run: |
           mkdir -p out
+          echo "camera video step" > out/fake-video.txt
+          which ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null)
           curl -fsSL -o person.jpg https://storage.googleapis.com/mediapipe-assets/pose.jpg || true
           if [ -s person.jpg ]; then
             ffmpeg -loglevel error -loop 1 -i person.jpg -t 20 -r 15 -vf "scale=640:-2,pad=640:480:(ow-iw)/2:(oh-ih)/2" -pix_fmt yuv420p person.y4m
             echo "FAKE_VIDEO=$PWD/person.y4m" >> "$GITHUB_ENV"
           fi
+          ls -la person.* >> out/fake-video.txt 2>&1 || true
       - name: playwright
         working-directory: client
-        run: set -o pipefail; CI=1 npx playwright test 2>&1 | tee ../out/playwright.txt
+        run: set -o pipefail; mkdir -p ../out; CI=1 npx playwright test 2>&1 | tee ../out/playwright.txt
       - if: always()
-        run: cp -r client/test-results out/ 2>/dev/null || true
+        run: |
+          mkdir -p out/test-results
+          cd client/test-results 2>/dev/null && find . -name "error-context.md" -o -name "*.png" | cpio -pdm ../../out/test-results 2>/dev/null || true
       - if: always()
         uses: actions/upload-artifact@v4
         with: { name: e2e, path: out/ }
@@ -192,6 +198,10 @@ jobs:
           set -o pipefail
           (npm ci 2>/dev/null || npm install) > /dev/null && npx playwright install --with-deps chromium > /dev/null
           E2E_BASE_URL=http://localhost:8080 CI=1 npx playwright test --project=desktop --project=mobile -g "trainer|squat" 2>&1 | tee ../out/stack-playwright.txt
+      - if: always()
+        run: |
+          mkdir -p out/test-results
+          cd client/test-results 2>/dev/null && find . -name "error-context.md" -o -name "*.png" | cpio -pdm ../../out/test-results 2>/dev/null || true
       - if: always()
         run: docker compose logs --no-color --tail=150 api worker web > out/compose-logs.txt 2>&1 || true
       - if: always()
