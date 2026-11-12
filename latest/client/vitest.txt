@@ -1,0 +1,23 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90m/home/runner/work/fitvision-ai/fitvision-ai/client[39m
+
+ [32m✓[39m src/engine/engine.test.ts[2m > [22mgeometry[2m > [22mcomputes 2D and 3D angles
+ [32m✓[39m src/engine/engine.test.ts[2m > [22mgeometry[2m > [22msmooths over 5 frames
+ [32m✓[39m src/engine/engine.test.ts[2m > [22mcounting rule comes from data (NFR-13)[2m > [22muses the Bottom rule with a max angle
+ [32m✓[39m src/engine/engine.test.ts[2m > [22mcounting rule comes from data (NFR-13)[2m > [22mBR-02 score
+ [32m✓[39m src/engine/engine.test.ts[2m > [22msquat (front view, depth from world landmarks)[2m > [22mcounts 5 clean reps
+ [32m✓[39m src/engine/engine.test.ts[2m > [22msquat (front view, depth from world landmarks)[2m > [22mpartial rep is counted, invalid and penalised (BR-01)
+ [32m✓[39m src/engine/engine.test.ts[2m > [22msquat (front view, depth from world landmarks)[2m > [22mknee valgus is a High error with one alert per rep (BR-11)
+ [32m✓[39m src/engine/engine.test.ts[2m > [22mlunge (side view, lead leg)[2m > [22mcounts reps on the visible leg and flags a too-deep front knee
+ [32m✓[39m src/engine/engine.test.ts[2m > [22mbiceps curl (side view)[2m > [22mcounts curls and flags the elbow drifting forward
+ [32m✓[39m src/engine/engine.test.ts[2m > [22mshoulder press (front view)[2m > [22mcounts presses that lower to shoulder height
+ [32m✓[39m src/engine/engine.test.ts[2m > [22mtracking[2m > [22mignores frames without a body and reports lost tracking
+ [32m✓[39m src/offline/sync.test.ts[2m > [22moffline queue (NFR-12)[2m > [22mkeeps sets while offline and syncs them once, in order, when the network returns
+ [32m✓[39m src/pages/Login.test.tsx[2m > [22mLogin[2m > [22mshows the server's Hebrew error message
+ [32m✓[39m src/components/Skeleton.test.tsx[2m > [22mSkeleton[2m > [22mrenders placeholders marked as busy
+
+[2m Test Files [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[32m14 passed[39m[22m[90m (14)[39m
+[2m   Start at [22m 10:45:48
+[2m   Duration [22m 3.13s[2m (transform 238ms, setup 208ms, collect 481ms, tests 208ms, environment 1.34s, prepare 325ms)[22m
+
