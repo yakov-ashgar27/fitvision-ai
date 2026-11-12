@@ -12,23 +12,61 @@
 # Error details
 
 ```
-Error: expect(locator).toContainText(expected) failed
+Test timeout of 120000ms exceeded.
+```
 
-Locator: getByTestId('sync-status')
-Expected substring: "נשמר בשרת"
-Received string:    "נשמר במכשיר · יסונכרן כשיהיה חיבור"
-Timeout: 20000ms
-
+```
+Error: locator.click: Test timeout of 120000ms exceeded.
 Call log:
-  - Expect "toContainText" getByTestId('sync-status') with timeout 20000ms
-  - waiting for getByTestId('sync-status')
-    44 × locator resolved to <div data-testid="sync-status">…</div>
-       - unexpected value "נשמר במכשיר · יסונכרן כשיהיה חיבור"
+  - waiting for getByTestId('open-report')
 
 ```
 
+# Page snapshot
+
 ```yaml
-- text: נשמר במכשיר · יסונכרן כשיהיה חיבור
+- generic [ref=f1e3]:
+  - banner [ref=f1e4]:
+    - link "FitVision AI" [ref=f1e5] [cursor=pointer]:
+      - /url: /
+    - navigation [ref=f1e6]:
+      - link "בית" [ref=f1e7] [cursor=pointer]:
+        - /url: /
+      - link "היסטוריה" [ref=f1e8] [cursor=pointer]:
+        - /url: /history
+      - link "דוחות" [ref=f1e9] [cursor=pointer]:
+        - /url: /reports
+      - link "הגדרות" [ref=f1e10] [cursor=pointer]:
+        - /url: /settings
+    - button "יציאה" [ref=f1e11] [cursor=pointer]
+  - main [ref=f1e12]:
+    - generic [ref=f1e13]:
+      - heading "האימון הופסק" [level=1] [ref=f1e14]
+      - generic [ref=f1e15]:
+        - generic [ref=f1e16]:
+          - text: חזרות
+          - generic [ref=f1e17]: "10"
+        - generic [ref=f1e18]:
+          - text: סטים
+          - generic [ref=f1e19]: "1"
+        - generic [ref=f1e20]:
+          - text: ציון טכניקה
+          - generic [ref=f1e21]: "96"
+        - generic [ref=f1e22]:
+          - text: חזרות תקינות
+          - generic [ref=f1e23]: "8"
+      - generic [ref=f1e24]:
+        - heading "מה לשפר" [level=3] [ref=f1e25]
+        - list [ref=f1e26]:
+          - listitem [ref=f1e27]:
+            - text: רד עמוק יותר
+            - generic [ref=f1e28]: (1 חזרות)
+          - listitem [ref=f1e29]:
+            - text: דחוף את הברכיים החוצה
+            - generic [ref=f1e30]: (1 חזרות)
+      - generic [ref=f1e31]: נשמר בשרת
+      - link "חזרה לדף הבית" [ref=f1e33] [cursor=pointer]:
+        - /url: /
 ```
 
 # Test source
@@ -68,9 +106,9 @@ Call log:
   32 |   await expect(page.getByTestId("summary-reps")).toHaveText("10");
   33 |   const score = Number(await page.getByTestId("summary-score").innerText());
   34 |   expect(score).toBe(Math.round((8 * 100 + 85 + 70) / 10)); // BR-02: partial −15, valgus −30
-> 35 |   await expect(page.getByTestId("sync-status")).toContainText("נשמר בשרת", { timeout: 20_000 });
-     |                                                 ^ Error: expect(locator).toContainText(expected) failed
-  36 |   await page.getByTestId("open-report").click();
+  35 |   await expect(page.getByTestId("sync-status")).toContainText("נשמר בשרת", { timeout: 20_000 });
+> 36 |   await page.getByTestId("open-report").click();
+     |                                         ^ Error: locator.click: Test timeout of 120000ms exceeded.
   37 |   await expect(page.getByTestId("report-score")).toHaveText(String(Math.round((8 * 100 + 85 + 70) / 10)));
   38 | });
   39 | 
