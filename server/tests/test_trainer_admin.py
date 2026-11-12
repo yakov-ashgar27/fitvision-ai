@@ -17,9 +17,8 @@ def test_dashboard_one_request_and_cache(api, client):
 
 
 def test_alerts_tc09(api, client, db):
-    from app.services.alerts import compute_for_trainer
-
     from app.models import TrainerTraineeAssignment
+    from app.services.alerts import compute_for_trainer
 
     tt, rt, ids = api.pair()
     a = db.get(TrainerTraineeAssignment, ids["assignment_id"])

@@ -83,7 +83,13 @@ async function syncOne(w: LocalWorkout): Promise<void> {
   }
   for (const s of w.sets) {
     if (s.synced) continue;
-    const { synced: _s, scores: _sc, messages: _m, valid: _v, ...body } = s;
+    const body = {
+      exercise_id: s.exercise_id,
+      set_number: s.set_number,
+      started_at: s.started_at,
+      ended_at: s.ended_at,
+      reps: s.reps,
+    };
     await api(`/sessions/${w.serverId}/sets`, { method: "POST", json: body });
     s.synced = true;
     await store.put(w);

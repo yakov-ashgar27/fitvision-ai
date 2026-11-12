@@ -52,13 +52,15 @@ jobs:
         with: { python-version: "3.12", cache: pip, cache-dependency-path: server/requirements*.txt }
       - name: ODBC driver 18
         run: |
+          mkdir -p ../out
+          exec > >(tee ../out/odbc.txt) 2>&1
           if ! odbcinst -q -d 2>/dev/null | grep -q "ODBC Driver 18"; then
             curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg
             curl -fsSL "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list" | sudo tee /etc/apt/sources.list.d/mssql-release.list
             sudo apt-get update -qq && sudo ACCEPT_EULA=Y apt-get install -y -qq msodbcsql18 unixodbc-dev
           fi
           odbcinst -q -d
-      - run: pip install -r requirements-dev.txt 2>&1 | tail -n 3
+      - run: set -o pipefail; pip install -r requirements-dev.txt 2>&1 | tail -n 15 | tee ../out/pip.txt
       - name: create database, run Alembic migration, seed (python -m app.db_init)
         run: set -o pipefail; mkdir -p ../out; SEED_DEMO=1 python -m app.db_init 2>&1 | tee ../out/mssql-init.txt
       - name: schema check

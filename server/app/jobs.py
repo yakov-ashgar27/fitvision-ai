@@ -39,8 +39,8 @@ def status(job_id: str) -> dict[str, Any]:
     q = _queue()
     if q is None:
         return {"status": "unknown"}
-    from rq.job import Job
     from rq.exceptions import NoSuchJobError
+    from rq.job import Job
 
     try:
         job = Job.fetch(job_id, connection=q.connection)
