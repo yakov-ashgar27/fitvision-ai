@@ -24,10 +24,11 @@ def _start_scheduler() -> None:
     from apscheduler.schedulers.background import BackgroundScheduler
 
     from . import jobs
-    from .tasks import job_refresh_alerts
+    from .tasks import job_close_stale_sessions, job_refresh_alerts
 
     sched = BackgroundScheduler(timezone="Asia/Jerusalem")
     sched.add_job(lambda: jobs.enqueue(job_refresh_alerts), "cron", hour=6, minute=7, id="alerts")
+    sched.add_job(lambda: jobs.enqueue(job_close_stale_sessions), "cron", minute=23, id="stale-sessions")
     sched.start()
     log.info("scheduler started")
 

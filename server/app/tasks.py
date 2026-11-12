@@ -67,6 +67,28 @@ def job_send_report(report_id: int, channel: str, fmt: str) -> dict:
         return {"report_id": report_id, "channel": channel, "attachment": attachment}
 
 
+def job_close_stale_sessions(hours: int = 12) -> dict:
+    """Close workouts left open (app closed mid-workout): with sets → Aborted + partial report (BR-12); empty → deleted."""
+    from datetime import UTC, datetime, timedelta
+
+    limit = datetime.now(UTC).replace(tzinfo=None) - timedelta(hours=hours)
+    closed = deleted = 0
+    with _db() as db:
+        stale = db.scalars(select(m.WorkoutSession).where(m.WorkoutSession.status == "InProgress",
+                                                          m.WorkoutSession.started_at < limit)).all()
+        for s in stale:
+            if s.sets:
+                s.status, s.ended_at = "Aborted", max(x.ended_at for x in s.sets)
+                db.flush()
+                generate_report(db, s.session_id)
+                closed += 1
+            else:
+                db.delete(s)
+                deleted += 1
+        db.commit()
+    return {"closed": closed, "deleted": deleted}
+
+
 def job_refresh_alerts() -> dict:
     with _db() as db:
         return {"trainers": alerts.refresh_all(db)}

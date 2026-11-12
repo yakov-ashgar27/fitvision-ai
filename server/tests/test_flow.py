@@ -126,3 +126,24 @@ def test_plan_visible_to_trainee_immediately_us11(api, client):
     stranger = api.register("st@test.io")
     body["trainee_id"] = stranger["user"]["user_id"]
     assert client.post("/api/plans", json=body, headers=api.h(rt)).status_code == 403
+
+
+def test_stale_sessions_are_closed(api, client):
+    """Workouts left open (app closed mid-workout) are closed by the hourly job: empty ones removed, others Aborted."""
+    from app import models as m
+    from app.db import SessionLocal
+    from app.tasks import job_close_stale_sessions
+
+    tt, _rt, _ids = api.pair()
+    old = iso(now() - timedelta(days=1))
+    empty = client.post("/api/sessions", json={"started_at": old}, headers=api.h(tt)).json()["session_id"]
+    with_set = client.post("/api/sessions", json={"started_at": old}, headers=api.h(tt)).json()["session_id"]
+    sq = _squat(api, tt)
+    r = client.post(f"/api/sessions/{with_set}/sets", headers=api.h(tt), json={
+        "exercise_id": sq, "set_number": 1, "started_at": old, "ended_at": old, "reps": [rep(1), rep(2)]})
+    assert r.status_code in (200, 201)
+    assert job_close_stale_sessions() == {"closed": 1, "deleted": 1}
+    with SessionLocal() as db:
+        assert db.get(m.WorkoutSession, empty) is None
+        s = db.get(m.WorkoutSession, with_set)
+        assert s.status == "Aborted" and s.report is not None
