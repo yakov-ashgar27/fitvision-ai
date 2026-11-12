@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from sqlalchemy import func as sa_func
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -118,4 +119,16 @@ def my_reports(user: m.User = Depends(require_role("Trainee")), db: Session = De
                                      "sent_at": None, "opened_at": None})
         if sent and (cur["sent_at"] is None or sent > cur["sent_at"]):
             cur["sent_at"], cur["opened_at"] = sent, opened
+    # which workout it was: exercise names in the order they were done (shown in the list and the report title)
+    names = db.execute(
+        select(m.Report.report_id, m.Exercise.name, sa_func.min(m.ExerciseSet.set_number))
+        .join(m.ExerciseSet, m.ExerciseSet.session_id == m.Report.session_id)
+        .join(m.Exercise, m.Exercise.exercise_id == m.ExerciseSet.exercise_id)
+        .where(m.Report.report_id.in_(list(seen)))
+        .group_by(m.Report.report_id, m.Exercise.name)
+    ).all() if seen else []
+    for rid, name, _first in sorted(names, key=lambda x: (x[0], x[2])):
+        seen[rid].setdefault("exercises", []).append(name)
+    for cur in seen.values():
+        cur.setdefault("exercises", [])
     return list(seen.values())

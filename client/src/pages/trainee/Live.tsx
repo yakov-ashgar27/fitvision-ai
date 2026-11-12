@@ -1,9 +1,10 @@
 /** Screen 3 – live workout: counter, skeleton, one correction at a time, readable from 2–3 metres. */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CompletedRep, Feedback, TechniqueEngine } from "../../engine/engine";
+import { Coach, Cue } from "../../engine/coach";
+import { CompletedRep, TechniqueEngine } from "../../engine/engine";
 import { report } from "../../lib/rum";
-import { beep, isMuted, say, setMuted } from "../../lib/speech";
+import { say, setSounds, setVoice, sfx, soundsOn, voiceOn } from "../../lib/speech";
 import { addSet, finishWorkout } from "../../offline/sync";
 import { drawSkeleton } from "../../vision/draw";
 import { PosePipeline, PipelineStats, shutdownPose } from "../../vision/poseClient";
@@ -23,11 +24,17 @@ export default function Live() {
 
   const [count, setCount] = useState(0);
   const [valid, setValid] = useState(0);
-  const [feedback, setFeedback] = useState<Feedback | null>(null);
+  const [feedback, setFeedback] = useState<(Cue & { id: number; joints: number[] }) | null>(null);
+  const [flash, setFlash] = useState<"good" | "bad" | null>(null);
+  const [party, setParty] = useState(0);
+  const coach = useRef<Coach | null>(null);
+  const lastRule = useRef<number | null>(null);
+  const cueId = useRef(0);
   const [tracking, setTracking] = useState(true);
   const [rest, setRest] = useState<number | null>(null);
   const [status, setStatus] = useState("מכין…");
-  const [muted, setM] = useState(isMuted());
+  const [sounds, setS] = useState(soundsOn());
+  const [voice, setV] = useState(voiceOn());
   const [stats, setStats] = useState<PipelineStats | null>(null);
   const [showStats, setShowStats] = useState(false);
   const fbTimer = useRef<number>(0);
@@ -35,6 +42,16 @@ export default function Live() {
   useEffect(() => {
     if (!w || !item) nav("/", { replace: true });
   }, [w, item, nav]);
+
+  const showCue = useCallback((cue: Cue | null, joints: number[] = []) => {
+    if (!cue) return;
+    cueId.current += 1;
+    setFeedback({ ...cue, id: cueId.current, joints });
+    say(cue.text);
+    if (cue.tone !== "good" && !shownMessages.current.includes(cue.text)) shownMessages.current.push(cue.text);
+    window.clearTimeout(fbTimer.current);
+    fbTimer.current = window.setTimeout(() => setFeedback(null), cue.tone === "good" ? 1600 : 2600);
+  }, []);
 
   const endSet = useCallback(async () => {
     if (!w || !item || !engine.current) return;
@@ -83,6 +100,7 @@ export default function Live() {
   useEffect(() => {
     if (!item || !video.current) return;
     engine.current = new TechniqueEngine(item.exercise, { aspect: 4 / 3 });
+    coach.current = new Coach(item.exercise.name, item.exercise.rules, item.target_reps);
     const p = new PosePipeline(
       video.current,
       (r) => {
@@ -96,24 +114,32 @@ export default function Live() {
           }
           drawSkeleton(c, r.image, eng.state.feedback?.joints ?? []);
         }
+        // a new correction during the rep: one cue per rule per rep, then it fades (no endless repetition)
         const fb = eng.state.feedback;
-        if (fb) {
-          setFeedback((prev) => {
-            if (prev?.ruleId !== fb.ruleId) {
-              say(fb.message);
-              if (!shownMessages.current.includes(fb.message)) shownMessages.current.push(fb.message);
-            }
-            return fb;
-          });
-          window.clearTimeout(fbTimer.current);
-          fbTimer.current = window.setTimeout(() => setFeedback(null), 2500);
+        if (fb && fb.ruleId !== lastRule.current) {
+          lastRule.current = fb.ruleId;
+          const cue = coach.current?.onViolation(fb.ruleId) ?? null;
+          if (cue) {
+            sfx.fix();
+            showCue(cue, fb.joints);
+          }
         }
         setTracking(eng.state.tracking);
         if (rep) {
+          lastRule.current = null;
           reps.current.push(rep);
           setCount(eng.state.reps);
           setValid(eng.state.validReps);
-          beep();
+          const good = rep.is_valid && rep.violated.length === 0;
+          setFlash(good ? "good" : "bad");
+          window.setTimeout(() => setFlash(null), 450);
+          const cue = coach.current?.onRep(rep, eng.state.reps) ?? null;
+          if (eng.state.reps >= item.target_reps) {
+            sfx.setDone();
+            setParty((n) => n + 1);
+          } else if (good) sfx.good();
+          else sfx.bad();
+          showCue(cue);
           if (eng.state.reps >= item.target_reps) void endSetRef.current();
         }
       },
@@ -136,7 +162,7 @@ export default function Live() {
       window.clearInterval(t);
       p.dispose();
     };
-  }, [item]);
+  }, [item, showCue]);
 
   // rest timer between sets
   useEffect(() => {
@@ -144,6 +170,8 @@ export default function Live() {
     if (rest <= 0) {
       setRest(null);
       engine.current = item ? new TechniqueEngine(item.exercise, { aspect: 4 / 3 }) : null;
+      coach.current = item ? new Coach(item.exercise.name, item.exercise.rules, item.target_reps) : null;
+      lastRule.current = null;
       setCount(0);
       setValid(0);
       setFeedback(null);
@@ -152,6 +180,7 @@ export default function Live() {
       say("מתחילים");
       return;
     }
+    if (rest <= 3) sfx.tick();
     const t = window.setTimeout(() => setRest(rest - 1), 1000);
     return () => window.clearTimeout(t);
   }, [rest, item]);
@@ -182,15 +211,28 @@ export default function Live() {
   if (!w || !item) return null;
   return (
     <div className="live">
-      <div className="stage" onDoubleClick={() => setShowStats(!showStats)}>
+      <div className={`stage ${flash ? `flash-${flash}` : ""}`} onDoubleClick={() => setShowStats(!showStats)}>
         <video ref={video} className="mirror" playsInline muted />
         <canvas ref={canvas} />
         <div className="hud">
-          <div>
-            <div className="counter num" data-testid="rep-counter" aria-live="polite">
-              {count}
+          <div className="ring-wrap">
+            <svg className="ring" viewBox="0 0 120 120" aria-hidden="true">
+              <circle cx="60" cy="60" r="52" className="ring-bg" />
+              <circle
+                cx="60"
+                cy="60"
+                r="52"
+                className="ring-fg"
+                strokeDasharray={`${Math.min(1, count / item.target_reps) * 326.7} 326.7`}
+              />
+            </svg>
+            <div className="ring-center">
+              <div className="counter num" data-testid="rep-counter" aria-live="polite">
+                {count}
+              </div>
+              <div className="small">מתוך {item.target_reps}</div>
             </div>
-            <div className="small">מתוך {item.target_reps} · תקינות {valid}</div>
+            <div className="valid-chip">✓ {valid} תקינות</div>
           </div>
           <div className="meta">
             <b>{item.exercise.name}</b>
@@ -205,8 +247,8 @@ export default function Live() {
           </div>
         </div>
         {feedback && (
-          <div className={`feedback ${feedback.severity}`} role="alert" data-testid="feedback">
-            {feedback.message}
+          <div key={feedback.id} className={`feedback tone-${feedback.tone}`} role="alert" data-testid="feedback">
+            {feedback.text}
           </div>
         )}
         {(!tracking || status) && rest === null && (
@@ -214,6 +256,7 @@ export default function Live() {
             {status || "האימון מושהה – חזרו למסגרת כך שכל הגוף נראה"}
           </div>
         )}
+        {party > 0 && <Confetti key={party} />}
         {rest !== null && (
           <div className="rest">
             <div>
@@ -227,8 +270,27 @@ export default function Live() {
         )}
       </div>
       <div className="controls">
-        <button className="secondary" onClick={() => { setMuted(!muted); setM(!muted); }} aria-label="השתקת משוב קולי">
-          {muted ? "🔇" : "🔊"}
+        <button
+          className="secondary icon"
+          aria-pressed={sounds}
+          aria-label="צלילים"
+          onClick={() => {
+            setSounds(!sounds);
+            setS(!sounds);
+          }}
+        >
+          {sounds ? "🔔" : "🔕"}
+        </button>
+        <button
+          className="secondary icon"
+          aria-pressed={voice}
+          aria-label="הקראה קולית"
+          onClick={() => {
+            setVoice(!voice);
+            setV(!voice);
+          }}
+        >
+          {voice ? "🗣️" : "🤐"}
         </button>
         <button className="secondary" onClick={() => void endSet()} disabled={rest !== null} data-testid="end-set">
           סיים סט
@@ -237,6 +299,24 @@ export default function Live() {
           סיום אימון
         </button>
       </div>
+    </div>
+  );
+}
+
+const COLORS = ["#22c55e", "#3b82f6", "#f59e0b", "#ec4899", "#a855f7", "#14b8a6"];
+/** A short burst of confetti when a set is completed. */
+function Confetti() {
+  const bits = Array.from({ length: 36 }, (_, i) => ({
+    left: (i * 37) % 100,
+    delay: (i % 9) * 0.04,
+    color: COLORS[i % COLORS.length],
+    rot: (i * 47) % 360,
+  }));
+  return (
+    <div className="confetti" aria-hidden="true">
+      {bits.map((b, i) => (
+        <i key={i} style={{ left: `${b.left}%`, animationDelay: `${b.delay}s`, background: b.color, transform: `rotate(${b.rot}deg)` }} />
+      ))}
     </div>
   );
 }

@@ -208,10 +208,31 @@ jobs:
         uses: actions/upload-artifact@v4
         with: { name: stack, path: out/ }
 
+  cloud-image:
+    name: Single-container image (permanent public link)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: build and smoke-test Dockerfile.cloud
+        run: |
+          set -o pipefail
+          mkdir -p out
+          docker build -f Dockerfile.cloud -t fv-cloud . 2>&1 | tail -n 5 | tee out/build.txt
+          docker run -d --name fv -e PORT=8000 -p 8090:8000 fv-cloud
+          for i in $(seq 1 40); do curl -fsS http://localhost:8090/api/health && break; sleep 3; done | tee out/health.txt
+          curl -fsS http://localhost:8090/ | head -c 300 | tee out/index.txt
+          curl -fsS -X POST http://localhost:8090/api/auth/login -H 'Content-Type: application/json' \
+            -d '{"email":"trainee@fitvision.app","password":"Demo1234!"}' | head -c 200 | tee out/login.txt
+      - if: always()
+        run: docker logs fv > out/logs.txt 2>&1 || true
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: cloud-image, path: out/ }
+
   report:
     name: Publish CI report to the ci-reports branch
     if: always()
-    needs: [server, server-mssql, client, e2e, stack]
+    needs: [server, server-mssql, client, e2e, stack, cloud-image]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
@@ -230,6 +251,7 @@ jobs:
           | client | ${{ needs.client.result }} |
           | e2e | ${{ needs.e2e.result }} |
           | stack | ${{ needs.stack.result }} |
+          | cloud-image | ${{ needs.cloud-image.result }} |
           EOF
           git clone --quiet --depth 1 --branch ci-reports "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" reports 2>/dev/null \
             || (git init -q reports && cd reports && git checkout -q --orphan ci-reports && git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git")

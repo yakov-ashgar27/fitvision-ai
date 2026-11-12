@@ -81,6 +81,7 @@ def test_report_lifecycle_br10_tc06(api, client):
     assert client.get(f"/api/reports/{rid}", headers=api.h(rt)).json()["status"] == "Sent"
     mine = client.get("/api/me/reports", headers=api.h(tt)).json()
     assert mine[0]["sent_at"] is not None and mine[0]["opened_at"] is None
+    assert mine[0]["exercises"] == ["סקוואט"]  # the list says which workout it was
     client.get(f"/api/reports/{rid}", headers=api.h(tt))  # trainee opens it
     assert client.get("/api/me/reports", headers=api.h(tt)).json()[0]["opened_at"] is not None
 

@@ -10,12 +10,31 @@ import { fmtDateTime, fmtScore, STATUS_HE } from "../../lib/format";
 import { startWorkout } from "../../offline/sync";
 import { saveWorkout, WorkoutItem } from "../../workout";
 
+export const EX_EMOJI: Record<string, string> = { "סקוואט": "🏋️", "לאנג'ים": "🦵", "כפיפת מרפקים": "💪", "לחיצת כתפיים": "🙌" };
+
+/** Training streak (consecutive days up to today or yesterday), sessions this week and best score. */
+export function streakStats(sessions: SessionSummary[], today = new Date()) {
+  const day = (d: Date) => d.toISOString().slice(0, 10);
+  const days = new Set(sessions.filter((s) => s.total_reps > 0).map((s) => day(new Date(s.started_at))));
+  let streak = 0;
+  const d = new Date(today);
+  if (!days.has(day(d))) d.setDate(d.getDate() - 1);
+  while (days.has(day(d))) {
+    streak += 1;
+    d.setDate(d.getDate() - 1);
+  }
+  const weekAgo = today.getTime() - 7 * 864e5;
+  const week = sessions.filter((s) => s.total_reps > 0 && Date.parse(s.started_at) >= weekAgo).length;
+  const best = Math.max(0, ...sessions.map((s) => s.avg_technique_score ?? 0));
+  return { streak, week, best: best || null };
+}
+
 export default function Home() {
   const { me, user, refresh } = useAuth();
   const nav = useNavigate();
   const qc = useQueryClient();
   const plan = useQuery({ queryKey: ["plan-active"], queryFn: () => api<Plan | null>("/plans/active") });
-  const last = useQuery({ queryKey: ["my-sessions", 1], queryFn: () => api<SessionSummary[]>("/me/sessions?limit=1") });
+  const last = useQuery({ queryKey: ["my-sessions", 30], queryFn: () => api<SessionSummary[]>("/me/sessions?limit=30") });
   const exercises = useQuery({ queryKey: ["exercises"], queryFn: () => api<Exercise[]>("/exercises"), staleTime: 3600_000 });
   const [code, setCode] = useState("");
   const request = useMutation({
@@ -36,7 +55,24 @@ export default function Home() {
   const a = me?.assignment;
   return (
     <div className="stack">
-      <h1>שלום {user?.first_name}</h1>
+      <div className="card hero">
+        <h1>שלום {user?.first_name} 👋</h1>
+        <div className="muted">{last.data?.length ? "מוכנים לאימון הבא?" : "האימון הראשון שלכם מחכה"}</div>
+        {last.data && last.data.length > 0 && (
+          <div className="hero-stats" data-testid="hero-stats">
+            {(() => {
+              const st = streakStats(last.data);
+              return (
+                <>
+                  <span>🔥 {st.streak} ימים ברצף</span>
+                  <span>📅 {st.week} אימונים השבוע</span>
+                  {st.best !== null && <span>🏆 שיא {Math.round(st.best)}</span>}
+                </>
+              );
+            })()}
+          </div>
+        )}
+      </div>
 
       {plan.isLoading ? (
         <SkeletonCards n={2} />
@@ -49,7 +85,9 @@ export default function Home() {
           {plan.data.exercises.map((pe) => (
             <div className="listrow" key={pe.plan_exercise_id}>
               <div>
-                <b>{pe.exercise.name}</b>
+                <b>
+                  {EX_EMOJI[pe.exercise.name] ?? "⭐"} {pe.exercise.name}
+                </b>
                 <div className="muted small">
                   {pe.target_sets} סטים × {pe.target_reps} חזרות · {pe.exercise.camera_view === "Front" ? "מבט חזית" : "מבט צד"}
                 </div>
@@ -71,7 +109,9 @@ export default function Home() {
           {exercises.data?.map((ex) => (
             <div className="listrow" key={ex.exercise_id}>
               <div>
-                <b>{ex.name}</b>
+                <b>
+                  {EX_EMOJI[ex.name] ?? "⭐"} {ex.name}
+                </b>
                 <div className="muted small">{ex.camera_view === "Front" ? "מבט חזית" : "מבט צד"} · 3 סטים × 10</div>
               </div>
               <button data-testid={`free-${ex.exercise_id}`} onClick={() => begin([{ exercise: ex, target_sets: 3, target_reps: 10, rest_seconds: 45 }], null)}>

@@ -2,12 +2,13 @@ import { FormEvent, useEffect, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { api } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
-import { isMuted, setMuted } from "../lib/speech";
+import { setSounds, setVoice, sfx, soundsOn, voiceOn } from "../lib/speech";
 
 export default function Settings() {
   const { me, user, refresh, logout } = useAuth();
   const [params] = useSearchParams();
-  const [muted, setM] = useState(isMuted());
+  const [sounds, setS] = useState(soundsOn());
+  const [voice, setV] = useState(voiceOn());
   const [p, setP] = useState({ height_cm: "", weight_kg: "", fitness_level: "", injuries_notes: "" });
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -89,14 +90,34 @@ export default function Settings() {
           </div>
         </div>
       )}
-      <div className="card spread">
-        <div>
-          <h3>משוב קולי באימון</h3>
-          <div className="muted small">ההודעות מוקראות בעברית</div>
+      <div className="card stack">
+        <h3>צלילים וקול באימון</h3>
+        <div className="spread">
+          <div>
+            <b>צלילים</b>
+            <div className="muted small">צליל קצר לחזרה טובה, לתיקון ולסיום סט</div>
+          </div>
+          <button
+            className={sounds ? "" : "secondary"}
+            aria-pressed={sounds}
+            onClick={() => {
+              setSounds(!sounds);
+              setS(!sounds);
+              if (!sounds) setTimeout(() => sfx.good(), 50);
+            }}
+          >
+            {sounds ? "פועל" : "כבוי"}
+          </button>
         </div>
-        <button className="secondary" onClick={() => { setMuted(!muted); setM(!muted); }}>
-          {muted ? "מושתק – להפעיל" : "פעיל – להשתיק"}
-        </button>
+        <div className="spread">
+          <div>
+            <b>הקראה קולית</b>
+            <div className="muted small">ההערות מוקראות בעברית (כבוי כברירת מחדל)</div>
+          </div>
+          <button className={voice ? "" : "secondary"} aria-pressed={voice} onClick={() => { setVoice(!voice); setV(!voice); }}>
+            {voice ? "פועל" : "כבוי"}
+          </button>
+        </div>
       </div>
       <div className="card stack">
         <h3>בדיקת מכשיר</h3>

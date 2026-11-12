@@ -7,6 +7,7 @@ import { MIN_VISIBILITY } from "../../engine/geometry";
 import type { Lm } from "../../engine/geometry";
 import { drawSkeleton } from "../../vision/draw";
 import { PosePipeline } from "../../vision/poseClient";
+import { sfx } from "../../lib/speech";
 import { discardIfEmpty } from "../../offline/sync";
 import { CAMERA_TIPS, loadWorkout, saveWorkout } from "../../workout";
 
@@ -208,11 +209,11 @@ export default function Setup() {
             ביטול
           </button>
           {canForce ? (
-            <button style={{ flex: 2 }} className="secondary" data-testid="start-anyway" onClick={() => nav("/workout/live")}>
+            <button style={{ flex: 2 }} className="secondary" data-testid="start-anyway" onClick={() => { sfx.unlock(); nav("/workout/live"); }}>
               להתחיל בכל זאת
             </button>
           ) : (
-            <button style={{ flex: 2 }} disabled={stage !== "ready"} data-testid="start-set" onClick={() => nav("/workout/live")}>
+            <button style={{ flex: 2 }} disabled={stage !== "ready"} data-testid="start-set" onClick={() => { sfx.unlock(); nav("/workout/live"); }}>
               התחל סט
             </button>
           )}

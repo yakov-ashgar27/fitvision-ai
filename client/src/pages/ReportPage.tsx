@@ -89,7 +89,9 @@ export default function ReportPage() {
     <div className="stack">
       <div className="spread">
         <div>
-          <h1>דוח אימון – {r.trainee_name}</h1>
+          <h1>
+            {s.exercises.map((e) => e.name).join(" · ") || "דוח אימון"} – {r.trainee_name}
+          </h1>
           <div className="muted small">
             {fmtDateTime(r.started_at)} · {STATUS_HE[r.session_status]} · <span className="pill" data-testid="report-status">{STATUS_HE[r.status]}</span>
           </div>

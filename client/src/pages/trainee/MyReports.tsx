@@ -12,6 +12,7 @@ interface Row {
   started_at: string;
   sent_at: string | null;
   opened_at: string | null;
+  exercises?: string[];
 }
 
 export default function MyReports() {
@@ -28,7 +29,8 @@ export default function MyReports() {
           {q.data.map((r) => (
             <div className="listrow" key={r.report_id}>
               <div>
-                <b>{fmtDateTime(r.started_at)}</b>
+                <b>{r.exercises?.length ? r.exercises.join(" · ") : "אימון"}</b>
+                <div className="small">{fmtDateTime(r.started_at)}</div>
                 <div className="muted small">
                   {r.sent_at ? (r.opened_at ? "דוח מהמאמן · נקרא" : <b>דוח חדש מהמאמן</b>) : STATUS_HE[r.status]}
                 </div>
