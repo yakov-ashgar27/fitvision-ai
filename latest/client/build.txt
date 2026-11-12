@@ -19,27 +19,27 @@ computing gzip size...
 [2mdist/[22m[2massets/[22m[36mformat-868eUAWx.js       [39m[1m[2m  0.70 kB[22m[1m[22m[2m │ gzip:   0.46 kB[22m
 [2mdist/[22m[2massets/[22m[36mworkout-BzrgxTRs.js      [39m[1m[2m  0.86 kB[22m[1m[22m[2m │ gzip:   0.45 kB[22m
 [2mdist/[22m[2massets/[22m[36mTrendsChart-DHSTE25S.js  [39m[1m[2m  1.05 kB[22m[1m[22m[2m │ gzip:   0.69 kB[22m
-[2mdist/[22m[2massets/[22m[36mMyReports-Dh2LAfOE.js    [39m[1m[2m  1.11 kB[22m[1m[22m[2m │ gzip:   0.58 kB[22m
+[2mdist/[22m[2massets/[22m[36mMyReports-DWG0rTwi.js    [39m[1m[2m  1.11 kB[22m[1m[22m[2m │ gzip:   0.58 kB[22m
 [2mdist/[22m[2massets/[22m[36mspeech-C81eVUHh.js       [39m[1m[2m  1.29 kB[22m[1m[22m[2m │ gzip:   0.75 kB[22m
-[2mdist/[22m[2massets/[22m[36mLogin-2dU9LThc.js        [39m[1m[2m  1.32 kB[22m[1m[22m[2m │ gzip:   0.73 kB[22m
-[2mdist/[22m[2massets/[22m[36mAudit-Be2ZGVxN.js        [39m[1m[2m  1.64 kB[22m[1m[22m[2m │ gzip:   0.81 kB[22m
-[2mdist/[22m[2massets/[22m[36mUsers-BWf4kfIL.js        [39m[1m[2m  1.96 kB[22m[1m[22m[2m │ gzip:   1.06 kB[22m
-[2mdist/[22m[2massets/[22m[36mDiag-fohdaDrc.js         [39m[1m[2m  1.98 kB[22m[1m[22m[2m │ gzip:   0.93 kB[22m
-[2mdist/[22m[2massets/[22m[36mRegister-B1-CfthW.js     [39m[1m[2m  2.27 kB[22m[1m[22m[2m │ gzip:   1.02 kB[22m
-[2mdist/[22m[2massets/[22m[36mHistory-BoT5PR_p.js      [39m[1m[2m  2.37 kB[22m[1m[22m[2m │ gzip:   1.21 kB[22m
-[2mdist/[22m[2massets/[22m[36mSummary-wf3-4ftv.js      [39m[1m[2m  2.46 kB[22m[1m[22m[2m │ gzip:   1.09 kB[22m
-[2mdist/[22m[2massets/[22m[36mDashboard-9nnfpzE1.js    [39m[1m[2m  4.79 kB[22m[1m[22m[2m │ gzip:   1.89 kB[22m
-[2mdist/[22m[2massets/[22m[36mSettings-00W2fp4R.js     [39m[1m[2m  4.80 kB[22m[1m[22m[2m │ gzip:   1.90 kB[22m
+[2mdist/[22m[2massets/[22m[36mLogin-C7RZICCg.js        [39m[1m[2m  1.32 kB[22m[1m[22m[2m │ gzip:   0.73 kB[22m
+[2mdist/[22m[2massets/[22m[36mAudit-LPx3etmh.js        [39m[1m[2m  1.64 kB[22m[1m[22m[2m │ gzip:   0.81 kB[22m
+[2mdist/[22m[2massets/[22m[36mUsers-D2ykAUCu.js        [39m[1m[2m  1.96 kB[22m[1m[22m[2m │ gzip:   1.05 kB[22m
+[2mdist/[22m[2massets/[22m[36mDiag-BjbinCc3.js         [39m[1m[2m  1.98 kB[22m[1m[22m[2m │ gzip:   0.93 kB[22m
+[2mdist/[22m[2massets/[22m[36mRegister-BKytNFzO.js     [39m[1m[2m  2.27 kB[22m[1m[22m[2m │ gzip:   1.02 kB[22m
+[2mdist/[22m[2massets/[22m[36mSummary-GRChlg2_.js      [39m[1m[2m  2.46 kB[22m[1m[22m[2m │ gzip:   1.09 kB[22m
+[2mdist/[22m[2massets/[22m[36mHistory-S656QTZ0.js      [39m[1m[2m  2.56 kB[22m[1m[22m[2m │ gzip:   1.30 kB[22m
+[2mdist/[22m[2massets/[22m[36mDashboard-DRY2t9KC.js    [39m[1m[2m  4.79 kB[22m[1m[22m[2m │ gzip:   1.89 kB[22m
+[2mdist/[22m[2massets/[22m[36mSettings-CyU8ya2M.js     [39m[1m[2m  4.80 kB[22m[1m[22m[2m │ gzip:   1.90 kB[22m
 [2mdist/[22m[2massets/[22m[36mposeClient-BLyRhH8C.js   [39m[1m[2m  5.45 kB[22m[1m[22m[2m │ gzip:   2.42 kB[22m
 [2mdist/[22m[2massets/[22m[36mweb-vitals-DTdQsl0v.js   [39m[1m[2m  5.52 kB[22m[1m[22m[2m │ gzip:   2.12 kB[22m
-[2mdist/[22m[2massets/[22m[36mHome-Cn9sbzH8.js         [39m[1m[2m  5.65 kB[22m[1m[22m[2m │ gzip:   2.24 kB[22m
-[2mdist/[22m[2massets/[22m[36mExercises-BWtPKU2e.js    [39m[1m[2m  5.89 kB[22m[1m[22m[2m │ gzip:   2.01 kB[22m
-[2mdist/[22m[2massets/[22m[36mReportPage-Gf_W4vNs.js   [39m[1m[2m  5.93 kB[22m[1m[22m[2m │ gzip:   2.22 kB[22m
-[2mdist/[22m[2massets/[22m[36mSetup-C-kZlhCe.js        [39m[1m[2m  6.41 kB[22m[1m[22m[2m │ gzip:   2.75 kB[22m
-[2mdist/[22m[2massets/[22m[36mTraineePage-wl3zHyWc.js  [39m[1m[2m  6.62 kB[22m[1m[22m[2m │ gzip:   2.49 kB[22m
-[2mdist/[22m[2massets/[22m[36mLive-Cdp4Vtmr.js         [39m[1m[2m 17.19 kB[22m[1m[22m[2m │ gzip:   6.49 kB[22m
+[2mdist/[22m[2massets/[22m[36mHome-CqNzVx_o.js         [39m[1m[2m  5.65 kB[22m[1m[22m[2m │ gzip:   2.24 kB[22m
+[2mdist/[22m[2massets/[22m[36mExercises-CgOSibu9.js    [39m[1m[2m  5.89 kB[22m[1m[22m[2m │ gzip:   2.01 kB[22m
+[2mdist/[22m[2massets/[22m[36mReportPage-CPKTVaGM.js   [39m[1m[2m  5.98 kB[22m[1m[22m[2m │ gzip:   2.23 kB[22m
+[2mdist/[22m[2massets/[22m[36mSetup-DNIIIvD0.js        [39m[1m[2m  6.41 kB[22m[1m[22m[2m │ gzip:   2.75 kB[22m
+[2mdist/[22m[2massets/[22m[36mTraineePage-DAq4_Og_.js  [39m[1m[2m  6.62 kB[22m[1m[22m[2m │ gzip:   2.49 kB[22m
+[2mdist/[22m[2massets/[22m[36mLive-iWj3Ykuk.js         [39m[1m[2m 17.19 kB[22m[1m[22m[2m │ gzip:   6.49 kB[22m
 [2mdist/[22m[2massets/[22m[36mVirtualList-BV5gsxQE.js  [39m[1m[2m 35.76 kB[22m[1m[22m[2m │ gzip:  10.91 kB[22m
 [2mdist/[22m[2massets/[22m[36mquery-DMrHPFWj.js        [39m[1m[2m 48.56 kB[22m[1m[22m[2m │ gzip:  14.92 kB[22m
-[2mdist/[22m[2massets/[22m[36mindex-BU5SikZ7.js        [39m[1m[2m268.15 kB[22m[1m[22m[2m │ gzip:  86.35 kB[22m
+[2mdist/[22m[2massets/[22m[36mindex-B5FBEiUR.js        [39m[1m[2m268.15 kB[22m[1m[22m[2m │ gzip:  86.36 kB[22m
 [2mdist/[22m[2massets/[22m[36mrecharts-CafPervD.js     [39m[1m[2m410.59 kB[22m[1m[22m[2m │ gzip: 112.39 kB[22m
-[32m✓ built in 4.20s[39m
+[32m✓ built in 4.69s[39m
