@@ -1,8 +1,8 @@
-# CI d545f07 on feature/full-implementation
+# CI 13ac62b on feature/full-implementation
 | job | result |
 | --- | --- |
 | server | failure |
 | server-mssql | failure |
-| client | success |
+| client | cancelled |
 | e2e | cancelled |
 | stack | cancelled |
