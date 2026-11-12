@@ -1,0 +1,1 @@
+{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzIiwicm9sZSI6IlRyYWluZWUiLCJpYXQiOjE3OTQ0OTg1MTIsImV4cCI6MTc5NDUwMjExMn0.Z4rwnNF_1U0TLy9wk1s5YE8djDKpOgHy9k5wyVn0su4","token_type":"bea
