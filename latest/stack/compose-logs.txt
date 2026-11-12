@@ -1,0 +1,263 @@
+worker-1  | /usr/local/lib/python3.12/site-packages/click/core.py:1371: UserWarning: The parameter --serializer is used more than once. Remove its duplicate as parameters should be unique.
+worker-1  |   parser = self.make_parser(ctx)
+worker-1  | /usr/local/lib/python3.12/site-packages/click/core.py:1371: UserWarning: The parameter -S is used more than once. Remove its duplicate as parameters should be unique.
+worker-1  |   parser = self.make_parser(ctx)
+worker-1  | /usr/local/lib/python3.12/site-packages/click/core.py:1364: UserWarning: The parameter --serializer is used more than once. Remove its duplicate as parameters should be unique.
+worker-1  |   self.parse_args(ctx, args)
+worker-1  | /usr/local/lib/python3.12/site-packages/click/core.py:1364: UserWarning: The parameter -S is used more than once. Remove its duplicate as parameters should be unique.
+worker-1  |   self.parse_args(ctx, args)
+worker-1  | 17:10:30 Worker rq:worker:85b1d14205784c38849fc1c06c011cff started with PID 1, version 2.1.0
+worker-1  | 17:10:30 Subscribing to channel rq:pubsub:85b1d14205784c38849fc1c06c011cff
+worker-1  | 17:10:30 *** Listening on fitvision...
+worker-1  | 17:10:30 Cleaning registries for queue: fitvision
+worker-1  | 17:10:30 fitvision: app.tasks.job_export(22, 'pdf') (3556337d-7709-4012-8447-c0e00fb571e0)
+worker-1  | 17:10:31 Successfully completed app.tasks.job_export(22, 'pdf') job in 0:00:00.912589s on worker 85b1d14205784c38849fc1c06c011cff
+worker-1  | 17:10:31 fitvision: Job OK (3556337d-7709-4012-8447-c0e00fb571e0)
+worker-1  | 17:10:31 Result is kept for 3600 seconds
+worker-1  | 17:10:31 fitvision: app.tasks.job_export(22, 'xlsx') (06ab7d5b-0dad-4051-9998-67e58627da47)
+worker-1  | 17:10:31 Successfully completed app.tasks.job_export(22, 'xlsx') job in 0:00:00.397916s on worker 85b1d14205784c38849fc1c06c011cff
+worker-1  | 17:10:31 fitvision: Job OK (06ab7d5b-0dad-4051-9998-67e58627da47)
+worker-1  | 17:10:31 Result is kept for 3600 seconds
+worker-1  | 17:11:50 fitvision: app.tasks.job_generate_report(23) (d193c889-9585-4e65-949d-24f722bbc4cd)
+worker-1  | 17:11:51 Successfully completed app.tasks.job_generate_report(23) job in 0:00:00.468097s on worker 85b1d14205784c38849fc1c06c011cff
+worker-1  | 17:11:51 fitvision: Job OK (d193c889-9585-4e65-949d-24f722bbc4cd)
+worker-1  | 17:11:51 Result is kept for 3600 seconds
+worker-1  | 17:11:53 fitvision: app.tasks.job_export(22, 'xlsx') (83482bf2-872a-4e63-a7c5-de89267250a3)
+worker-1  | 17:11:54 Successfully completed app.tasks.job_export(22, 'xlsx') job in 0:00:00.485193s on worker 85b1d14205784c38849fc1c06c011cff
+worker-1  | 17:11:54 fitvision: Job OK (83482bf2-872a-4e63-a7c5-de89267250a3)
+worker-1  | 17:11:54 Result is kept for 3600 seconds
+worker-1  | 17:11:54 fitvision: app.tasks.job_export(22, 'pdf') (cdc3ed50-deb5-4f49-b42d-1f4c09329ac2)
+worker-1  | 17:11:55 Successfully completed app.tasks.job_export(22, 'pdf') job in 0:00:00.969300s on worker 85b1d14205784c38849fc1c06c011cff
+worker-1  | 17:11:55 fitvision: Job OK (cdc3ed50-deb5-4f49-b42d-1f4c09329ac2)
+worker-1  | 17:11:55 Result is kept for 3600 seconds
+worker-1  | 17:11:56 fitvision: app.tasks.job_send_report(22, 'InApp', 'PDF') (97c84031-9ab0-41de-b88d-2d68776b2560)
+worker-1  | 17:11:57 Successfully completed app.tasks.job_send_report(22, 'InApp', 'PDF') job in 0:00:00.739816s on worker 85b1d14205784c38849fc1c06c011cff
+worker-1  | 17:11:57 fitvision: Job OK (97c84031-9ab0-41de-b88d-2d68776b2560)
+worker-1  | 17:11:57 Result is kept for 3600 seconds
+api-1     | INFO  [alembic.runtime.migration] Context impl MSSQLImpl.
+api-1     | INFO  [alembic.runtime.migration] Will assume transactional DDL.
+api-1     | INFO  [alembic.runtime.migration] Running upgrade  -> 0001, Initial schema: the 17 tables of section 4.3 with the indexes of table 6.5.
+api-1     | INFO  [alembic.runtime.migration] Running upgrade 0001 -> 0002, Calibrate the biceps-curl rules after the first real-phone trial (12.11.2026, chapter 10).
+web-1     | /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+web-1     | /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+web-1     | /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+web-1     | 10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+web-1     | 10-listen-on-ipv6-by-default.sh: info: /etc/nginx/conf.d/default.conf differs from the packaged version
+web-1     | /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+web-1     | /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+web-1     | /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+web-1     | /docker-entrypoint.sh: Configuration complete; ready for start up
+api-1     | seed done
+api-1     | 2026-11-12 17:10:28,851 INFO apscheduler.scheduler Adding job tentatively -- it will be properly scheduled when the scheduler starts
+api-1     | 2026-11-12 17:10:28,851 INFO apscheduler.scheduler Adding job tentatively -- it will be properly scheduled when the scheduler starts
+api-1     | 2026-11-12 17:10:28,852 INFO apscheduler.scheduler Added job "_start_scheduler.<locals>.<lambda>" to job store "default"
+api-1     | 2026-11-12 17:10:28,852 INFO apscheduler.scheduler Added job "_start_scheduler.<locals>.<lambda>" to job store "default"
+api-1     | 2026-11-12 17:10:28,852 INFO apscheduler.scheduler Scheduler started
+api-1     | 2026-11-12 17:10:28,852 INFO fitvision scheduler started
+api-1     | INFO:     Started server process [1]
+api-1     | INFO:     Waiting for application startup.
+api-1     | INFO:     Application startup complete.
+api-1     | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+api-1     | INFO:     127.0.0.1:48284 - "GET /api/health HTTP/1.1" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/health HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "POST /api/auth/login HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/dashboard HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/dashboard HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/reports HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "POST /api/reports/22/export/pdf HTTP/1.0" 202 Accepted
+api-1     | INFO:     172.18.0.1:0 - "GET /api/jobs/3556337d-7709-4012-8447-c0e00fb571e0 HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/jobs/3556337d-7709-4012-8447-c0e00fb571e0 HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/jobs/3556337d-7709-4012-8447-c0e00fb571e0 HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/reports/22/files/pdf HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "POST /api/reports/22/export/xlsx HTTP/1.0" 202 Accepted
+api-1     | INFO:     172.18.0.1:0 - "GET /api/jobs/06ab7d5b-0dad-4051-9998-67e58627da47 HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/jobs/06ab7d5b-0dad-4051-9998-67e58627da47 HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/reports/22/files/xlsx HTTP/1.0" 200 OK
+api-1     | INFO:     127.0.0.1:52268 - "GET /api/health HTTP/1.1" 200 OK
+api-1     | INFO:     127.0.0.1:55766 - "GET /api/health HTTP/1.1" 200 OK
+api-1     | INFO:     127.0.0.1:46430 - "GET /api/health HTTP/1.1" 200 OK
+api-1     | INFO:     127.0.0.1:46036 - "GET /api/health HTTP/1.1" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "POST /api/auth/register HTTP/1.0" 201 Created
+api-1     | INFO:     172.18.0.1:0 - "GET /api/me HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/me/sessions?limit=30 HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/plans/active HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/exercises HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/me HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/me/sessions?limit=30 HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/plans/active HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/exercises HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "POST /api/me/consent HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/me HTTP/1.0" 200 OK
+api-1     | INFO:     127.0.0.1:41850 - "GET /api/health HTTP/1.1" 200 OK
+api-1     | INFO:     127.0.0.1:37036 - "GET /api/health HTTP/1.1" 200 OK
+api-1     | INFO:     127.0.0.1:33250 - "GET /api/health HTTP/1.1" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "POST /api/sessions HTTP/1.0" 201 Created
+api-1     | INFO:     172.18.0.1:0 - "POST /api/sessions/23/sets HTTP/1.0" 201 Created
+api-1     | INFO:     172.18.0.1:0 - "POST /api/sessions/23/finish HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/jobs/d193c889-9585-4e65-949d-24f722bbc4cd HTTP/1.0" 200 OK
+api-1     | INFO:     127.0.0.1:50458 - "GET /api/health HTTP/1.1" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/jobs/d193c889-9585-4e65-949d-24f722bbc4cd HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/reports/23 HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "POST /api/auth/login HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/me HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/dashboard HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/exercises HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/trainees/4/trends?weeks=8 HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/trainees/4 HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/sessions?trainee_id=4&limit=50 HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/trainees/4/plans HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/reports/22 HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "POST /api/reports/22/notes HTTP/1.0" 201 Created
+api-1     | INFO:     172.18.0.1:0 - "GET /api/reports/22 HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "POST /api/reports/22/export/xlsx HTTP/1.0" 202 Accepted
+api-1     | INFO:     172.18.0.1:0 - "GET /api/jobs/83482bf2-872a-4e63-a7c5-de89267250a3 HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/jobs/83482bf2-872a-4e63-a7c5-de89267250a3 HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/reports/22/files/xlsx HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "POST /api/reports/22/export/pdf HTTP/1.0" 202 Accepted
+api-1     | INFO:     172.18.0.1:0 - "GET /api/jobs/cdc3ed50-deb5-4f49-b42d-1f4c09329ac2 HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/jobs/cdc3ed50-deb5-4f49-b42d-1f4c09329ac2 HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/jobs/cdc3ed50-deb5-4f49-b42d-1f4c09329ac2 HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/reports/22/files/pdf HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "POST /api/reports/22/send HTTP/1.0" 202 Accepted
+api-1     | INFO:     172.18.0.1:0 - "POST /api/auth/login HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/me HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/exercises HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/me/sessions?limit=30 HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/plans/active HTTP/1.0" 200 OK
+api-1     | 2026-11-12 17:11:57,528 INFO fitvision.rum {"rum": "LCP", "value": 572.0, "page": "/login", "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36", "role": null}
+api-1     | 2026-11-12 17:11:57,528 INFO fitvision.rum {"rum": "INP", "value": 40.0, "page": "/", "device": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.8127.18 Safari/537.36", "role": null}
+api-1     | 2026-11-12 17:11:57,528 INFO fitvision.rum {"rum": "CLS", "value": 0.0, "page": "/", "device": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.8127.18 Safari/537.36", "role": null}
+api-1     | INFO:     172.18.0.1:0 - "POST /api/metrics/rum HTTP/1.0" 204 No Content
+api-1     | INFO:     172.18.0.1:0 - "GET /api/me HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/exercises HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/me/sessions?limit=30 HTTP/1.0" 200 OK
+web-1     | 2026/11/12 17:10:29 [notice] 1#1: using the "epoll" event method
+web-1     | 2026/11/12 17:10:29 [notice] 1#1: nginx/1.27.5
+web-1     | 2026/11/12 17:10:29 [notice] 1#1: built by gcc 14.2.0 (Alpine 14.2.0) 
+web-1     | 2026/11/12 17:10:29 [notice] 1#1: OS: Linux 7.0.0-1019-azure
+web-1     | 2026/11/12 17:10:29 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 65536:65536
+web-1     | 2026/11/12 17:10:29 [notice] 1#1: start worker processes
+web-1     | 2026/11/12 17:10:29 [notice] 1#1: start worker process 29
+web-1     | 2026/11/12 17:10:29 [notice] 1#1: start worker process 30
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:10:29 +0000] "GET /api/health HTTP/1.1" 200 15 "-" "curl/8.18.0" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:10:30 +0000] "POST /api/auth/login HTTP/1.1" 200 452 "-" "Python-urllib/3.14" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:10:30 +0000] "GET /api/dashboard HTTP/1.1" 200 1015 "-" "Python-urllib/3.14" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:10:30 +0000] "GET /api/dashboard HTTP/1.1" 200 1014 "-" "Python-urllib/3.14" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:10:30 +0000] "GET /api/reports HTTP/1.1" 200 4084 "-" "Python-urllib/3.14" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:10:30 +0000] "POST /api/reports/22/export/pdf HTTP/1.1" 202 94 "-" "Python-urllib/3.14" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:10:30 +0000] "GET /api/jobs/3556337d-7709-4012-8447-c0e00fb571e0 HTTP/1.1" 200 95 "-" "Python-urllib/3.14" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:10:31 +0000] "GET /api/jobs/3556337d-7709-4012-8447-c0e00fb571e0 HTTP/1.1" 200 95 "-" "Python-urllib/3.14" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:10:31 +0000] "GET /api/jobs/3556337d-7709-4012-8447-c0e00fb571e0 HTTP/1.1" 200 160 "-" "Python-urllib/3.14" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:10:31 +0000] "GET /api/reports/22/files/pdf HTTP/1.1" 200 69919 "-" "Python-urllib/3.14" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:10:31 +0000] "POST /api/reports/22/export/xlsx HTTP/1.1" 202 94 "-" "Python-urllib/3.14" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:10:31 +0000] "GET /api/jobs/06ab7d5b-0dad-4051-9998-67e58627da47 HTTP/1.1" 200 95 "-" "Python-urllib/3.14" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:10:32 +0000] "GET /api/jobs/06ab7d5b-0dad-4051-9998-67e58627da47 HTTP/1.1" 200 162 "-" "Python-urllib/3.14" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:10:32 +0000] "GET /api/reports/22/files/xlsx HTTP/1.1" 200 7337 "-" "Python-urllib/3.14" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:19 +0000] "GET /register HTTP/1.1" 200 567 "-" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:19 +0000] "GET /assets/index-XWL5NBkO.css HTTP/1.1" 200 3051 "http://localhost:8080/register" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:19 +0000] "GET /assets/query-DMrHPFWj.js HTTP/1.1" 200 14926 "http://localhost:8080/register" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:19 +0000] "GET /assets/index-BU5SikZ7.js HTTP/1.1" 200 86278 "http://localhost:8080/register" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:19 +0000] "GET /assets/recharts-CafPervD.js HTTP/1.1" 200 111998 "http://localhost:8080/register" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:19 +0000] "GET /sw.js HTTP/1.1" 200 652 "http://localhost:8080/register" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:19 +0000] "GET /assets/Register-B1-CfthW.js HTTP/1.1" 200 1021 "http://localhost:8080/register" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:19 +0000] "GET / HTTP/1.1" 200 567 "http://localhost:8080/sw.js" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:19 +0000] "GET /index.html HTTP/1.1" 200 567 "http://localhost:8080/sw.js" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:19 +0000] "GET /manifest.webmanifest HTTP/1.1" 200 583 "http://localhost:8080/sw.js" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:19 +0000] "GET /pose-worker.js HTTP/1.1" 200 1106 "http://localhost:8080/sw.js" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:19 +0000] "GET /assets/web-vitals-DTdQsl0v.js HTTP/1.1" 200 2137 "http://localhost:8080/assets/index-BU5SikZ7.js" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "POST /api/auth/register HTTP/1.1" 201 462 "http://localhost:8080/register" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "GET /api/me HTTP/1.1" 200 408 "http://localhost:8080/register" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "GET /assets/Home-Cn9sbzH8.js HTTP/1.1" 200 2235 "http://localhost:8080/" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "GET /assets/format-868eUAWx.js HTTP/1.1" 200 701 "http://localhost:8080/" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "GET /assets/workout-BzrgxTRs.js HTTP/1.1" 200 855 "http://localhost:8080/" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "GET /api/me/sessions?limit=30 HTTP/1.1" 200 2 "http://localhost:8080/" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "GET /api/plans/active HTTP/1.1" 200 4 "http://localhost:8080/" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "GET / HTTP/1.1" 304 0 "-" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "GET /api/exercises HTTP/1.1" 200 854 "http://localhost:8080/" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "GET /api/me HTTP/1.1" 200 408 "http://localhost:8080/" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "GET /api/me/sessions?limit=30 HTTP/1.1" 200 2 "http://localhost:8080/" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "GET /api/plans/active HTTP/1.1" 200 4 "http://localhost:8080/" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "GET /api/exercises HTTP/1.1" 200 854 "http://localhost:8080/" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "GET /assets/Setup-C-kZlhCe.js HTTP/1.1" 200 2733 "http://localhost:8080/workout/setup" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "GET /assets/poseClient-BLyRhH8C.js HTTP/1.1" 200 2432 "http://localhost:8080/workout/setup" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "GET /assets/speech-C81eVUHh.js HTTP/1.1" 200 760 "http://localhost:8080/workout/setup" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "GET /assets/Live-Cdp4Vtmr.js HTTP/1.1" 200 6432 "http://localhost:8080/workout/setup" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "GET /assets/Summary-wf3-4ftv.js HTTP/1.1" 200 1086 "http://localhost:8080/workout/setup" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "POST /api/me/consent HTTP/1.1" 200 43 "http://localhost:8080/workout/setup" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:20 +0000] "GET /api/me HTTP/1.1" 200 432 "http://localhost:8080/workout/setup" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+api-1     | INFO:     172.18.0.1:0 - "GET /api/plans/active HTTP/1.0" 200 OK
+api-1     | INFO:     172.18.0.1:0 - "GET /api/dashboard HTTP/1.0" 403 Forbidden
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:22 +0000] "GET /sw.js HTTP/1.1" 304 0 "http://localhost:8080/sw.js" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:50 +0000] "POST /api/sessions HTTP/1.1" 201 201 "http://localhost:8080/workout/live" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:50 +0000] "POST /api/sessions/23/sets HTTP/1.1" 201 133 "http://localhost:8080/workout/live" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:50 +0000] "POST /api/sessions/23/finish HTTP/1.1" 200 339 "http://localhost:8080/workout/summary/4802433f-3e1d-419e-a230-081ef0a2d63b" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:51 +0000] "GET /api/jobs/d193c889-9585-4e65-949d-24f722bbc4cd HTTP/1.1" 200 95 "http://localhost:8080/workout/summary/4802433f-3e1d-419e-a230-081ef0a2d63b" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:51 +0000] "GET /api/jobs/d193c889-9585-4e65-949d-24f722bbc4cd HTTP/1.1" 200 108 "http://localhost:8080/workout/summary/4802433f-3e1d-419e-a230-081ef0a2d63b" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:51 +0000] "GET /assets/ReportPage-Gf_W4vNs.js HTTP/1.1" 200 2216 "http://localhost:8080/reports/23" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:51 +0000] "GET /api/reports/23 HTTP/1.1" 200 585 "http://localhost:8080/reports/23" "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:52 +0000] "GET /login HTTP/1.1" 200 567 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:52 +0000] "GET /assets/index-BU5SikZ7.js HTTP/1.1" 200 86278 "http://localhost:8080/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:52 +0000] "GET /assets/index-XWL5NBkO.css HTTP/1.1" 200 3051 "http://localhost:8080/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:52 +0000] "GET /assets/query-DMrHPFWj.js HTTP/1.1" 200 14926 "http://localhost:8080/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:52 +0000] "GET /assets/recharts-CafPervD.js HTTP/1.1" 200 111998 "http://localhost:8080/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:52 +0000] "GET /sw.js HTTP/1.1" 200 652 "http://localhost:8080/login" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:52 +0000] "GET / HTTP/1.1" 200 567 "http://localhost:8080/sw.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:52 +0000] "GET /index.html HTTP/1.1" 200 567 "http://localhost:8080/sw.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:52 +0000] "GET /manifest.webmanifest HTTP/1.1" 200 583 "http://localhost:8080/sw.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:52 +0000] "GET /pose-worker.js HTTP/1.1" 200 1106 "http://localhost:8080/sw.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:52 +0000] "GET /assets/Login-2dU9LThc.js HTTP/1.1" 200 729 "http://localhost:8080/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:52 +0000] "GET /assets/web-vitals-DTdQsl0v.js HTTP/1.1" 200 2137 "http://localhost:8080/assets/index-BU5SikZ7.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:53 +0000] "POST /api/auth/login HTTP/1.1" 200 452 "http://localhost:8080/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:53 +0000] "GET /api/me HTTP/1.1" 200 365 "http://localhost:8080/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:53 +0000] "GET /assets/format-868eUAWx.js HTTP/1.1" 200 701 "http://localhost:8080/trainer" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:53 +0000] "GET /assets/Dashboard-9nnfpzE1.js HTTP/1.1" 200 1883 "http://localhost:8080/trainer" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:53 +0000] "GET /assets/VirtualList-BV5gsxQE.js HTTP/1.1" 200 10925 "http://localhost:8080/trainer" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:53 +0000] "GET /api/dashboard HTTP/1.1" 200 1015 "http://localhost:8080/trainer" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:53 +0000] "GET /assets/TraineePage-wl3zHyWc.js HTTP/1.1" 200 2485 "http://localhost:8080/trainer/trainees/4" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:53 +0000] "GET /api/exercises HTTP/1.1" 200 854 "http://localhost:8080/trainer/trainees/4" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:53 +0000] "GET /api/trainees/4/trends?weeks=8 HTTP/1.1" 200 577 "http://localhost:8080/trainer/trainees/4" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:53 +0000] "GET /api/trainees/4 HTTP/1.1" 200 423 "http://localhost:8080/trainer/trainees/4" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:53 +0000] "GET /api/sessions?trainee_id=4&limit=50 HTTP/1.1" 200 369 "http://localhost:8080/trainer/trainees/4" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:53 +0000] "GET /api/trainees/4/plans HTTP/1.1" 200 1084 "http://localhost:8080/trainer/trainees/4" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:53 +0000] "GET /assets/TrendsChart-DHSTE25S.js HTTP/1.1" 200 700 "http://localhost:8080/trainer/trainees/4" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:53 +0000] "GET /assets/ReportPage-Gf_W4vNs.js HTTP/1.1" 200 2216 "http://localhost:8080/reports/22" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:53 +0000] "GET /api/reports/22 HTTP/1.1" 200 850 "http://localhost:8080/reports/22" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:53 +0000] "POST /api/reports/22/notes HTTP/1.1" 201 184 "http://localhost:8080/reports/22" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:53 +0000] "GET /api/reports/22 HTTP/1.1" 200 941 "http://localhost:8080/reports/22" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:53 +0000] "POST /api/reports/22/export/xlsx HTTP/1.1" 202 94 "http://localhost:8080/reports/22" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:54 +0000] "GET /api/jobs/83482bf2-872a-4e63-a7c5-de89267250a3 HTTP/1.1" 200 95 "http://localhost:8080/reports/22" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:54 +0000] "GET /api/jobs/83482bf2-872a-4e63-a7c5-de89267250a3 HTTP/1.1" 200 162 "http://localhost:8080/reports/22" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:54 +0000] "GET /api/reports/22/files/xlsx HTTP/1.1" 200 6613 "http://localhost:8080/reports/22" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:54 +0000] "POST /api/reports/22/export/pdf HTTP/1.1" 202 94 "http://localhost:8080/reports/22" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:55 +0000] "GET /api/jobs/cdc3ed50-deb5-4f49-b42d-1f4c09329ac2 HTTP/1.1" 200 95 "http://localhost:8080/reports/22" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:55 +0000] "GET /api/jobs/cdc3ed50-deb5-4f49-b42d-1f4c09329ac2 HTTP/1.1" 200 95 "http://localhost:8080/reports/22" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:56 +0000] "GET /api/jobs/cdc3ed50-deb5-4f49-b42d-1f4c09329ac2 HTTP/1.1" 200 160 "http://localhost:8080/reports/22" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:56 +0000] "GET /api/reports/22/files/pdf HTTP/1.1" 200 61395 "http://localhost:8080/reports/22" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:56 +0000] "POST /api/reports/22/send HTTP/1.1" 202 94 "http://localhost:8080/reports/22" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:56 +0000] "GET /login HTTP/1.1" 200 567 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:56 +0000] "GET /assets/index-BU5SikZ7.js HTTP/1.1" 200 86278 "http://localhost:8080/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:56 +0000] "GET /assets/index-XWL5NBkO.css HTTP/1.1" 200 3051 "http://localhost:8080/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:56 +0000] "GET /assets/query-DMrHPFWj.js HTTP/1.1" 200 14926 "http://localhost:8080/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:56 +0000] "GET /assets/recharts-CafPervD.js HTTP/1.1" 200 111998 "http://localhost:8080/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:56 +0000] "GET /sw.js HTTP/1.1" 200 652 "http://localhost:8080/login" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:56 +0000] "GET / HTTP/1.1" 200 567 "http://localhost:8080/sw.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:56 +0000] "GET /index.html HTTP/1.1" 200 567 "http://localhost:8080/sw.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:56 +0000] "GET /manifest.webmanifest HTTP/1.1" 200 583 "http://localhost:8080/sw.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:56 +0000] "GET /pose-worker.js HTTP/1.1" 200 1106 "http://localhost:8080/sw.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:56 +0000] "GET /assets/Login-2dU9LThc.js HTTP/1.1" 200 729 "http://localhost:8080/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:56 +0000] "GET /assets/web-vitals-DTdQsl0v.js HTTP/1.1" 200 2137 "http://localhost:8080/assets/index-BU5SikZ7.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:57 +0000] "POST /api/auth/login HTTP/1.1" 200 474 "http://localhost:8080/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:57 +0000] "GET /api/me HTTP/1.1" 200 741 "http://localhost:8080/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:57 +0000] "GET /assets/Home-Cn9sbzH8.js HTTP/1.1" 200 2235 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:57 +0000] "GET /assets/workout-BzrgxTRs.js HTTP/1.1" 200 855 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:57 +0000] "GET /assets/format-868eUAWx.js HTTP/1.1" 200 701 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:57 +0000] "GET /api/exercises HTTP/1.1" 200 854 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:57 +0000] "GET /api/me/sessions?limit=30 HTTP/1.1" 200 353 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:57 +0000] "GET /api/plans/active HTTP/1.1" 200 1076 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:57 +0000] "GET /trainer HTTP/1.1" 200 567 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:57 +0000] "POST /api/metrics/rum HTTP/1.1" 204 0 "http://localhost:8080/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:57 +0000] "GET /api/me HTTP/1.1" 200 741 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:57 +0000] "GET /api/exercises HTTP/1.1" 200 854 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:57 +0000] "GET /api/me/sessions?limit=30 HTTP/1.1" 200 353 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:57 +0000] "GET /api/plans/active HTTP/1.1" 200 1076 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"
+web-1     | 172.18.0.1 - - [12/Nov/2026:17:11:57 +0000] "GET /api/dashboard HTTP/1.1" 403 48 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36" "-"

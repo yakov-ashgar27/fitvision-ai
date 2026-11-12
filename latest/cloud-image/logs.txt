@@ -1,1 +1,12 @@
-Error response from daemon: No such container: fv
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 0001, Initial schema: the 17 tables of section 4.3 with the indexes of table 6.5.
+INFO  [alembic.runtime.migration] Running upgrade 0001 -> 0002, Calibrate the biceps-curl rules after the first real-phone trial (12.11.2026, chapter 10).
+seed done
+INFO:     Started server process [1]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     172.17.0.1:46532 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     172.17.0.1:46536 - "GET / HTTP/1.1" 200 OK
+INFO:     172.17.0.1:46540 - "POST /api/auth/login HTTP/1.1" 200 OK

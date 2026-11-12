@@ -1,0 +1,15 @@
+Using cached argon2_cffi_bindings-26.1.0-cp310-abi3-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl (26 kB)
+Using cached cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (221 kB)
+Using cached certifi-2026.10.23-py3-none-any.whl (135 kB)
+Using cached et_xmlfile-2.0.0-py3-none-any.whl (18 kB)
+Using cached iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+Using cached mako-1.4.3-py3-none-any.whl (80 kB)
+Using cached packaging-26.3-py3-none-any.whl (129 kB)
+Using cached pycparser-3.12-py3-none-any.whl (62 kB)
+Installing collected packages: sortedcontainers, websockets, uvloop, tzlocal, typing-extensions, ruff, redis, pyyaml, python-multipart, python-dotenv, pyodbc, PyJWT, pycparser, psycopg-binary, pluggy, packaging, MarkupSafe, iniconfig, idna, httptools, h11, greenlet, et-xmlfile, dnspython, click, certifi, annotated-types, uvicorn, SQLAlchemy, rq, pytest, pyee, pydantic-core, psycopg, openpyxl, Mako, Jinja2, httpcore, fakeredis, email-validator, cffi, APScheduler, anyio, watchfiles, starlette, pydantic, playwright, httpx, argon2-cffi-bindings, alembic, fastapi, argon2-cffi
+[?25l
+[?25h
+Successfully installed APScheduler-3.11.0 Jinja2-3.1.5 Mako-1.4.3 MarkupSafe-3.0.4 PyJWT-2.10.1 SQLAlchemy-2.0.36 alembic-1.14.0 annotated-types-0.8.0 anyio-4.16.0 argon2-cffi-23.1.0 argon2-cffi-bindings-26.1.0 certifi-2026.10.23 cffi-2.1.1 click-8.5.1 dnspython-2.9.2 email-validator-2.2.0 et-xmlfile-2.0.0 fakeredis-2.26.2 fastapi-0.115.6 greenlet-3.1.1 h11-0.16.0 httpcore-1.0.9 httptools-0.9.0 httpx-0.28.1 idna-3.20 iniconfig-2.3.1 openpyxl-3.1.5 packaging-26.3 playwright-1.49.1 pluggy-1.7.0 psycopg-3.2.3 psycopg-binary-3.2.3 pycparser-3.12 pydantic-2.10.4 pydantic-core-2.27.2 pyee-12.0.0 pyodbc-5.2.0 pytest-8.3.4 python-dotenv-1.2.4 python-multipart-0.0.20 pyyaml-6.0.3 redis-5.2.1 rq-2.1.0 ruff-0.8.4 sortedcontainers-2.4.0 starlette-0.41.3 typing-extensions-4.16.0 tzlocal-5.4.5 uvicorn-0.34.0 uvloop-0.23.0 watchfiles-1.3.0 websockets-17.4
+
+[1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m A new release of pip is available: [0m[31;49m26.2.2[0m[39;49m -> [0m[32;49m26.3[0m
+[1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m To update, run: [0m[32;49mpip install --upgrade pip[0m
