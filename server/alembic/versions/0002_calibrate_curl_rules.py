@@ -22,13 +22,14 @@ CHANGES = [  # rule name, old max angle, new max angle
 ]
 
 
+rules = sa.table("TechniqueRules", sa.column("rule_name", sa.String), sa.column("max_angle", sa.Numeric))
+
+
 def _apply(pairs) -> None:
+    # built with SQLAlchemy Core, so the quoting of the mixed-case table name is right on every database
     bind = op.get_bind()
     for name, old, new in pairs:
-        bind.execute(
-            sa.text("UPDATE TechniqueRules SET max_angle = :new WHERE rule_name = :name AND max_angle = :old"),
-            {"new": new, "old": old, "name": name},
-        )
+        bind.execute(rules.update().where(rules.c.rule_name == name, rules.c.max_angle == old).values(max_angle=new))
 
 
 def upgrade() -> None:

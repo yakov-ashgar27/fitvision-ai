@@ -11,7 +11,7 @@ def _bool(name: str, default: bool = False) -> bool:
 
 @dataclass(frozen=True)
 class Settings:
-    database_url: str = field(default_factory=lambda: os.getenv("DATABASE_URL", "sqlite:///./fitvision.db"))
+    database_url: str = field(default_factory=lambda: os.getenv("DATABASE_URL") or "sqlite:///./fitvision.db")
     redis_url: str | None = field(default_factory=lambda: os.getenv("REDIS_URL") or None)
     jwt_secret: str = field(default_factory=lambda: os.getenv("JWT_SECRET", "dev-only-change-me-please-32-bytes!!"))
     jwt_minutes: int = field(default_factory=lambda: int(os.getenv("JWT_MINUTES", "60")))  # NFR-06

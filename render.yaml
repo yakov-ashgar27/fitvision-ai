@@ -11,3 +11,7 @@ services:
         generateValue: true
       - key: SEED_DEMO
         value: "1"
+      # permanent data: paste the connection string of a free Neon PostgreSQL database (neon.tech).
+      # Left empty, the service falls back to SQLite inside the container, which is reset on every restart.
+      - key: DATABASE_URL
+        sync: false
