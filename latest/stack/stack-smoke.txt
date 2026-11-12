@@ -1,4 +1,0 @@
-dashboard 200 71ms kpis {'active_trainees': 2, 'sessions_week': 8, 'avg_score_week': 95.7, 'reports_to_review': 22} alerts 2
-dashboard (cached) True 3ms
-pdf http 202 job finished 1.27s 70126 bytes
-xlsx http 202 job finished 0.63s 7338 bytes
