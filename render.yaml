@@ -5,6 +5,7 @@ services:
     runtime: docker
     dockerfilePath: ./Dockerfile.cloud
     plan: free
+    region: frankfurt
     healthCheckPath: /api/health
     envVars:
       - key: JWT_SECRET
