@@ -42,22 +42,74 @@ export const setCueLang = (l: CueLang) => {
   }
 };
 
+/* ---------- voices ----------
+ * Speech uses the phone's own text-to-speech engine. Voices load asynchronously, and some engines have no
+ * Hebrew voice at all (e.g. Samsung TTS), which made the cues silent in the third trial. So: wait for the voices,
+ * report which languages are available, and let the workout fall back to a language the phone can speak. */
+let voices: SpeechSynthesisVoice[] = [];
+function loadVoices(): SpeechSynthesisVoice[] {
+  if (typeof speechSynthesis === "undefined") return [];
+  const v = speechSynthesis.getVoices();
+  if (v.length) voices = v;
+  return voices;
+}
+if (typeof speechSynthesis !== "undefined") {
+  loadVoices();
+  speechSynthesis.addEventListener?.("voiceschanged", loadVoices);
+}
+
+/** Resolves with the voice list once the engine has published it (or after 2.5 s). */
+export function voicesReady(): Promise<SpeechSynthesisVoice[]> {
+  if (typeof speechSynthesis === "undefined") return Promise.resolve([]);
+  if (loadVoices().length) return Promise.resolve(voices);
+  return new Promise((resolve) => {
+    const done = () => resolve(loadVoices());
+    speechSynthesis.addEventListener?.("voiceschanged", done, { once: true });
+    setTimeout(done, 2500);
+  });
+}
+
+const prefix = (lang: CueLang) => (lang === "en" ? "en" : lang === "he" ? "he" : lang);
+export function voiceFor(lang: CueLang): SpeechSynthesisVoice | undefined {
+  const all = loadVoices();
+  const p = prefix(lang);
+  // Hebrew is "he-IL" on most engines and "iw-IL" on some older Android ones
+  const match = (v: SpeechSynthesisVoice) => {
+    const l = v.lang.toLowerCase().replace("_", "-");
+    return l.startsWith(p) || (p === "he" && l.startsWith("iw"));
+  };
+  return all.find((v) => match(v) && v.localService) ?? all.find(match);
+}
+export const speechSupported = () => typeof speechSynthesis !== "undefined" && typeof SpeechSynthesisUtterance !== "undefined";
+
+/** The language the workout will actually speak: the chosen one if the phone has a voice for it, else English. */
+export function spokenLang(): CueLang {
+  const want = cueLang();
+  if (voiceFor(want) || !loadVoices().length) return want;
+  return voiceFor("en") ? "en" : want;
+}
+
 let last = "";
 let lastAt = 0;
 export function say(text: string, lang: CueLang = cueLang()): void {
-  if (!voiceOn() || typeof speechSynthesis === "undefined") return;
+  if (!voiceOn() || !speechSupported()) return;
   const now = Date.now();
   if (text === last && now - lastAt < 4000) return;
   last = text;
   lastAt = now;
-  const u = new SpeechSynthesisUtterance(text.replace(/[^\p{L}\p{N}\s!,.?'"-]/gu, ""));
+  const u = new SpeechSynthesisUtterance(text.replace(/[^\p{L}\p{N}\s!,.?'"-]/gu, "").trim());
   u.lang = lang === "en" ? "en-US" : "he-IL";
-  const voice = speechSynthesis.getVoices().find((v) => v.lang.toLowerCase().startsWith(lang === "en" ? "en" : "he"));
-  if (voice) u.voice = voice;
+  const voice = voiceFor(lang);
+  if (voice) {
+    u.voice = voice;
+    u.lang = voice.lang;
+  }
   u.rate = 1;
   u.volume = 1;
-  speechSynthesis.cancel(); // the newest cue replaces an older one that is still being read
-  speechSynthesis.speak(u);
+  // cancel() right before speak() silently drops the new utterance on some Android builds: only cancel if busy
+  if (speechSynthesis.speaking || speechSynthesis.pending) speechSynthesis.cancel();
+  speechSynthesis.resume(); // Chrome on Android can leave the queue paused after the page was in the background
+  setTimeout(() => speechSynthesis.speak(u), speechSynthesis.speaking ? 60 : 0);
 }
 
 let ctx: AudioContext | null = null;
@@ -121,9 +173,12 @@ export const sfx = {
   /** Browsers (iOS especially) allow audio and speech only after a tap: call this from the start button. */
   unlock: () => {
     audio();
-    if (voiceOn() && typeof speechSynthesis !== "undefined") {
-      const u = new SpeechSynthesisUtterance(" ");
-      u.volume = 0;
+    if (voiceOn() && speechSupported()) {
+      // a real (quiet) word inside the tap: some engines ignore an empty utterance and stay locked
+      const u = new SpeechSynthesisUtterance(cueLang() === "en" ? "ready" : "מוכן");
+      u.volume = 0.01;
+      const v = voiceFor(cueLang());
+      if (v) u.voice = v;
       speechSynthesis.speak(u);
     }
   },

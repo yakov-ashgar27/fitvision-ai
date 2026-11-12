@@ -2,7 +2,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { api } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
-import { CueLang, cueLang, say, setCueLang, setSounds, setVoice, sfx, soundsOn, voiceOn } from "../lib/speech";
+import { CueLang, cueLang, say, setCueLang, setSounds, setVoice, sfx, soundsOn, speechSupported, voiceFor, voiceOn, voicesReady } from "../lib/speech";
 
 export default function Settings() {
   const { me, user, refresh, logout } = useAuth();
@@ -10,6 +10,7 @@ export default function Settings() {
   const [sounds, setS] = useState(soundsOn());
   const [voice, setV] = useState(voiceOn());
   const [lang, setL] = useState<CueLang>(cueLang());
+  const [voiceCheck, setVoiceCheck] = useState<string | null>(null);
   const [p, setP] = useState({ height_cm: "", weight_kg: "", fitness_level: "", injuries_notes: "" });
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -142,6 +143,34 @@ export default function Settings() {
               </button>
             ))}
           </div>
+        </div>
+        <div className="stack">
+          <button
+            className="secondary"
+            data-testid="voice-test"
+            onClick={async () => {
+              sfx.unlock();
+              if (!speechSupported()) {
+                setVoiceCheck("הדפדפן הזה לא תומך בהקראה קולית. נסו ב-Chrome.");
+                return;
+              }
+              const all = await voicesReady();
+              const he = voiceFor("he");
+              const en = voiceFor("en");
+              say(lang === "en" || !he ? "Keep your elbow tucked" : "הצמד את המרפק לגוף", lang === "en" || !he ? "en" : "he");
+              setVoiceCheck(
+                `קולות בטלפון: ${all.length}. עברית: ${he ? `✓ ${he.name}` : "✗ לא נמצא"}. אנגלית: ${en ? `✓ ${en.name}` : "✗ לא נמצא"}.` +
+                  (he ? "" : " כדי לשמוע עברית: הגדרות הטלפון ← ניהול כללי ← המרת טקסט לדיבור ← מנוע מועדף: Google ← התקנת נתוני קול ← עברית. ב-iPhone: הגדרות ← נגישות ← תוכן מוקרא ← קולות ← עברית."),
+              );
+            }}
+          >
+            🔊 בדיקת קול
+          </button>
+          {voiceCheck && (
+            <div className="small" data-testid="voice-check" role="status">
+              {voiceCheck}
+            </div>
+          )}
         </div>
       </div>
       <div className="card stack">

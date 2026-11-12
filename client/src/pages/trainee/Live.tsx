@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Coach, Cue } from "../../engine/coach";
 import { CompletedRep, TechniqueEngine } from "../../engine/engine";
 import { report } from "../../lib/rum";
-import { cueLang, say, setSounds, setVoice, sfx, soundsOn, voiceOn } from "../../lib/speech";
+import { cueLang, say, setSounds, setVoice, sfx, soundsOn, spokenLang, voiceOn, voicesReady } from "../../lib/speech";
 import { addSet, finishWorkout } from "../../offline/sync";
 import { drawSkeleton } from "../../vision/draw";
 import { PosePipeline, PipelineStats, shutdownPose } from "../../vision/poseClient";
@@ -28,6 +28,8 @@ export default function Live() {
   const [flash, setFlash] = useState<"good" | "bad" | null>(null);
   const [party, setParty] = useState(0);
   const coach = useRef<Coach | null>(null);
+  const lang = useRef(cueLang());
+  const [langNote, setLangNote] = useState<string | null>(null);
   const lastRule = useRef<number | null>(null);
   const cueId = useRef(0);
   const [tracking, setTracking] = useState(true);
@@ -48,7 +50,7 @@ export default function Live() {
     cueId.current += 1;
     setFeedback({ ...cue, id: cueId.current, joints });
     // corrections, "finish the movement" cues and milestones are spoken; plain praise stays a visual + pop
-    if (cue.key !== "praise" && cue.key !== "streak") say(cue.text);
+    if (cue.key !== "praise" && cue.key !== "streak") say(cue.text, lang.current);
     if (cue.tone !== "good" && !shownMessages.current.includes(cue.text)) shownMessages.current.push(cue.text);
     window.clearTimeout(fbTimer.current);
     fbTimer.current = window.setTimeout(() => setFeedback(null), cue.tone === "good" ? 1600 : 2600);
@@ -101,7 +103,7 @@ export default function Live() {
   useEffect(() => {
     if (!item || !video.current) return;
     engine.current = new TechniqueEngine(item.exercise, { aspect: 4 / 3 });
-    coach.current = new Coach(item.exercise.name, item.exercise.rules, item.target_reps, cueLang());
+    coach.current = new Coach(item.exercise.name, item.exercise.rules, item.target_reps, lang.current);
     const p = new PosePipeline(
       video.current,
       (r) => {
@@ -161,20 +163,33 @@ export default function Live() {
     };
   }, [item, showCue]);
 
+  // the phone may have no voice for the chosen language: speak (and show) the cues in one it has
+  useEffect(() => {
+    void voicesReady().then(() => {
+      const l = spokenLang();
+      if (l !== lang.current) {
+        lang.current = l;
+        if (item) coach.current = new Coach(item.exercise.name, item.exercise.rules, item.target_reps, l);
+        setLangNote("לא נמצא קול עברי בטלפון, ולכן ההערות יוקראו באנגלית. אפשר להתקין קול עברי: הגדרות ← המרת טקסט לדיבור ← Google");
+        window.setTimeout(() => setLangNote(null), 7000);
+      }
+    });
+  }, [item]);
+
   // rest timer between sets
   useEffect(() => {
     if (rest === null) return;
     if (rest <= 0) {
       setRest(null);
       engine.current = item ? new TechniqueEngine(item.exercise, { aspect: 4 / 3 }) : null;
-      coach.current = item ? new Coach(item.exercise.name, item.exercise.rules, item.target_reps, cueLang()) : null;
+      coach.current = item ? new Coach(item.exercise.name, item.exercise.rules, item.target_reps, lang.current) : null;
       lastRule.current = null;
       setCount(0);
       setValid(0);
       setFeedback(null);
       setStart.current = new Date().toISOString();
       pipe.current?.run();
-      say(cueLang() === "en" ? "Go!" : "מתחילים");
+      say(lang.current === "en" ? "Go!" : "מתחילים", lang.current);
       return;
     }
     if (rest <= 3) sfx.tick();
@@ -254,6 +269,7 @@ export default function Live() {
           </div>
         )}
         {party > 0 && <Confetti key={party} />}
+        {langNote && <div className="status small" style={{ top: "auto", bottom: 200 }}>{langNote}</div>}
         {rest !== null && (
           <div className="rest">
             <div>
