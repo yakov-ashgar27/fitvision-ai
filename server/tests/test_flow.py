@@ -148,3 +148,14 @@ def test_stale_sessions_are_closed(api, client):
         assert db.get(m.WorkoutSession, empty) is None
         s = db.get(m.WorkoutSession, with_set)
         assert s.status == "Aborted" and s.report is not None
+
+
+def test_trainee_exports_own_report_and_history(api, client):
+    tt, _rt, _ids = api.pair()
+    out = api.workout(tt, _squat(api, tt), [rep(1), rep(2)])
+    job = client.post(f"/api/reports/{out['report_id']}/export/xlsx", headers=api.h(tt))
+    assert job.status_code in (200, 202), job.text
+    h = client.get("/api/me/sessions/export.xlsx", headers=api.h(tt))
+    assert h.status_code == 200 and h.content[:2] == b"PK"  # an .xlsx is a zip file
+    other = api.register("someone@test.io")["access_token"]
+    assert client.post(f"/api/reports/{out['report_id']}/export/pdf", headers=api.h(other)).status_code in (403, 404)

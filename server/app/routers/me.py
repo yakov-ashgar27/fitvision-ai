@@ -101,6 +101,35 @@ def my_trends(weeks: int = Query(8, ge=1, le=52), user: m.User = Depends(require
     return trends(db, user.user_id, weeks, None)
 
 
+@router.get("/sessions/export.xlsx")
+def export_history(user: m.User = Depends(require_role("Trainee")), db: Session = Depends(get_db)):
+    """The trainee's whole workout history as an Excel file (right-to-left sheet)."""
+    from io import BytesIO
+
+    from fastapi.responses import Response
+    from openpyxl import Workbook
+    from openpyxl.styles import Font
+
+    rows = session_list(db, user.user_id, None, None, 1000, 0)
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "היסטוריה"
+    ws.sheet_view.rightToLeft = True
+    ws.append(["תאריך", "שעה", "תרגילים", "חזרות", "ציון טכניקה", "סטטוס"])
+    for c in ws[1]:
+        c.font = Font(bold=True)
+    status_he = {"Done": "הושלם", "Aborted": "הופסק", "InProgress": "בתהליך"}
+    for r in rows:
+        ws.append([r.started_at.date(), r.started_at.strftime("%H:%M"), " · ".join(r.exercises), r.total_reps,
+                   r.avg_technique_score, status_he.get(r.status, r.status)])
+    for col, width in zip("ABCDEF", (12, 8, 32, 8, 12, 10), strict=True):
+        ws.column_dimensions[col].width = width
+    buf = BytesIO()
+    wb.save(buf)
+    return Response(buf.getvalue(), media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    headers={"Content-Disposition": 'attachment; filename="fitvision-history.xlsx"'})
+
+
 @router.get("/reports")
 def my_reports(user: m.User = Depends(require_role("Trainee")), db: Session = Depends(get_db)):
     rows = db.execute(

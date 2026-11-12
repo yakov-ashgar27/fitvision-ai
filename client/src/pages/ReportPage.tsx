@@ -96,14 +96,16 @@ export default function ReportPage() {
             {fmtDateTime(r.started_at)} · {STATUS_HE[r.session_status]} · <span className="pill" data-testid="report-status">{STATUS_HE[r.status]}</span>
           </div>
         </div>
+        <div className="row">
+          <button className="secondary" disabled={!!busy} onClick={() => exportFile("pdf")} data-testid="export-pdf">
+            {busy === "pdf" ? "מפיק…" : "⬇️ PDF"}
+          </button>
+          <button className="secondary" disabled={!!busy} onClick={() => exportFile("xlsx")} data-testid="export-xlsx">
+            {busy === "xlsx" ? "מפיק…" : "⬇️ Excel"}
+          </button>
+        </div>
         {isTrainer && (
           <div className="row">
-            <button className="secondary" disabled={!!busy} onClick={() => exportFile("pdf")} data-testid="export-pdf">
-              {busy === "pdf" ? "מפיק…" : "PDF"}
-            </button>
-            <button className="secondary" disabled={!!busy} onClick={() => exportFile("xlsx")} data-testid="export-xlsx">
-              {busy === "xlsx" ? "מפיק…" : "Excel"}
-            </button>
             <button disabled={!!busy} onClick={() => send("InApp")} data-testid="send-report">
               שליחה למתאמן
             </button>

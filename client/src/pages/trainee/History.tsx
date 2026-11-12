@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { api } from "../../api/client";
+import { api, downloadFile } from "../../api/client";
 import type { Exercise, SessionSummary } from "../../api/types";
 import { SkeletonRows } from "../../components/Skeleton";
 import { Sparkline } from "../../components/Sparkline";
@@ -22,6 +22,13 @@ export default function History() {
     <div className="stack">
       <div className="spread">
         <h1>היסטוריית אימונים</h1>
+        <button
+          className="secondary"
+          data-testid="export-history"
+          onClick={() => void downloadFile("/me/sessions/export.xlsx", "fitvision-history.xlsx")}
+        >
+          ⬇️ ייצוא ל-Excel
+        </button>
         <select value={exercise} onChange={(e) => setExercise(e.target.value)} style={{ maxWidth: 220 }} aria-label="סינון לפי תרגיל">
           <option value="">כל התרגילים</option>
           {exercises.data?.map((e) => (

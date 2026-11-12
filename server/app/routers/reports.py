@@ -90,8 +90,9 @@ def add_note(report_id: int, data: NoteIn, request: Request, user: m.User = Depe
 
 
 @router.post("/reports/{report_id}/export/{fmt}", response_model=JobOut)
-def export(report_id: int, fmt: str, request: Request, user: m.User = Depends(require_role("Trainer")),
+def export(report_id: int, fmt: str, request: Request, user: m.User = Depends(require_role("Trainer", "Trainee")),
            db: Session = Depends(get_db)):
+    # trainers export their trainees' reports (US-14); a trainee may export their own (access checked in _get)
     if fmt not in exporting.EXPORTERS:
         raise HTTPException(422, "פורמט לא נתמך")
     r = _get(db, report_id, user, request)
