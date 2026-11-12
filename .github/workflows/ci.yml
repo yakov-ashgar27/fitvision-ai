@@ -1,0 +1,240 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "feature/**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_COLOR: "0"
+
+jobs:
+  server:
+    name: Server – ruff + pytest (SQLite, real PDF)
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: server, shell: bash } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip, cache-dependency-path: server/requirements*.txt }
+      - run: pip install -r requirements-dev.txt 2>&1 | tail -n 3
+      - run: python -m playwright install --with-deps chromium > /dev/null
+      - name: ruff
+        run: set -o pipefail; mkdir -p ../out; ruff check . 2>&1 | tee ../out/ruff.txt
+      - name: pytest
+        run: set -o pipefail; TEST_PDF_ENGINE=chromium python -m pytest -q -rA --durations=10 2>&1 | tee ../out/pytest-sqlite.txt
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: server, path: out/ }
+
+  server-mssql:
+    name: Server – SQL Server 2022 + migrations + pytest
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: server, shell: bash } }
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env: { ACCEPT_EULA: "Y", MSSQL_PID: Express, MSSQL_SA_PASSWORD: "FitVision!2028" }
+        ports: ["1433:1433"]
+    env:
+      DATABASE_URL: "mssql+pyodbc://sa:FitVision!2028@localhost:1433/fitvision?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip, cache-dependency-path: server/requirements*.txt }
+      - name: ODBC driver 18
+        run: |
+          mkdir -p ../out
+          exec > >(tee ../out/odbc.txt) 2>&1
+          if ! odbcinst -q -d 2>/dev/null | grep -q "ODBC Driver 18"; then
+            curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/microsoft-prod.gpg
+            curl -fsSL "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list" | sudo tee /etc/apt/sources.list.d/mssql-release.list
+            sudo apt-get update -qq && sudo ACCEPT_EULA=Y apt-get install -y -qq msodbcsql18 unixodbc-dev
+          fi
+          odbcinst -q -d
+      - run: set -o pipefail; pip install -r requirements-dev.txt 2>&1 | tail -n 15 | tee ../out/pip.txt
+      - name: create database, run Alembic migration, seed (python -m app.db_init)
+        run: set -o pipefail; mkdir -p ../out; SEED_DEMO=1 python -m app.db_init 2>&1 | tee ../out/mssql-init.txt
+      - name: schema check
+        run: |
+          set -o pipefail
+          python - <<'EOF' 2>&1 | tee ../out/mssql-schema.txt
+          from sqlalchemy import inspect, text
+          from app.db import engine
+          insp = inspect(engine)
+          tables = sorted(insp.get_table_names())
+          print(len(tables), "tables:", ", ".join(tables))
+          for t in ("WorkoutSessions", "ExerciseSets", "TrainerTraineeAssignments", "AuditLog", "FormErrorEvents"):
+              print(t, [(i["name"], i["column_names"], bool(i.get("unique"))) for i in insp.get_indexes(t)])
+          with engine.connect() as c:
+              print("exercises:", c.execute(text("SELECT name FROM Exercises")).scalars().all())
+              print("sessions:", c.execute(text("SELECT COUNT(*) FROM WorkoutSessions")).scalar(),
+                    "reports:", c.execute(text("SELECT COUNT(*) FROM Reports")).scalar())
+          EOF
+      - name: pytest on SQL Server
+        run: set -o pipefail; TEST_DATABASE_URL="$DATABASE_URL" python -m pytest -q -rA -x 2>&1 | tee ../out/pytest-mssql.txt
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: server-mssql, path: out/ }
+
+  client:
+    name: Client – eslint + tsc + vitest + build
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: client, shell: bash } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: mkdir -p ../out && (npm ci 2>/dev/null || npm install) 2>&1 | tail -n 5 | tee ../out/npm-install.txt
+      - run: cp package-lock.json ../out/package-lock.json
+      - name: eslint
+        run: set -o pipefail; npm run lint 2>&1 | tee ../out/eslint.txt
+      - name: vitest
+        run: set -o pipefail; npx vitest run --reporter=verbose 2>&1 | tee ../out/vitest.txt
+      - name: build (tsc + vite)
+        run: set -o pipefail; npm run build 2>&1 | tee ../out/build.txt
+      - name: bundle sizes
+        run: ls -la dist/assets | sort -k5 -n | tee ../out/bundle-sizes.txt; du -sh dist/mediapipe dist/models | tee -a ../out/bundle-sizes.txt
+      - uses: actions/upload-artifact@v4
+        with: { name: client-dist, path: client/dist }
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: client, path: out/ }
+
+  e2e:
+    name: E2E – phone viewport, live workout, real MediaPipe
+    needs: client
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip, cache-dependency-path: server/requirements*.txt }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: actions/download-artifact@v4
+        with: { name: client-dist, path: client/dist }
+      - run: mkdir -p out && set -o pipefail && pip install -r server/requirements.txt 2>&1 | tail -n 5 | tee out/e2e-setup.txt
+      - run: set -o pipefail; python -m playwright install --with-deps chromium 2>&1 | tail -n 5 | tee -a out/e2e-setup.txt
+      - working-directory: client
+        run: set -o pipefail; ((npm ci 2>/dev/null || npm install) && npx playwright install chromium) 2>&1 | tail -n 10 | tee -a ../out/e2e-setup.txt
+      - name: camera video of a person (fake webcam for MediaPipe)
+        continue-on-error: true
+        run: |
+          mkdir -p out
+          echo "camera video step" > out/fake-video.txt
+          which ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null)
+          curl -fsSL -o person.jpg https://storage.googleapis.com/mediapipe-assets/pose.jpg || true
+          if [ -s person.jpg ]; then
+            ffmpeg -loglevel error -loop 1 -i person.jpg -t 20 -r 15 -vf "scale=640:-2,pad=640:480:(ow-iw)/2:(oh-ih)/2" -pix_fmt yuv420p person.y4m
+            echo "FAKE_VIDEO=$PWD/person.y4m" >> "$GITHUB_ENV"
+          fi
+          ls -la person.* >> out/fake-video.txt 2>&1 || true
+      - name: playwright
+        working-directory: client
+        run: set -o pipefail; mkdir -p ../out; CI=1 npx playwright test 2>&1 | tee ../out/playwright.txt
+      - if: always()
+        run: |
+          mkdir -p out/test-results
+          cd client/test-results 2>/dev/null && find . -name "error-context.md" -o -name "*.png" -o -name "pose-metrics.json" | cpio -pdm ../../out/test-results 2>/dev/null || true
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: e2e, path: out/ }
+
+  stack:
+    name: Docker Compose – SQL Server + Redis + API + RQ worker + nginx
+    needs: client
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: compose up
+        run: |
+          set -o pipefail
+          mkdir -p out
+          cp .env.example .env
+          docker compose up -d --build 2>&1 | tail -n 30 | tee out/compose-up.txt
+          for i in $(seq 1 60); do curl -fsS http://localhost:8080/api/health && break; sleep 5; done | tee out/health.txt
+          docker compose ps | tee out/compose-ps.txt
+      - name: smoke through nginx (login, dashboard, report export via the RQ worker)
+        run: |
+          set -o pipefail
+          python3 - <<'EOF' 2>&1 | tee out/stack-smoke.txt
+          import json, time, urllib.request
+          B = "http://localhost:8080/api"
+          def call(path, body=None, token=None, method=None):
+              req = urllib.request.Request(B + path, data=json.dumps(body).encode() if body is not None else None,
+                                           method=method or ("POST" if body is not None else "GET"))
+              req.add_header("Content-Type", "application/json")
+              if token: req.add_header("Authorization", "Bearer " + token)
+              with urllib.request.urlopen(req, timeout=60) as r:
+                  return r.status, r.headers.get("content-encoding"), r.read()
+          st, _, raw = call("/auth/login", {"email": "trainer@fitvision.app", "password": "Demo1234!"})
+          tok = json.loads(raw)["access_token"]
+          t0 = time.time(); st, enc, raw = call("/dashboard", token=tok); d = json.loads(raw)
+          print("dashboard", st, f"{(time.time()-t0)*1000:.0f}ms", "kpis", d["kpis"], "alerts", len(d["alerts"]))
+          t0 = time.time(); st, enc, raw = call("/dashboard", token=tok); print("dashboard (cached)", json.loads(raw)["cached"], f"{(time.time()-t0)*1000:.0f}ms")
+          st, _, raw = call("/reports", token=tok); rid = json.loads(raw)[0]["report_id"]
+          for fmt in ("pdf", "xlsx"):
+              t0 = time.time(); st, _, raw = call(f"/reports/{rid}/export/{fmt}", {}, tok); job = json.loads(raw)
+              while job["status"] not in ("finished", "failed"):
+                  time.sleep(0.3); _, _, raw = call(f"/jobs/{job['job_id']}", token=tok); job = json.loads(raw)
+              _, _, data = call(f"/reports/{rid}/files/{fmt}", token=tok)
+              print(fmt, "http", st, "job", job["status"], f"{time.time()-t0:.2f}s", len(data), "bytes")
+          EOF
+      - uses: actions/download-artifact@v4
+        with: { name: client-dist, path: client/dist }
+      - name: playwright against the full stack
+        working-directory: client
+        run: |
+          set -o pipefail
+          (npm ci 2>/dev/null || npm install) > /dev/null && npx playwright install --with-deps chromium > /dev/null
+          E2E_BASE_URL=http://localhost:8080 CI=1 npx playwright test --project=desktop --project=mobile -g "trainer|squat" 2>&1 | tee ../out/stack-playwright.txt
+      - if: always()
+        run: |
+          mkdir -p out/test-results
+          cd client/test-results 2>/dev/null && find . -name "error-context.md" -o -name "*.png" -o -name "pose-metrics.json" | cpio -pdm ../../out/test-results 2>/dev/null || true
+      - if: always()
+        run: docker compose logs --no-color --tail=150 api worker web > out/compose-logs.txt 2>&1 || true
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: stack, path: out/ }
+
+  report:
+    name: Publish CI report to the ci-reports branch
+    if: always()
+    needs: [server, server-mssql, client, e2e, stack]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { path: artifacts }
+      - name: push
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          rm -rf artifacts/client-dist
+          cat > artifacts/SUMMARY.md <<EOF
+          # CI ${GITHUB_SHA::7} on ${GITHUB_REF_NAME}
+          | job | result |
+          | --- | --- |
+          | server | ${{ needs.server.result }} |
+          | server-mssql | ${{ needs.server-mssql.result }} |
+          | client | ${{ needs.client.result }} |
+          | e2e | ${{ needs.e2e.result }} |
+          | stack | ${{ needs.stack.result }} |
+          EOF
+          git clone --quiet --depth 1 --branch ci-reports "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" reports 2>/dev/null \
+            || (git init -q reports && cd reports && git checkout -q --orphan ci-reports && git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git")
+          cd reports
+          rm -rf latest && mkdir -p latest && cp -r ../artifacts/* latest/
+          find latest -name "*.zip" -delete; find latest -name "trace.zip" -delete
+          git config user.name "ci" && git config user.email "ci@users.noreply.github.com"
+          git add -A && git commit -qm "CI ${GITHUB_SHA::7} ${GITHUB_REF_NAME}" && git push -q origin HEAD:ci-reports

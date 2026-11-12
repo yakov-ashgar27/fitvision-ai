@@ -1,0 +1,5 @@
+__pycache__
+*.db
+var
+.pytest_cache
+.ruff_cache

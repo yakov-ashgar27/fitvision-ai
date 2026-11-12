@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>דוח אימון {{ r.report_id }}</title>
+<style>
+  @page { size: A4; margin: 16mm 14mm; }
+  body { font-family: "Noto Sans Hebrew", "Noto Sans", "DejaVu Sans", Arial, sans-serif; color: #0f172a; font-size: 11pt; }
+  h1 { font-size: 18pt; margin: 0 0 4px; }
+  h2 { font-size: 13pt; margin: 18px 0 6px; color: #1d4ed8; }
+  .muted { color: #64748b; }
+  .kpis { display: flex; gap: 10px; margin: 12px 0; }
+  .kpi { flex: 1; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 10px; }
+  .kpi b { display: block; font-size: 16pt; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0; }
+  th, td { border: 1px solid #cbd5e1; padding: 4px 6px; text-align: right; }
+  th { background: #e8eef7; }
+  .bad { color: #b91c1c; }
+  .good { color: #15803d; }
+  .note { border-right: 3px solid #1d4ed8; padding: 4px 10px; margin: 6px 0; background: #f8fafc; }
+  .num { direction: ltr; unicode-bidi: embed; }
+</style>
+</head>
+<body>
+  <h1>דוח סיכום אימון – {{ trainee_name }}</h1>
+  <div class="muted">אימון מ-{{ started }} · סטטוס: {{ status_he }} · הופק: {{ generated }}</div>
+
+  <div class="kpis">
+    <div class="kpi">חזרות<b class="num">{{ s.total_reps }}</b></div>
+    <div class="kpi">חזרות תקינות<b class="num">{{ s.valid_reps }}</b></div>
+    <div class="kpi">ציון טכניקה<b class="num">{{ s.avg_score if s.avg_score is not none else "—" }}</b></div>
+    <div class="kpi">מגמה מול 3 אימונים קודמים<b class="num">{% if s.improvement_pct is none %}—{% else %}{{ "%+.1f"|format(s.improvement_pct) }}%{% endif %}</b></div>
+  </div>
+
+  {% for ex in s.exercises %}
+  <h2>{{ ex.name }} <span class="muted">({{ "מבט חזית" if ex.camera_view == "Front" else "מבט צד" }})</span></h2>
+  <table>
+    <tr><th>סט</th><th>חזרות</th><th>תקינות</th><th>ציון</th><th>טווח תנועה ממוצע</th></tr>
+    {% for st in ex.sets %}
+    <tr><td>{{ st.set_number }}</td><td>{{ st.total_reps }}</td><td>{{ st.valid_reps }}</td>
+        <td>{{ st.technique_score if st.technique_score is not none else "—" }}</td>
+        <td class="num">{{ st.avg_rom_deg if st.avg_rom_deg is not none else "—" }}°</td></tr>
+    {% endfor %}
+  </table>
+  {% if ex.failure_points %}
+  <div><b>נקודות כשל:</b></div>
+  <ul>
+    {% for f in ex.failure_points %}<li class="bad">{{ f.message }} – ב-{{ f.pct }}% מהחזרות (סט {{ f.set_number }})</li>{% endfor %}
+  </ul>
+  {% else %}<div class="good">לא נמצאו נקודות כשל.</div>{% endif %}
+  <div class="muted">מגמה: {% if ex.trend.enough_data %}{{ "%+.1f"|format(ex.trend.improvement_pct) }}% מול ממוצע 3 האימונים הקודמים{% else %}אין מספיק נתונים{% endif %}</div>
+  {% endfor %}
+
+  <h2>הערות המאמן</h2>
+  {% for n in notes %}<div class="note"><b>{{ n.trainer_name }}</b> · <span class="muted">{{ n.created_at }}</span><br>{{ n.note_text }}</div>
+  {% else %}<div class="muted">אין הערות.</div>{% endfor %}
+</body>
+</html>

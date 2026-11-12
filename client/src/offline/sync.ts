@@ -1,0 +1,190 @@
+/**
+ * Offline-first workout storage (NFR-12, R-05). Every set is written to IndexedDB first and shown as
+ * "saved" immediately (optimistic, 6.3.1); a background loop pushes it to the server when the network allows.
+ * Re-sending a set is safe: the server's unique (session_id, set_number) index makes it idempotent.
+ */
+import { api, ApiError, waitForJob } from "../api/client";
+import type { Job, SessionSummary, SetIn } from "../api/types";
+import { store } from "./db";
+
+export interface LocalSet extends SetIn {
+  synced: boolean;
+  scores: number[]; // per-rep scores, for the local summary
+  valid: number; // valid reps (BR-01)
+  messages: string[]; // feedback shown, for the local summary
+}
+
+export interface LocalWorkout {
+  localId: string;
+  serverId: number | null;
+  planId: number | null;
+  startedAt: string;
+  sets: LocalSet[];
+  finish: { status: "Done" | "Aborted"; endedAt: string; synced: boolean } | null;
+  reportId: number | null;
+  ownerId: number;
+}
+
+type Listener = (w: LocalWorkout[]) => void;
+const listeners = new Set<Listener>();
+let running: Promise<void> | null = null;
+
+export function onChange(fn: Listener): () => void {
+  listeners.add(fn);
+  return () => listeners.delete(fn);
+}
+
+async function emit() {
+  const all = await store.all<LocalWorkout>();
+  listeners.forEach((l) => l(all));
+}
+
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`);
+
+export async function startWorkout(ownerId: number, planId: number | null): Promise<LocalWorkout> {
+  const w: LocalWorkout = { localId: uid(), serverId: null, planId, startedAt: new Date().toISOString(), sets: [], finish: null, reportId: null, ownerId };
+  await store.put(w);
+  void sync();
+  return w;
+}
+
+export async function addSet(localId: string, set: Omit<LocalSet, "synced" | "set_number">): Promise<LocalWorkout> {
+  const w = await patch(localId, (x) => {
+    x.sets.push({ ...set, set_number: x.sets.length + 1, synced: false });
+  });
+  if (!w) throw new Error("workout not found");
+  await emit();
+  void sync();
+  return w;
+}
+
+export async function finishWorkout(localId: string, status: "Done" | "Aborted"): Promise<LocalWorkout> {
+  const w = await patch(localId, (x) => {
+    x.finish = { status, endedAt: new Date().toISOString(), synced: false };
+  });
+  if (!w) throw new Error("workout not found");
+  await emit();
+  void sync();
+  return w;
+}
+
+export const getWorkout = (localId: string) => store.get<LocalWorkout>(localId);
+export const pendingCount = async () => (await store.all<LocalWorkout>()).filter((w) => !isSynced(w)).length;
+export const isSynced = (w: LocalWorkout) => w.serverId !== null && w.sets.every((s) => s.synced) && (w.finish?.synced ?? false);
+
+/** Applies a change to the latest stored copy, so a set or finish added meanwhile by the live screen is never overwritten. */
+async function patch(localId: string, fn: (w: LocalWorkout) => void): Promise<LocalWorkout | undefined> {
+  return store.update<LocalWorkout>(localId, fn);
+}
+
+async function syncOne(localId: string): Promise<void> {
+  let w = await store.get<LocalWorkout>(localId);
+  if (!w) return;
+  if (w.serverId === null) {
+    const s = await api<SessionSummary>("/sessions", {
+      method: "POST",
+      json: { plan_id: w.planId, started_at: w.startedAt, device_info: navigator.userAgent.slice(0, 120) },
+    });
+    w = await patch(localId, (x) => {
+      x.serverId = s.session_id;
+    });
+    if (!w) return;
+  }
+  const serverId = w.serverId;
+  for (const s of w.sets) {
+    if (s.synced) continue;
+    const body = {
+      exercise_id: s.exercise_id,
+      set_number: s.set_number,
+      started_at: s.started_at,
+      ended_at: s.ended_at,
+      reps: s.reps,
+    };
+    await api(`/sessions/${serverId}/sets`, { method: "POST", json: body });
+    await patch(localId, (x) => {
+      const t = x.sets.find((y) => y.set_number === s.set_number);
+      if (t) t.synced = true;
+    });
+  }
+  // re-read: the workout may have been finished, or a set added, while the requests above were in flight
+  const fresh = await store.get<LocalWorkout>(localId);
+  if (!fresh || fresh.sets.some((x) => !x.synced)) return; // the next round sends the rest first
+  if (fresh.finish && !fresh.finish.synced) {
+    const res = await api<{ report_id: number | null; report_job: string | null; report_queued: boolean }>(
+      `/sessions/${serverId}/finish`,
+      { method: "POST", json: { status: fresh.finish.status, ended_at: fresh.finish.endedAt } },
+    );
+    await patch(localId, (x) => {
+      if (x.finish) x.finish.synced = true;
+      x.reportId = res.report_id;
+    });
+    if (res.report_id === null && res.report_queued && res.report_job) {
+      // the report is built by the background worker (6.3.2): wait for it, then link the summary to it
+      try {
+        const job = await waitForJob({ job_id: res.report_job, status: "queued" } satisfies Job, 30_000);
+        const rid = (job.result as { report_id?: number | null } | null)?.report_id ?? null;
+        if (rid !== null) {
+          await patch(localId, (x) => {
+            x.reportId = rid;
+          });
+        }
+      } catch {
+        /* the report still appears under "reports"; the summary simply shows no link */
+      }
+    }
+  }
+}
+
+let again = false;
+
+/** Pushes every unsynced workout; stops quietly when offline and resumes on the next trigger. */
+export function sync(): Promise<void> {
+  if (running) {
+    again = true; // something changed during this round: run once more right after it
+    return running;
+  }
+  running = (async () => {
+    try {
+      do {
+        again = false;
+        for (const w of await store.all<LocalWorkout>()) {
+          if (isSynced(w)) continue;
+          try {
+            await syncOne(w.localId);
+          } catch (e) {
+            if (e instanceof ApiError && e.status === 0) {
+              again = false;
+              break; // offline: retry later
+            }
+            if (e instanceof ApiError && (e.status === 401 || e.status === 409)) {
+              again = false;
+              break; // needs login / consent
+            }
+            console.warn("sync failed", e);
+          }
+        }
+      } while (again);
+    } finally {
+      running = null;
+      await emit();
+    }
+  })();
+  return running;
+}
+
+/** Removes synced workouts older than a week so the device does not keep data it no longer needs. */
+export async function prune(): Promise<void> {
+  const weekAgo = Date.now() - 7 * 86400_000;
+  for (const w of await store.all<LocalWorkout>()) if (isSynced(w) && Date.parse(w.startedAt) < weekAgo) await store.remove(w.localId);
+}
+
+export function startBackgroundSync(): () => void {
+  const onOnline = () => void sync();
+  window.addEventListener("online", onOnline);
+  const t = window.setInterval(() => void sync(), 15_000);
+  void sync().then(prune);
+  return () => {
+    window.removeEventListener("online", onOnline);
+    window.clearInterval(t);
+  };
+}
