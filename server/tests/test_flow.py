@@ -136,11 +136,12 @@ def test_stale_sessions_are_closed(api, client):
 
     tt, _rt, _ids = api.pair()
     old = iso(now() - timedelta(days=1))
+    client.post("/api/me/consent", headers=api.h(tt))
     empty = client.post("/api/sessions", json={"started_at": old}, headers=api.h(tt)).json()["session_id"]
     with_set = client.post("/api/sessions", json={"started_at": old}, headers=api.h(tt)).json()["session_id"]
     sq = _squat(api, tt)
     r = client.post(f"/api/sessions/{with_set}/sets", headers=api.h(tt), json={
-        "exercise_id": sq, "set_number": 1, "started_at": old, "ended_at": old, "reps": [rep(1), rep(2)]})
+        "exercise_id": sq["exercise_id"], "set_number": 1, "started_at": old, "ended_at": old, "reps": [rep(1), rep(2)]})
     assert r.status_code in (200, 201)
     assert job_close_stale_sessions() == {"closed": 1, "deleted": 1}
     with SessionLocal() as db:
