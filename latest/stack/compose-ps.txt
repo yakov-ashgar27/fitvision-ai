@@ -1,6 +1,0 @@
-NAME                    IMAGE                                        COMMAND                  SERVICE   CREATED          STATUS                    PORTS
-fitvision-ai-api-1      fitvision-ai-api                             "sh -c 'python -m ap…"   api       20 seconds ago   Up 11 seconds (healthy)   8000/tcp
-fitvision-ai-db-1       mcr.microsoft.com/mssql/server:2022-latest   "/opt/mssql/bin/laun…"   db        23 seconds ago   Up 19 seconds (healthy)   1433/tcp
-fitvision-ai-redis-1    redis:7-alpine                               "docker-entrypoint.s…"   redis     23 seconds ago   Up 19 seconds (healthy)   6379/tcp
-fitvision-ai-web-1      fitvision-ai-web                             "/docker-entrypoint.…"   web       20 seconds ago   Up Less than a second     0.0.0.0:8080->80/tcp, [::]:8080->80/tcp
-fitvision-ai-worker-1   fitvision-ai-worker                          "rq worker --url red…"   worker    20 seconds ago   Up Less than a second     8000/tcp

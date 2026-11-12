@@ -1,8 +1,8 @@
-# CI 2aa092b on feature/full-implementation
+# CI ed67888 on feature/full-implementation
 | job | result |
 | --- | --- |
 | server | success |
 | server-mssql | success |
-| client | success |
-| e2e | success |
-| stack | failure |
+| client | failure |
+| e2e | skipped |
+| stack | skipped |

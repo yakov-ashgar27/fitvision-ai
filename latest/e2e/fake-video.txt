@@ -1,3 +1,0 @@
-camera video step
--rw-r--r-- 1 runner runner     44100 Nov 12 11:18 person.jpg
--rw-r--r-- 1 runner runner 138241881 Nov 12 11:18 person.y4m
