@@ -41,4 +41,12 @@ describe("coach (varied cues, first-trial feedback)", () => {
     expect(c.onRep(rep(9), 9)?.text).toBe("אחרונה!");
     expect(c.onRep(rep(10), 10)?.key).toBe("done");
   });
+
+  it("speaks English when that cue language is chosen", () => {
+    const c = new Coach(CURL.name, CURL.rules, 10, "en");
+    const cue = c.onViolation(elbow.rule_id)!;
+    expect(/[a-z]/i.test(cue.text) && !/[\u0590-\u05FF]/.test(cue.text)).toBe(true);
+    expect(c.onRep(rep(1, [elbow.rule_id]), 9)).toBeNull();
+    expect(c.onRep(rep(2), 9)?.text).toBe("Last one!");
+  });
 });

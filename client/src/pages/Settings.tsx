@@ -2,13 +2,14 @@ import { FormEvent, useEffect, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { api } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
-import { setSounds, setVoice, sfx, soundsOn, voiceOn } from "../lib/speech";
+import { CueLang, cueLang, say, setCueLang, setSounds, setVoice, sfx, soundsOn, voiceOn } from "../lib/speech";
 
 export default function Settings() {
   const { me, user, refresh, logout } = useAuth();
   const [params] = useSearchParams();
   const [sounds, setS] = useState(soundsOn());
   const [voice, setV] = useState(voiceOn());
+  const [lang, setL] = useState<CueLang>(cueLang());
   const [p, setP] = useState({ height_cm: "", weight_kg: "", fitness_level: "", injuries_notes: "" });
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -95,7 +96,7 @@ export default function Settings() {
         <div className="spread">
           <div>
             <b>צלילים</b>
-            <div className="muted small">צליל קצר לחזרה טובה, לתיקון ולסיום סט</div>
+            <div className="muted small">צליל "פופ" לכל חזרה שהצליחה, וצליל בסיום סט</div>
           </div>
           <button
             className={sounds ? "" : "secondary"}
@@ -111,12 +112,36 @@ export default function Settings() {
         </div>
         <div className="spread">
           <div>
-            <b>הקראה קולית</b>
-            <div className="muted small">ההערות מוקראות בעברית (כבוי כברירת מחדל)</div>
+            <b>הערות קוליות</b>
+            <div className="muted small">ההערות מוקראות בקול, כי באימון עומדים רחוק מהמסך</div>
           </div>
           <button className={voice ? "" : "secondary"} aria-pressed={voice} onClick={() => { setVoice(!voice); setV(!voice); }}>
             {voice ? "פועל" : "כבוי"}
           </button>
+        </div>
+        <div className="spread">
+          <div>
+            <b>שפת ההערות באימון</b>
+            <div className="muted small">גם הטקסט על המסך וגם הקול</div>
+          </div>
+          <div className="row" role="radiogroup" aria-label="שפת ההערות">
+            {(["he", "en"] as const).map((l) => (
+              <button
+                key={l}
+                role="radio"
+                aria-checked={lang === l}
+                className={lang === l ? "" : "secondary"}
+                data-testid={`lang-${l}`}
+                onClick={() => {
+                  setCueLang(l);
+                  setL(l);
+                  setTimeout(() => say(l === "en" ? "Keep your elbow tucked" : "הצמד את המרפק לגוף", l), 50);
+                }}
+              >
+                {l === "he" ? "עברית" : "English"}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
       <div className="card stack">

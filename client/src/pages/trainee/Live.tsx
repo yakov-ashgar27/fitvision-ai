@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Coach, Cue } from "../../engine/coach";
 import { CompletedRep, TechniqueEngine } from "../../engine/engine";
 import { report } from "../../lib/rum";
-import { say, setSounds, setVoice, sfx, soundsOn, voiceOn } from "../../lib/speech";
+import { cueLang, say, setSounds, setVoice, sfx, soundsOn, voiceOn } from "../../lib/speech";
 import { addSet, finishWorkout } from "../../offline/sync";
 import { drawSkeleton } from "../../vision/draw";
 import { PosePipeline, PipelineStats, shutdownPose } from "../../vision/poseClient";
@@ -47,7 +47,8 @@ export default function Live() {
     if (!cue) return;
     cueId.current += 1;
     setFeedback({ ...cue, id: cueId.current, joints });
-    say(cue.text);
+    // corrections, "finish the movement" cues and milestones are spoken; plain praise stays a visual + pop
+    if (cue.key !== "praise" && cue.key !== "streak") say(cue.text);
     if (cue.tone !== "good" && !shownMessages.current.includes(cue.text)) shownMessages.current.push(cue.text);
     window.clearTimeout(fbTimer.current);
     fbTimer.current = window.setTimeout(() => setFeedback(null), cue.tone === "good" ? 1600 : 2600);
@@ -100,7 +101,7 @@ export default function Live() {
   useEffect(() => {
     if (!item || !video.current) return;
     engine.current = new TechniqueEngine(item.exercise, { aspect: 4 / 3 });
-    coach.current = new Coach(item.exercise.name, item.exercise.rules, item.target_reps);
+    coach.current = new Coach(item.exercise.name, item.exercise.rules, item.target_reps, cueLang());
     const p = new PosePipeline(
       video.current,
       (r) => {
@@ -119,10 +120,7 @@ export default function Live() {
         if (fb && fb.ruleId !== lastRule.current) {
           lastRule.current = fb.ruleId;
           const cue = coach.current?.onViolation(fb.ruleId) ?? null;
-          if (cue) {
-            sfx.fix();
-            showCue(cue, fb.joints);
-          }
+          if (cue) showCue(cue, fb.joints);
         }
         setTracking(eng.state.tracking);
         if (rep) {
@@ -137,8 +135,7 @@ export default function Live() {
           if (eng.state.reps >= item.target_reps) {
             sfx.setDone();
             setParty((n) => n + 1);
-          } else if (good) sfx.good();
-          else sfx.bad();
+          } else if (good) sfx.pop(); // a successful rep "pops"; a rep that needs fixing stays silent
           showCue(cue);
           if (eng.state.reps >= item.target_reps) void endSetRef.current();
         }
@@ -170,14 +167,14 @@ export default function Live() {
     if (rest <= 0) {
       setRest(null);
       engine.current = item ? new TechniqueEngine(item.exercise, { aspect: 4 / 3 }) : null;
-      coach.current = item ? new Coach(item.exercise.name, item.exercise.rules, item.target_reps) : null;
+      coach.current = item ? new Coach(item.exercise.name, item.exercise.rules, item.target_reps, cueLang()) : null;
       lastRule.current = null;
       setCount(0);
       setValid(0);
       setFeedback(null);
       setStart.current = new Date().toISOString();
       pipe.current?.run();
-      say("מתחילים");
+      say(cueLang() === "en" ? "Go!" : "מתחילים");
       return;
     }
     if (rest <= 3) sfx.tick();

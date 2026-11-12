@@ -9,6 +9,8 @@
 import type { Rule, Severity } from "../api/types";
 import type { CompletedRep } from "./engine";
 
+export type Lang = "he" | "en";
+
 export type Tone = "good" | "info" | "warn" | "bad";
 export interface Cue {
   text: string;
@@ -48,6 +50,27 @@ const EXTEND: Record<string, { below: number; texts: string[] }> = {
 
 const PRAISE = ["מצוין!", "חזרה מושלמת", "יפה מאוד", "ככה בדיוק", "טכניקה נקייה", "חזק!", "בול"];
 
+/** English cue set (cue language setting), keyed by the same rule names. */
+const RULE_EN: Record<string, string[]> = {
+  "עומק סקוואט": ["Go deeper", "A little lower", "Thighs parallel to the floor", "Sit back and down"],
+  "ברכיים קורסות פנימה": ["Push your knees out", "Knees over your toes", "Don't let your knees cave in"],
+  "זווית ברך קדמית": ["Front knee over the ankle", "Keep the front knee at ninety degrees", "Take a longer step"],
+  "טווח כפיפה מלא": ["Curl all the way up", "Squeeze at the top", "Bring it up to your shoulder"],
+  "מרפק צמוד לגוף": ["Keep your elbow tucked", "Elbow close to your body", "Don't swing the elbow"],
+  "עומק הורדה": ["Lower to shoulder height", "Bring it down a bit more", "Full range on the way down"],
+  "יישור מלא": ["Press all the way up", "Straighten your arms overhead", "Lock out at the top"],
+};
+const EXTEND_EN: Record<string, string[]> = {
+  "כפיפת מרפקים": ["Lower all the way down", "Straighten your arm at the bottom", "Full extension"],
+  "סקוואט": ["Stand all the way up", "Finish the rep standing tall", "Lock your knees at the top"],
+  "לאנג'ים": ["Come back to standing", "Finish the rep", "Stand tall between reps"],
+};
+const PRAISE_EN = ["Great!", "Perfect rep", "Nice", "Exactly like that", "Clean form", "Strong!", "Spot on"];
+const T = {
+  he: { done: "סט הושלם! 🎉", last: "אחרונה!", three: "עוד 3!", half: "חצי דרך 💪", streak: (n: number) => `${n} מושלמות ברצף 🔥` },
+  en: { done: "Set complete! 🎉", last: "Last one!", three: "3 more!", half: "Halfway there 💪", streak: (n: number) => `${n} perfect in a row 🔥` },
+};
+
 const pick = (() => {
   const last = new Map<string, string>();
   return (key: string, options: string[]): string => {
@@ -70,7 +93,14 @@ export class Coach {
     private readonly exerciseName: string,
     private readonly rules: Rule[],
     private readonly target: number,
+    private readonly lang: Lang = "he",
   ) {}
+
+  private ruleOptions(rule: Rule): string[] {
+    const name = RULE_VARIANTS[rule.rule_name] ? rule.rule_name : (BY_MESSAGE[rule.error_message] ?? rule.rule_name);
+    if (this.lang === "en") return RULE_EN[name] ?? [rule.error_message];
+    return [rule.error_message, ...(RULE_VARIANTS[name] ?? [])];
+  }
 
   /** A rule was just violated during the rep: one cue per rule per rep. */
   onViolation(ruleId: number): Cue | null {
@@ -78,8 +108,7 @@ export class Coach {
     this.shownThisRep.add(ruleId);
     const rule = this.rules.find((r) => r.rule_id === ruleId);
     if (!rule) return null;
-    const extra = RULE_VARIANTS[rule.rule_name] ?? RULE_VARIANTS[BY_MESSAGE[rule.error_message] ?? ""] ?? [];
-    const text = pick(`rule-${ruleId}`, [rule.error_message, ...extra]);
+    const text = pick(`rule-${ruleId}-${this.lang}`, this.ruleOptions(rule));
     return { text, tone: toneOf(rule.severity), key: `rule-${ruleId}` };
   }
 
@@ -88,28 +117,35 @@ export class Coach {
     const shown = this.shownThisRep;
     this.shownThisRep = new Set();
     const left = this.target - count;
-    const extend = EXTEND[this.exerciseName];
+    const extendRule = EXTEND[this.exerciseName];
+    const extend = extendRule && {
+      below: extendRule.below,
+      texts: this.lang === "en" ? (EXTEND_EN[this.exerciseName] ?? extendRule.texts) : extendRule.texts,
+    };
+    const t = T[this.lang];
     const notExtended = extend && rep.max_angle_deg != null && rep.max_angle_deg < extend.below;
 
     if (rep.violated.length) {
       this.goodStreak = 0;
       const unseen = rep.violated.find((v) => !shown.has(v.rule_id));
       if (unseen) return this.onViolation(unseen.rule_id);
-      if (notExtended) return { text: pick("extend", extend.texts), tone: "info", key: "extend" };
+      if (notExtended) return { text: pick(`extend-${this.lang}`, extend.texts), tone: "info", key: "extend" };
       return null;
     }
     if (notExtended) {
       this.goodStreak = 0;
-      return { text: pick("extend", extend.texts), tone: "info", key: "extend" };
+      return { text: pick(`extend-${this.lang}`, extend.texts), tone: "info", key: "extend" };
     }
     this.goodStreak += 1;
-    if (left === 0) return { text: "סט הושלם! 🎉", tone: "good", key: "done" };
-    if (left === 1) return { text: "אחרונה!", tone: "good", key: "milestone" };
-    if (left === 3 && this.target >= 6) return { text: "עוד 3!", tone: "good", key: "milestone" };
-    if (count === Math.ceil(this.target / 2) && this.target >= 8) return { text: "חצי דרך 💪", tone: "good", key: "milestone" };
-    if (this.goodStreak >= 3 && this.goodStreak % 3 === 0) return { text: `${this.goodStreak} מושלמות ברצף 🔥`, tone: "good", key: "streak" };
+    if (left === 0) return { text: t.done, tone: "good", key: "done" };
+    if (left === 1) return { text: t.last, tone: "good", key: "milestone" };
+    if (left === 3 && this.target >= 6) return { text: t.three, tone: "good", key: "milestone" };
+    if (count === Math.ceil(this.target / 2) && this.target >= 8) return { text: t.half, tone: "good", key: "milestone" };
+    if (this.goodStreak >= 3 && this.goodStreak % 3 === 0) return { text: t.streak(this.goodStreak), tone: "good", key: "streak" };
     // praise roughly every other good rep, so it stays meaningful
     this.praiseEvery = (this.praiseEvery + 1) % 2;
-    return this.praiseEvery === 0 ? { text: pick("praise", PRAISE), tone: "good", key: "praise" } : null;
+    return this.praiseEvery === 0
+      ? { text: pick(`praise-${this.lang}`, this.lang === "en" ? PRAISE_EN : PRAISE), tone: "good", key: "praise" }
+      : null;
   }
 }
