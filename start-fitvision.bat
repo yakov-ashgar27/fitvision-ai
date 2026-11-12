@@ -1,6 +1,7 @@
 @echo off
 rem FitVision AI - one-click start on Windows: checks the tools, starts the system in Docker
 rem and opens an HTTPS link for the phone. Double-click this file. Close the window to stop the link.
+set "PATH=%SystemRoot%\System32;%SystemRoot%;%SystemRoot%\System32\WindowsPowerShell\v1.0;%PATH%"
 chcp 65001 > nul
 cd /d "%~dp0"
 title FitVision AI
