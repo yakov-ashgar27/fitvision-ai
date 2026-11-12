@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 import { login } from "./helpers";
 
 test("trainer reviews, exports and sends a report", async ({ page }) => {
-  await login(page, "trainer@fitvision.local");
+  await login(page, "trainer@fitvision.app");
   await expect(page.getByTestId("kpi-active")).toHaveText("2");
   await page.getByTestId("trainee-row").first().click();
   await page.getByTestId("report-link").first().click();
@@ -24,7 +24,7 @@ test("trainer reviews, exports and sends a report", async ({ page }) => {
 });
 
 test("trainee cannot open the trainer dashboard (RBAC in the UI and the API)", async ({ page }) => {
-  await login(page, "trainee@fitvision.local");
+  await login(page, "trainee@fitvision.app");
   await page.goto("/trainer");
   await expect(page).toHaveURL(/\/$/);
   const status = await page.evaluate(async () => (await fetch("/api/dashboard", { headers: { Authorization: `Bearer ${localStorage.getItem("fv:token")}` } })).status);

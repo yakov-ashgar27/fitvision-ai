@@ -23,7 +23,7 @@ class Settings:
     smtp_port: int = field(default_factory=lambda: int(os.getenv("SMTP_PORT", "587")))
     smtp_user: str | None = field(default_factory=lambda: os.getenv("SMTP_USER") or None)
     smtp_password: str | None = field(default_factory=lambda: os.getenv("SMTP_PASSWORD") or None)
-    smtp_from: str = field(default_factory=lambda: os.getenv("SMTP_FROM", "FitVision AI <no-reply@fitvision.local>"))
+    smtp_from: str = field(default_factory=lambda: os.getenv("SMTP_FROM", "FitVision AI <no-reply@fitvision.app>"))
     enable_scheduler: bool = field(default_factory=lambda: _bool("ENABLE_SCHEDULER", False))
     pdf_engine: str = field(default_factory=lambda: os.getenv("PDF_ENGINE", "chromium"))  # chromium | none
     seed_demo: bool = field(default_factory=lambda: _bool("SEED_DEMO", False))

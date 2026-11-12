@@ -32,8 +32,8 @@ def test_alerts_tc09(api, client, db):
     # same failure point in 3 consecutive sessions, 6+ days ago, and a weekly drop
     for d in (13, 12, 6):
         bad = [rep(i, errors=[(rule["rule_id"], 110)]) for i in range(1, 6)]
-        good = [rep(i) for i in range(1, 6)]
-        api.workout(tt, sq, bad if d == 6 else good[:3] + bad[:2], started=now() - timedelta(days=d))
+        mixed = [rep(1), rep(2), rep(3)] + [rep(i, errors=[(rule["rule_id"], 110)]) for i in (4, 5)]
+        api.workout(tt, sq, bad if d == 6 else mixed, started=now() - timedelta(days=d))
     alerts = compute_for_trainer(db, ids["trainer_id"])
     kinds = {a["kind"] for a in alerts}
     assert {"repeat_error", "score_drop", "inactivity"} <= kinds
@@ -92,15 +92,23 @@ def test_rum_and_health(client):
 
 
 def test_seventeen_tables_with_indexes(db):
-    from sqlalchemy import inspect
+    from sqlalchemy import inspect, text
 
+    from app import models as m
     from app.db import engine
     from app.models import ALL_TABLES
 
     insp = inspect(engine)
     assert set(ALL_TABLES) <= set(insp.get_table_names())
-    idx = {i["name"] for i in insp.get_indexes("WorkoutSessions")}
-    assert "IX_Sessions_trainee_started" in idx
+    declared = {i.name for i in m.WorkoutSession.__table__.indexes}
+    assert "IX_Sessions_trainee_started" in declared
+    if engine.dialect.name == "sqlite":
+        with engine.connect() as c:
+            idx = set(c.execute(text("SELECT name FROM sqlite_master WHERE type='index' AND tbl_name='WorkoutSessions'"))
+                      .scalars())
+    else:
+        idx = {i["name"] for i in insp.get_indexes("WorkoutSessions")}
+    assert "IX_Sessions_trainee_started" in idx, (idx, engine.url.render_as_string(hide_password=True))
     uq = insp.get_unique_constraints("ExerciseSets")
     assert any(set(u["column_names"]) == {"session_id", "set_number"} for u in uq)
 

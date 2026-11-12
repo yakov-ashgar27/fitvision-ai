@@ -72,7 +72,7 @@ class Api:
         return {"Authorization": f"Bearer {token}"}
 
     def admin_token(self) -> str:
-        return self.login("admin@fitvision.local", "Admin1234!")
+        return self.login("admin@fitvision.app", "Admin1234!")
 
     def pair(self, trainee="dana@test.io", trainer="yossi@test.io"):
         """Trainee + trainer with an Active assignment. Returns (trainee_token, trainer_token, ids)."""

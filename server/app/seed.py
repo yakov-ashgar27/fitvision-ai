@@ -58,7 +58,7 @@ def _now() -> datetime:
 def seed_reference(db: Session) -> None:
     admin = db.scalar(select(m.User).where(m.User.role == "Admin"))
     if admin is None:
-        admin = m.User(email=os.getenv("ADMIN_EMAIL", "admin@fitvision.local").lower(),
+        admin = m.User(email=os.getenv("ADMIN_EMAIL", "admin@fitvision.app").lower(),
                        password_hash=hash_password(os.getenv("ADMIN_PASSWORD", "Admin1234!")),
                        first_name="מנהל", last_name="מערכת", role="Admin", is_active=True, created_at=_now())
         db.add(admin)
@@ -94,9 +94,9 @@ def _user(db: Session, email: str, first: str, last: str, role: str, password: s
 
 def seed_demo(db: Session) -> None:
     pw = os.getenv("DEMO_PASSWORD", "Demo1234!")
-    trainer = _user(db, "trainer@fitvision.local", "יוסי", "כהן", "Trainer", pw)
-    trainees = [_user(db, "trainee@fitvision.local", "דנה", "לוי", "Trainee", pw),
-                _user(db, "avi@fitvision.local", "אבי", "מזרחי", "Trainee", pw)]
+    trainer = _user(db, "trainer@fitvision.app", "יוסי", "כהן", "Trainer", pw)
+    trainees = [_user(db, "trainee@fitvision.app", "דנה", "לוי", "Trainee", pw),
+                _user(db, "avi@fitvision.app", "אבי", "מזרחי", "Trainee", pw)]
     exercises = db.scalars(select(m.Exercise).order_by(m.Exercise.exercise_id)).all()
     rnd = random.Random(2028)
     start = _now() - timedelta(days=21)

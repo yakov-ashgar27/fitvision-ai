@@ -55,7 +55,7 @@ jobs:
           mkdir -p ../out
           exec > >(tee ../out/odbc.txt) 2>&1
           if ! odbcinst -q -d 2>/dev/null | grep -q "ODBC Driver 18"; then
-            curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg
+            curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/microsoft-prod.gpg
             curl -fsSL "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list" | sudo tee /etc/apt/sources.list.d/mssql-release.list
             sudo apt-get update -qq && sudo ACCEPT_EULA=Y apt-get install -y -qq msodbcsql18 unixodbc-dev
           fi
@@ -171,7 +171,7 @@ jobs:
               if token: req.add_header("Authorization", "Bearer " + token)
               with urllib.request.urlopen(req, timeout=60) as r:
                   return r.status, r.headers.get("content-encoding"), r.read()
-          st, _, raw = call("/auth/login", {"email": "trainer@fitvision.local", "password": "Demo1234!"})
+          st, _, raw = call("/auth/login", {"email": "trainer@fitvision.app", "password": "Demo1234!"})
           tok = json.loads(raw)["access_token"]
           t0 = time.time(); st, enc, raw = call("/dashboard", token=tok); d = json.loads(raw)
           print("dashboard", st, f"{(time.time()-t0)*1000:.0f}ms", "kpis", d["kpis"], "alerts", len(d["alerts"]))
