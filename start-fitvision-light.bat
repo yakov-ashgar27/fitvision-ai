@@ -70,6 +70,8 @@ if errorlevel 1 goto fail
 if errorlevel 1 goto fail
 
 echo [4/4] Starting the server...
+rem stop a server left over from an earlier run on port 8000
+for /f "tokens=5" %%p in ('netstat -ano ^| findstr ":8000 " ^| findstr LISTENING') do taskkill /pid %%p /f > nul 2>&1
 start "FitVision server" /min .venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 popd
 for /l %%i in (1,1,30) do (
