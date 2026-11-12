@@ -1,11 +1,11 @@
-Using cached argon2_cffi_bindings-26.1.0-cp310-abi3-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl (26 kB)
-Using cached cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (221 kB)
-Using cached certifi-2026.10.23-py3-none-any.whl (135 kB)
-Using cached et_xmlfile-2.0.0-py3-none-any.whl (18 kB)
-Using cached iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
-Using cached mako-1.4.3-py3-none-any.whl (80 kB)
-Using cached packaging-26.3-py3-none-any.whl (129 kB)
-Using cached pycparser-3.12-py3-none-any.whl (62 kB)
+Downloading argon2_cffi_bindings-26.1.0-cp310-abi3-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl (26 kB)
+Downloading cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (221 kB)
+Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+Downloading et_xmlfile-2.0.0-py3-none-any.whl (18 kB)
+Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+Downloading mako-1.4.3-py3-none-any.whl (80 kB)
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+Downloading pycparser-3.12-py3-none-any.whl (62 kB)
 Installing collected packages: sortedcontainers, websockets, uvloop, tzlocal, typing-extensions, ruff, redis, pyyaml, python-multipart, python-dotenv, pyodbc, PyJWT, pycparser, pluggy, packaging, MarkupSafe, iniconfig, idna, httptools, h11, greenlet, et-xmlfile, dnspython, click, certifi, annotated-types, uvicorn, SQLAlchemy, rq, pytest, pyee, pydantic-core, openpyxl, Mako, Jinja2, httpcore, fakeredis, email-validator, cffi, APScheduler, anyio, watchfiles, starlette, pydantic, playwright, httpx, argon2-cffi-bindings, alembic, fastapi, argon2-cffi
 [?25l
 [?25h
