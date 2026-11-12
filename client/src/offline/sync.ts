@@ -68,8 +68,18 @@ export async function finishWorkout(localId: string, status: "Done" | "Aborted")
   return w;
 }
 
+/** Drops a workout that was cancelled before any set was done (setup screen → cancel). */
+export async function discardIfEmpty(localId: string): Promise<void> {
+  const w = await store.get<LocalWorkout>(localId);
+  if (w && w.sets.length === 0 && w.serverId === null) {
+    await store.remove(localId);
+    await emit();
+  }
+}
+
 export const getWorkout = (localId: string) => store.get<LocalWorkout>(localId);
-export const pendingCount = async () => (await store.all<LocalWorkout>()).filter((w) => !isSynced(w)).length;
+export const pendingCount = async () =>
+  (await store.all<LocalWorkout>()).filter((w) => !isSynced(w) && (w.sets.length > 0 || w.finish !== null)).length;
 export const isSynced = (w: LocalWorkout) => w.serverId !== null && w.sets.every((s) => s.synced) && (w.finish?.synced ?? false);
 
 /** Applies a change to the latest stored copy, so a set or finish added meanwhile by the live screen is never overwritten. */
@@ -80,6 +90,8 @@ async function patch(localId: string, fn: (w: LocalWorkout) => void): Promise<Lo
 async function syncOne(localId: string): Promise<void> {
   let w = await store.get<LocalWorkout>(localId);
   if (!w) return;
+  // nothing to report yet: do not open a server session for a workout that may still be cancelled
+  if (w.serverId === null && w.sets.length === 0 && !w.finish) return;
   if (w.serverId === null) {
     const s = await api<SessionSummary>("/sessions", {
       method: "POST",

@@ -44,6 +44,12 @@ describe("squat (front view, depth from world landmarks)", () => {
     expect(done.every((r) => r.is_valid && r.score === 100)).toBe(true);
     expect(eng.state.validReps).toBe(5);
   });
+  it("ignores a shallow twitch that is tracking noise, not a rep", () => {
+    const { done } = run(SQUAT, "squat", [{ bottom: 85 }, { bottom: 146 }, { bottom: 85 }]);
+    expect(done).toHaveLength(2);
+    expect(done.every((r) => r.is_valid)).toBe(true);
+  });
+
   it("partial rep is counted, invalid and penalised (BR-01)", () => {
     const { done } = run(SQUAT, "squat", [{ bottom: 85 }, { bottom: 118 }]);
     expect(done).toHaveLength(2);

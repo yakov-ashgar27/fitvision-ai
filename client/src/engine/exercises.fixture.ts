@@ -27,8 +27,8 @@ export const LUNGE: Exercise = {
 export const CURL: Exercise = {
   exercise_id: 3, name: "כפיפת מרפקים", description: null, muscle_group: null, camera_view: "Side", demo_video_url: null, is_active: true,
   rules: [
-    rule(3, { landmark_a: 11, landmark_b: 13, landmark_c: 15, phase: "Bottom", max_angle: 50, severity: "Low", error_message: "השלם את התנועה עד למעלה" }),
-    rule(3, { landmark_a: 13, landmark_b: 11, landmark_c: 23, phase: null, max_angle: 20, severity: "Med", error_message: "הצמד את המרפק לגוף" }),
+    rule(3, { landmark_a: 11, landmark_b: 13, landmark_c: 15, phase: "Bottom", max_angle: 75, severity: "Low", error_message: "השלם את התנועה עד למעלה" }),
+    rule(3, { landmark_a: 13, landmark_b: 11, landmark_c: 23, phase: null, max_angle: 35, severity: "Med", error_message: "הצמד את המרפק לגוף" }),
   ],
 };
 export const PRESS: Exercise = {

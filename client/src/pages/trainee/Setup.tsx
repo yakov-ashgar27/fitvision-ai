@@ -7,7 +7,8 @@ import { MIN_VISIBILITY } from "../../engine/geometry";
 import type { Lm } from "../../engine/geometry";
 import { drawSkeleton } from "../../vision/draw";
 import { PosePipeline } from "../../vision/poseClient";
-import { CAMERA_TIPS, loadWorkout } from "../../workout";
+import { discardIfEmpty } from "../../offline/sync";
+import { CAMERA_TIPS, loadWorkout, saveWorkout } from "../../workout";
 
 /** Body parts that must be in frame. Front view needs both sides; side view needs the side facing the camera. */
 const PARTS: { name: string; left: number[]; right: number[] }[] = [
@@ -193,7 +194,17 @@ export default function Setup() {
         </details>
         <div className="setup-privacy">הווידאו מעובד בטלפון בלבד ואינו נשלח לשרת</div>
         <div className="row" style={{ flexWrap: "nowrap" }}>
-          <button className="secondary" style={{ flex: 1 }} onClick={() => nav("/")}>
+          <button
+            className="secondary"
+            style={{ flex: 1 }}
+            onClick={async () => {
+              if (w.index === 0 && w.setsDone === 0) {
+                await discardIfEmpty(w.localId);
+                saveWorkout(null);
+              }
+              nav("/");
+            }}
+          >
             ביטול
           </button>
           {canForce ? (

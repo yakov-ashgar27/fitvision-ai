@@ -67,7 +67,7 @@ export function pose(kind: Kind, theta: number, script: RepScript = { bottom: 90
       put(img, world, 27 + (side === "l" ? 0 : 1), v(x, 0.84, 0));
       if (kind === "curl") {
         // upper arm hangs down (drifting forward by `flare`), forearm at angle theta from it, rising forward
-        const flare = script.elbowFlare ? 0.6 * depthFrac : 0.02;
+        const flare = script.elbowFlare ? 0.9 * depthFrac : 0.02;
         const el2: [number, number] = [L * Math.sin(flare), -0.5 + L * Math.cos(flare)]; // (fwd, y)
         const ux = -Math.sin(flare), uy = -Math.cos(flare); // elbow → shoulder
         const fx = ux * Math.cos(r) - uy * Math.sin(r);

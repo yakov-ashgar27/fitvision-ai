@@ -4,6 +4,8 @@
  *
  * The counting joint is data, not code (NFR-13): it is the exercise's Bottom-phase rule with a max angle
  * (e.g. squat knee ≤ 100°). Thresholds: enter Down below 150°, Standing again above 160° (hysteresis).
+ * A dip that is shorter than 0.6 s or never goes 10° below the Down threshold is tracking noise, not a rep
+ * (found in the first real-phone trial: 217 ms and 317 ms "reps" while stepping into the frame).
  */
 import type { ErrorIn, Exercise, RepIn, Rule, Severity } from "../api/types";
 import { angle, isLeft, Lm, meanVisibility, mirror, MovingAverage, visible } from "./geometry";
@@ -49,6 +51,8 @@ export interface EngineOptions {
   persistFrames?: number;
   aspect?: number; // image width / height
   hipDropMin?: number;
+  minRepMs?: number;
+  minDescent?: number;
   now?: () => Date;
 }
 
@@ -103,6 +107,8 @@ export class TechniqueEngine {
       persistFrames: 3,
       aspect: 4 / 3,
       hipDropMin: 0.6,
+      minRepMs: 600,
+      minDescent: 10,
       now: () => new Date(),
       ...opts,
     };
@@ -201,7 +207,14 @@ export class TechniqueEngine {
         return null;
       case "Down":
         if (a <= this.depth && (!this.useHipDrop || this.hipDrop >= this.o.hipDropMin)) s.phase = "Bottom";
-        else if (a > this.o.standAbove) return this.finish(f, false);
+        else if (a > this.o.standAbove) {
+          const noise = f.t - this.repStart < this.o.minRepMs || this.minAngle > this.o.downBelow - this.o.minDescent;
+          if (noise) {
+            this.reset();
+            return null;
+          }
+          return this.finish(f, false);
+        }
         return null;
       case "Bottom":
         if (a >= this.minAngle + this.o.riseFromMin) {
@@ -302,7 +315,13 @@ export class TechniqueEngine {
       is_valid,
       violated,
     };
-    s.phase = "Standing";
+    this.reset();
+    return rep;
+  }
+
+  /** Back to Standing, dropping everything collected for the current movement. */
+  private reset() {
+    this.state.phase = "Standing";
     this.minAngle = Infinity;
     this.maxAngle = -Infinity;
     this.repViolations.clear();
@@ -310,6 +329,5 @@ export class TechniqueEngine {
     this.bottomSnapshot.clear();
     this.upBest.clear();
     this.persist.clear();
-    return rep;
   }
 }
