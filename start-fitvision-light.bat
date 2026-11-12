@@ -39,14 +39,15 @@ winget install -e --id Cloudflare.cloudflared --accept-package-agreements --acce
 :cf_ok
 
 echo [1/4] Building the phone app (first time: a few minutes)...
-if exist client\dist\index.html goto built
 pushd client
+if exist node_modules\.package-lock.json goto deps_ok
 call npm ci || call npm install
 if errorlevel 1 goto fail
+:deps_ok
+rem always rebuild, so a "git pull" is picked up (takes about 30 seconds)
 call npm run build
 if errorlevel 1 goto fail
 popd
-:built
 
 echo [2/4] Preparing the server (first time: a few minutes)...
 pushd server

@@ -99,3 +99,14 @@ th.sort { cursor: pointer; user-select: none; }
 .check-ok::before { content: "✓ "; color: var(--ok); }
 .check-wait::before { content: "… "; color: var(--muted); }
 .dev { font-size: 0.75rem; opacity: 0.75; direction: ltr; text-align: left; }
+
+/* setup screen: solid, high-contrast panel under the camera (readable at arm's length and from 2–3 m) */
+.setup-panel { background: #ffffff; color: var(--ink); padding: 14px 16px; padding-bottom: max(14px, env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 10px; border-top-left-radius: 18px; border-top-right-radius: 18px; }
+.setup-status { font-size: 1.15rem; font-weight: 700; padding: 12px 14px; border-radius: 12px; line-height: 1.4; }
+.setup-status.wait { background: #fef3c7; color: #78350f; }
+.setup-status.ok { background: #dcfce7; color: #14532d; }
+.setup-status.bad { background: #fee2e2; color: #7f1d1d; }
+.setup-tips summary { cursor: pointer; font-weight: 600; color: var(--accent); padding: 4px 0; }
+.setup-tips ol { margin: 6px 0 0; padding-inline-start: 22px; font-size: 0.98rem; line-height: 1.55; }
+.setup-privacy { font-size: 0.85rem; color: #065f46; }
+.setup-note { font-size: 0.85rem; color: var(--muted); }
