@@ -9,3 +9,4 @@ Dockerfile text eol=lf
 *.pdf binary
 *.docx binary
 *.task binary
+*.bat text eol=crlf
