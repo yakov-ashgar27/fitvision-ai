@@ -1,8 +1,8 @@
-# CI 121390e on feature/full-implementation
+# CI 1fbbe34 on main
 | job | result |
 | --- | --- |
 | server | success |
 | server-mssql | success |
 | client | success |
-| e2e | success |
-| stack | success |
+| e2e | cancelled |
+| stack | cancelled |

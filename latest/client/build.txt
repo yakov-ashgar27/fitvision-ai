@@ -43,4 +43,4 @@ computing gzip size...
 [2mdist/[22m[2massets/[22m[36mquery-DMrHPFWj.js        [39m[1m[2m 48.56 kB[22m[1m[22m[2m │ gzip:  14.92 kB[22m
 [2mdist/[22m[2massets/[22m[36mindex-BPA_UUQo.js        [39m[1m[2m266.37 kB[22m[1m[22m[2m │ gzip:  85.73 kB[22m
 [2mdist/[22m[2massets/[22m[36mrecharts-CafPervD.js     [39m[1m[2m410.59 kB[22m[1m[22m[2m │ gzip: 112.39 kB[22m
-[32m✓ built in 4.70s[39m
+[32m✓ built in 3.18s[39m
