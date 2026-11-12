@@ -1,0 +1,97 @@
+[WebServer] INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+[WebServer] INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade  -> 0001, Initial schema: the 17 tables of section 4.3 with the indexes of table 6.5.
+[WebServer] INFO:     Started server process [3984]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+
+Running 5 tests using 1 worker
+
+  ✘  1 [mobile] › e2e/mediapipe.spec.ts:10:1 › pose model detects a body from the camera in real time (1.5m)
+  ✓  2 [mobile] › e2e/workout.spec.ts:9:1 › trainee squat workout, live feedback and report (UC-1, TC-01, TC-02) (31.8s)
+  ✘  3 [mobile] › e2e/workout.spec.ts:40:1 › offline set is kept on the phone and synced later (TC-03, NFR-12) (1.1m)
+  ✓  4 [desktop] › e2e/trainer.spec.ts:5:1 › trainer reviews, exports and sends a report (2.5s)
+  ✓  5 [desktop] › e2e/trainer.spec.ts:26:1 › trainee cannot open the trainer dashboard (RBAC in the UI and the API) (1.1s)
+
+
+  1) [mobile] › e2e/mediapipe.spec.ts:10:1 › pose model detects a body from the camera in real time 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByTestId('diag-landmarks')
+    Expected: "33"
+    Received: "0"
+    Timeout:  90000ms
+
+    Call log:
+      - Expect "toHaveText" getByTestId('diag-landmarks') with timeout 90000ms
+      - waiting for getByTestId('diag-landmarks')
+        179 × locator resolved to <b data-testid="diag-landmarks">0</b>
+            - unexpected value "0"
+
+
+      12 |   page.on("console", (m) => logs.push(m.text()));
+      13 |   await page.goto("/diag");
+    > 14 |   await expect(page.getByTestId("diag-landmarks")).toHaveText("33", { timeout: 90_000 });
+         |                                                    ^
+      15 |   await page.waitForTimeout(8_000); // let FPS and latency settle
+      16 |   const fps = Number(await page.getByTestId("diag-fps").innerText());
+      17 |   const p50 = await page.getByTestId("diag-p50").innerText();
+        at /home/runner/work/fitvision-ai/fitvision-ai/client/e2e/mediapipe.spec.ts:14:52
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/mediapipe-pose-model-detec-579ee-rom-the-camera-in-real-time-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/mediapipe-pose-model-detec-579ee-rom-the-camera-in-real-time-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/mediapipe-pose-model-detec-579ee-rom-the-camera-in-real-time-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/mediapipe-pose-model-detec-579ee-rom-the-camera-in-real-time-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › e2e/workout.spec.ts:40:1 › offline set is kept on the phone and synced later (TC-03, NFR-12) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByTestId('skip-rest')
+    Expected: visible
+    Timeout: 60000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByTestId('skip-rest') with timeout 60000ms
+      - waiting for getByTestId('skip-rest')
+
+
+      48 |   await page.getByTestId("start-set").click();
+      49 |   await context.setOffline(true);
+    > 50 |   await expect(page.getByTestId("skip-rest")).toBeVisible({ timeout: 60_000 });
+         |                                               ^
+      51 |   await page.getByTestId("end-workout").click();
+      52 |   await expect(page.getByTestId("sync-status")).toContainText("נשמר במכשיר");
+      53 |   await context.setOffline(false);
+        at /home/runner/work/fitvision-ai/fitvision-ai/client/e2e/workout.spec.ts:50:47
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/workout-offline-set-is-kep-0b2ce--synced-later-TC-03-NFR-12--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/workout-offline-set-is-kep-0b2ce--synced-later-TC-03-NFR-12--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/workout-offline-set-is-kep-0b2ce--synced-later-TC-03-NFR-12--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/workout-offline-set-is-kep-0b2ce--synced-later-TC-03-NFR-12--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [mobile] › e2e/mediapipe.spec.ts:10:1 › pose model detects a body from the camera in real time ─
+    [mobile] › e2e/workout.spec.ts:40:1 › offline set is kept on the phone and synced later (TC-03, NFR-12) 
+  3 passed (3.3m)

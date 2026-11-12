@@ -2,8 +2,8 @@
 Running 3 tests using 1 worker
 
   ✘  1 [mobile] › e2e/workout.spec.ts:9:1 › trainee squat workout, live feedback and report (UC-1, TC-01, TC-02) (2.0m)
-  ✓  2 [desktop] › e2e/trainer.spec.ts:5:1 › trainer reviews, exports and sends a report (4.3s)
-  ✘  3 [desktop] › e2e/trainer.spec.ts:26:1 › trainee cannot open the trainer dashboard (RBAC in the UI and the API) (21.0s)
+  ✓  2 [desktop] › e2e/trainer.spec.ts:5:1 › trainer reviews, exports and sends a report (4.1s)
+  ✓  3 [desktop] › e2e/trainer.spec.ts:26:1 › trainee cannot open the trainer dashboard (RBAC in the UI and the API) (1.4s)
 
 
   1) [mobile] › e2e/workout.spec.ts:9:1 › trainee squat workout, live feedback and report (UC-1, TC-01, TC-02) 
@@ -38,44 +38,6 @@ Running 3 tests using 1 worker
 
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
-  2) [desktop] › e2e/trainer.spec.ts:26:1 › trainee cannot open the trainer dashboard (RBAC in the UI and the API) 
-
-    Error: expect(page).toHaveURL(expected) failed
-
-    Expected pattern: /\/$/
-    Received string:  "http://localhost:8080/login"
-    Timeout: 20000ms
-
-    Call log:
-      - Expect "toHaveURL" with timeout 20000ms
-        44 × locator resolved to <html lang="he" dir="rtl">…</html>
-           - unexpected value "http://localhost:8080/login"
-
-
-      27 |   await login(page, "trainee@fitvision.app");
-      28 |   await page.goto("/trainer");
-    > 29 |   await expect(page).toHaveURL(/\/$/);
-         |                      ^
-      30 |   const status = await page.evaluate(async () => (await fetch("/api/dashboard", { headers: { Authorization: `Bearer ${localStorage.getItem("fv:token")}` } })).status);
-      31 |   expect(status).toBe(403);
-      32 | });
-        at /home/runner/work/fitvision-ai/fitvision-ai/client/e2e/trainer.spec.ts:29:22
-
-    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    test-results/trainer-trainee-cannot-ope-ef442-RBAC-in-the-UI-and-the-API--desktop/test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Error Context: test-results/trainer-trainee-cannot-ope-ef442-RBAC-in-the-UI-and-the-API--desktop/error-context.md
-
-    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
-    test-results/trainer-trainee-cannot-ope-ef442-RBAC-in-the-UI-and-the-API--desktop/trace.zip
-    Usage:
-
-        npx playwright show-trace test-results/trainer-trainee-cannot-ope-ef442-RBAC-in-the-UI-and-the-API--desktop/trace.zip
-
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-  2 failed
+  1 failed
     [mobile] › e2e/workout.spec.ts:9:1 › trainee squat workout, live feedback and report (UC-1, TC-01, TC-02) 
-    [desktop] › e2e/trainer.spec.ts:26:1 › trainee cannot open the trainer dashboard (RBAC in the UI and the API) 
-  1 passed (2.5m)
+  2 passed (2.2m)

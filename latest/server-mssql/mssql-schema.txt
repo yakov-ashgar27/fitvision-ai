@@ -1,9 +1,8 @@
 18 tables: AuditLog, ExerciseSets, Exercises, FormErrorEvents, Goals, PlanExercises, Repetitions, ReportDeliveries, Reports, TechniqueRules, TraineeProfiles, TrainerNotes, TrainerProfiles, TrainerTraineeAssignments, Users, WorkoutPlans, WorkoutSessions, alembic_version
-Traceback (most recent call last):
-  File "<stdin>", line 7, in <module>
-  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/sqlalchemy/engine/reflection.py", line 1232, in get_unique_constraints
-    return self.dialect.get_unique_constraints(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/sqlalchemy/engine/interfaces.py", line 1616, in get_unique_constraints
-    raise NotImplementedError()
-NotImplementedError
+WorkoutSessions [('IX_Sessions_trainee_started', ['trainee_id', 'started_at'], False)]
+ExerciseSets [('UQ_Sets_session_setnum', ['session_id', 'set_number'], True)]
+TrainerTraineeAssignments [('IX_Assign_trainee_status', ['trainee_id', 'status'], False), ('IX_Assign_trainer_status', ['trainer_id', 'status'], False)]
+AuditLog [('IX_Audit_created', ['created_at'], False), ('IX_Audit_user_created', ['user_id', 'created_at'], False)]
+FormErrorEvents [('IX_Errors_set_rule', ['set_id', 'rule_id'], False)]
+exercises: ['סקוואט', "לאנג'ים", 'כפיפת מרפקים', 'לחיצת כתפיים']
+sessions: 22 reports: 22
