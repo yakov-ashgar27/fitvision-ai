@@ -12,51 +12,23 @@
 # Error details
 
 ```
-Test timeout of 120000ms exceeded.
-```
+Error: expect(locator).toContainText(expected) failed
 
-```
-Error: locator.click: Test timeout of 120000ms exceeded.
+Locator: getByTestId('sync-status')
+Expected substring: "נשמר בשרת"
+Received string:    "נשמר במכשיר · יסונכרן כשיהיה חיבור"
+Timeout: 20000ms
+
 Call log:
-  - waiting for getByRole('button', { name: 'התחלה' }).first()
+  - Expect "toContainText" getByTestId('sync-status') with timeout 20000ms
+  - waiting for getByTestId('sync-status')
+    44 × locator resolved to <div data-testid="sync-status">…</div>
+       - unexpected value "נשמר במכשיר · יסונכרן כשיהיה חיבור"
 
 ```
-
-# Page snapshot
 
 ```yaml
-- generic [ref=f1e3]:
-  - banner [ref=f1e4]:
-    - link "FitVision AI" [ref=f1e5] [cursor=pointer]:
-      - /url: /
-    - navigation [ref=f1e6]:
-      - link "בית" [ref=f1e7] [cursor=pointer]:
-        - /url: /
-      - link "היסטוריה" [ref=f1e8] [cursor=pointer]:
-        - /url: /history
-      - link "דוחות" [ref=f1e9] [cursor=pointer]:
-        - /url: /reports
-      - link "הגדרות" [ref=f1e10] [cursor=pointer]:
-        - /url: /settings
-    - button "יציאה" [ref=f1e11] [cursor=pointer]
-  - main [ref=f1e12]:
-    - generic [ref=f1e13]:
-      - heading "שלום בדיקה" [level=1] [ref=f1e14]
-      - generic [ref=f1e15]:
-        - heading "אימון חופשי" [level=3] [ref=f1e16]
-        - paragraph [ref=f1e17]: "אין עדיין תוכנית מהמאמן. אפשר להתאמן על כל אחד מהתרגילים:"
-      - generic [ref=f1e18]:
-        - generic [ref=f1e19]:
-          - heading "המאמן שלי" [level=3] [ref=f1e20]
-          - generic [ref=f1e21]:
-            - generic [ref=f1e22]:
-              - text: קוד הזמנה מהמאמן
-              - textbox "קוד הזמנה מהמאמן" [ref=f1e23]:
-                - /placeholder: ABCD1234
-            - button "שליחת בקשת שיוך" [ref=f1e24] [cursor=pointer]
-        - generic [ref=f1e25]:
-          - heading "האימון האחרון" [level=3] [ref=f1e26]
-          - generic [ref=f1e27]: עוד לא התאמנתם
+- text: נשמר במכשיר · יסונכרן כשיהיה חיבור
 ```
 
 # Test source
@@ -76,8 +48,7 @@ Call log:
   12 |   page.on("dialog", (d) => d.accept());
   13 |   await register(page, `e2e-${Date.now()}@test.io`);
   14 |   await page.goto("/");
-> 15 |   await page.getByRole("button", { name: "התחלה" }).first().click();
-     |                                                             ^ Error: locator.click: Test timeout of 120000ms exceeded.
+  15 |   await page.getByRole("button", { name: "התחלה" }).first().click();
   16 | 
   17 |   // consent (NFR-08), then the body-visibility check on screen 2
   18 |   await page.getByTestId("consent-box").check();
@@ -97,7 +68,8 @@ Call log:
   32 |   await expect(page.getByTestId("summary-reps")).toHaveText("10");
   33 |   const score = Number(await page.getByTestId("summary-score").innerText());
   34 |   expect(score).toBe(Math.round((8 * 100 + 85 + 70) / 10)); // BR-02: partial −15, valgus −30
-  35 |   await expect(page.getByTestId("sync-status")).toContainText("נשמר בשרת", { timeout: 20_000 });
+> 35 |   await expect(page.getByTestId("sync-status")).toContainText("נשמר בשרת", { timeout: 20_000 });
+     |                                                 ^ Error: expect(locator).toContainText(expected) failed
   36 |   await page.getByTestId("open-report").click();
   37 |   await expect(page.getByTestId("report-score")).toHaveText(String(Math.round((8 * 100 + 85 + 70) / 10)));
   38 | });
@@ -110,14 +82,16 @@ Call log:
   45 |   await page.getByRole("button", { name: "התחלה" }).first().click();
   46 |   await page.getByTestId("consent-box").check();
   47 |   await page.getByTestId("consent-ok").click();
-  48 |   await page.getByTestId("start-set").click();
-  49 |   await context.setOffline(true);
-  50 |   await expect(page.getByTestId("skip-rest")).toBeVisible({ timeout: 60_000 });
-  51 |   await page.getByTestId("end-workout").click();
-  52 |   await expect(page.getByTestId("sync-status")).toContainText("נשמר במכשיר");
-  53 |   await context.setOffline(false);
-  54 |   await page.evaluate(() => window.dispatchEvent(new Event("online")));
-  55 |   await expect(page.getByTestId("sync-status")).toContainText("נשמר בשרת", { timeout: 30_000 });
-  56 | });
-  57 | 
+  48 |   await expect(page.getByTestId("start-set")).toBeEnabled();
+  49 |   await page.waitForLoadState("networkidle"); // live and summary screens are prefetched on the setup screen
+  50 |   await context.setOffline(true); // signal lost before the set starts
+  51 |   await page.getByTestId("start-set").click();
+  52 |   await expect(page.getByTestId("skip-rest")).toBeVisible({ timeout: 60_000 });
+  53 |   await page.getByTestId("end-workout").click();
+  54 |   await expect(page.getByTestId("sync-status")).toContainText("נשמר במכשיר");
+  55 |   await context.setOffline(false);
+  56 |   await page.evaluate(() => window.dispatchEvent(new Event("online")));
+  57 |   await expect(page.getByTestId("sync-status")).toContainText("נשמר בשרת", { timeout: 30_000 });
+  58 | });
+  59 | 
 ```
