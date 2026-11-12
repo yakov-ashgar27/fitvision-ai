@@ -1,0 +1,9 @@
+18 tables: AuditLog, ExerciseSets, Exercises, FormErrorEvents, Goals, PlanExercises, Repetitions, ReportDeliveries, Reports, TechniqueRules, TraineeProfiles, TrainerNotes, TrainerProfiles, TrainerTraineeAssignments, Users, WorkoutPlans, WorkoutSessions, alembic_version
+Traceback (most recent call last):
+  File "<stdin>", line 7, in <module>
+  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/sqlalchemy/engine/reflection.py", line 1232, in get_unique_constraints
+    return self.dialect.get_unique_constraints(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/sqlalchemy/engine/interfaces.py", line 1616, in get_unique_constraints
+    raise NotImplementedError()
+NotImplementedError

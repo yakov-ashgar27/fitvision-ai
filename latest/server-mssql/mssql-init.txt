@@ -1,0 +1,4 @@
+INFO  [alembic.runtime.migration] Context impl MSSQLImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 0001, Initial schema: the 17 tables of section 4.3 with the indexes of table 6.5.
+seed done
