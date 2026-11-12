@@ -49,20 +49,20 @@ export async function startWorkout(ownerId: number, planId: number | null): Prom
 }
 
 export async function addSet(localId: string, set: Omit<LocalSet, "synced" | "set_number">): Promise<LocalWorkout> {
-  const w = await store.get<LocalWorkout>(localId);
+  const w = await patch(localId, (x) => {
+    x.sets.push({ ...set, set_number: x.sets.length + 1, synced: false });
+  });
   if (!w) throw new Error("workout not found");
-  w.sets.push({ ...set, set_number: w.sets.length + 1, synced: false });
-  await store.put(w);
   await emit();
   void sync();
   return w;
 }
 
 export async function finishWorkout(localId: string, status: "Done" | "Aborted"): Promise<LocalWorkout> {
-  const w = await store.get<LocalWorkout>(localId);
+  const w = await patch(localId, (x) => {
+    x.finish = { status, endedAt: new Date().toISOString(), synced: false };
+  });
   if (!w) throw new Error("workout not found");
-  w.finish = { status, endedAt: new Date().toISOString(), synced: false };
-  await store.put(w);
   await emit();
   void sync();
   return w;
@@ -74,11 +74,7 @@ export const isSynced = (w: LocalWorkout) => w.serverId !== null && w.sets.every
 
 /** Applies a change to the latest stored copy, so a set or finish added meanwhile by the live screen is never overwritten. */
 async function patch(localId: string, fn: (w: LocalWorkout) => void): Promise<LocalWorkout | undefined> {
-  const cur = await store.get<LocalWorkout>(localId);
-  if (!cur) return undefined;
-  fn(cur);
-  await store.put(cur);
-  return cur;
+  return store.update<LocalWorkout>(localId, fn);
 }
 
 async function syncOne(localId: string): Promise<void> {
