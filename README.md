@@ -66,12 +66,25 @@ FitVision AI מזהה את שלד המתאמן ממצלמת הטלפון ונו�
 
 | תיקייה | תוכן |
 | --- | --- |
-| `docs/` | מסמך האפיון: Markdown, ‏Word ו-PDF |
+| `server/` | שרת ה-API: מודלים, כללים עסקיים, דוחות, משימות רקע ובדיקות pytest |
+| `client/` | אפליקציית הטלפון (PWA): מנוע הטכניקה, אימון חי, מסכי מאמן ומנהל, בדיקות vitest ו-Playwright |
+| `docs/` | מסמך האפיון: Markdown, ‏Word ו-PDF, ומדריך ההרצה והניסוי |
 | `diagrams/drawio/` | ארבעת קובצי ה-draw.io לעריכה |
 | `diagrams/figures/` | האיורים שבמסמך (PNG) |
 | `diagrams/wireframes/` | תמונות 5 מסכי הממשק |
 | `poc/` | הוכחת ההיתכנות (T-03): MediaPipe ב-Web Worker וספירת חזרות בסקוואט |
 | `tools/` | סקריפטים שמייצרים את התרשימים, את תמונות המסכים ואת קובצי ה-Word וה-PDF |
+
+## האפליקציה
+
+הקוד המלא של ה-MVP נמצא ב-`server/` (FastAPI, ‏SQL Server, ‏Redis ו-RQ) וב-`client/` (React PWA, ‏MediaPipe ב-Web Worker). הרצה ב-Docker:
+
+```bash
+cp .env.example .env
+docker compose up -d --build     # http://localhost:8080
+```
+
+הוראות מלאות: הרצה בלי Docker, גישה מהטלפון ב-HTTPS, בדיקת מכשיר ותסריט ניסוי אמת, נמצאות ב-[docs/מדריך-הרצה-וניסוי-בטלפון.md](docs/מדריך-הרצה-וניסוי-בטלפון.md). הבדיקות האוטומטיות רצות ב-GitHub Actions, והתוצאות נשמרות בענף `ci-reports`.
 
 ## הוראות הרצה
 

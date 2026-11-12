@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { api } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
 import { isMuted, setMuted } from "../lib/speech";
@@ -97,6 +97,13 @@ export default function Settings() {
         <button className="secondary" onClick={() => { setMuted(!muted); setM(!muted); }}>
           {muted ? "מושתק – להפעיל" : "פעיל – להשתיק"}
         </button>
+      </div>
+      <div className="card stack">
+        <h3>בדיקת מכשיר</h3>
+        <p className="small">מודדת קצב פריימים והשהיה של זיהוי התנוחה בטלפון הזה (נספח ג', טבלה ג.2).</p>
+        <Link className="btn secondary" to="/diag">
+          פתיחת בדיקת המכשיר
+        </Link>
       </div>
       <div className="card stack">
         <h3>פרטיות</h3>
