@@ -143,7 +143,7 @@ jobs:
       - if: always()
         run: |
           mkdir -p out/test-results
-          cd client/test-results 2>/dev/null && find . -name "error-context.md" -o -name "*.png" | cpio -pdm ../../out/test-results 2>/dev/null || true
+          cd client/test-results 2>/dev/null && find . -name "error-context.md" -o -name "*.png" -o -name "pose-metrics.json" | cpio -pdm ../../out/test-results 2>/dev/null || true
       - if: always()
         uses: actions/upload-artifact@v4
         with: { name: e2e, path: out/ }
@@ -201,7 +201,7 @@ jobs:
       - if: always()
         run: |
           mkdir -p out/test-results
-          cd client/test-results 2>/dev/null && find . -name "error-context.md" -o -name "*.png" | cpio -pdm ../../out/test-results 2>/dev/null || true
+          cd client/test-results 2>/dev/null && find . -name "error-context.md" -o -name "*.png" -o -name "pose-metrics.json" | cpio -pdm ../../out/test-results 2>/dev/null || true
       - if: always()
         run: docker compose logs --no-color --tail=150 api worker web > out/compose-logs.txt 2>&1 || true
       - if: always()

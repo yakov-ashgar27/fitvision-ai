@@ -72,15 +72,29 @@ export const getWorkout = (localId: string) => store.get<LocalWorkout>(localId);
 export const pendingCount = async () => (await store.all<LocalWorkout>()).filter((w) => !isSynced(w)).length;
 export const isSynced = (w: LocalWorkout) => w.serverId !== null && w.sets.every((s) => s.synced) && (w.finish?.synced ?? false);
 
-async function syncOne(w: LocalWorkout): Promise<void> {
+/** Applies a change to the latest stored copy, so a set or finish added meanwhile by the live screen is never overwritten. */
+async function patch(localId: string, fn: (w: LocalWorkout) => void): Promise<LocalWorkout | undefined> {
+  const cur = await store.get<LocalWorkout>(localId);
+  if (!cur) return undefined;
+  fn(cur);
+  await store.put(cur);
+  return cur;
+}
+
+async function syncOne(localId: string): Promise<void> {
+  let w = await store.get<LocalWorkout>(localId);
+  if (!w) return;
   if (w.serverId === null) {
     const s = await api<SessionSummary>("/sessions", {
       method: "POST",
       json: { plan_id: w.planId, started_at: w.startedAt, device_info: navigator.userAgent.slice(0, 120) },
     });
-    w.serverId = s.session_id;
-    await store.put(w);
+    w = await patch(localId, (x) => {
+      x.serverId = s.session_id;
+    });
+    if (!w) return;
   }
+  const serverId = w.serverId;
   for (const s of w.sets) {
     if (s.synced) continue;
     const body = {
@@ -90,36 +104,56 @@ async function syncOne(w: LocalWorkout): Promise<void> {
       ended_at: s.ended_at,
       reps: s.reps,
     };
-    await api(`/sessions/${w.serverId}/sets`, { method: "POST", json: body });
-    s.synced = true;
-    await store.put(w);
-  }
-  if (w.finish && !w.finish.synced) {
-    const res = await api<{ report_id: number | null }>(`/sessions/${w.serverId}/finish`, {
-      method: "POST",
-      json: { status: w.finish.status, ended_at: w.finish.endedAt },
+    await api(`/sessions/${serverId}/sets`, { method: "POST", json: body });
+    await patch(localId, (x) => {
+      const t = x.sets.find((y) => y.set_number === s.set_number);
+      if (t) t.synced = true;
     });
-    w.finish.synced = true;
-    w.reportId = res.report_id;
-    await store.put(w);
+  }
+  // re-read: the workout may have been finished, or a set added, while the requests above were in flight
+  const fresh = await store.get<LocalWorkout>(localId);
+  if (!fresh || fresh.sets.some((x) => !x.synced)) return; // the next round sends the rest first
+  if (fresh.finish && !fresh.finish.synced) {
+    const res = await api<{ report_id: number | null }>(`/sessions/${serverId}/finish`, {
+      method: "POST",
+      json: { status: fresh.finish.status, ended_at: fresh.finish.endedAt },
+    });
+    await patch(localId, (x) => {
+      if (x.finish) x.finish.synced = true;
+      x.reportId = res.report_id;
+    });
   }
 }
 
+let again = false;
+
 /** Pushes every unsynced workout; stops quietly when offline and resumes on the next trigger. */
 export function sync(): Promise<void> {
-  if (running) return running;
+  if (running) {
+    again = true; // something changed during this round: run once more right after it
+    return running;
+  }
   running = (async () => {
     try {
-      for (const w of await store.all<LocalWorkout>()) {
-        if (isSynced(w)) continue;
-        try {
-          await syncOne(w);
-        } catch (e) {
-          if (e instanceof ApiError && e.status === 0) break; // offline: retry later
-          if (e instanceof ApiError && (e.status === 401 || e.status === 409)) break; // needs login / consent
-          console.warn("sync failed", e);
+      do {
+        again = false;
+        for (const w of await store.all<LocalWorkout>()) {
+          if (isSynced(w)) continue;
+          try {
+            await syncOne(w.localId);
+          } catch (e) {
+            if (e instanceof ApiError && e.status === 0) {
+              again = false;
+              break; // offline: retry later
+            }
+            if (e instanceof ApiError && (e.status === 401 || e.status === 409)) {
+              again = false;
+              break; // needs login / consent
+            }
+            console.warn("sync failed", e);
+          }
         }
-      }
+      } while (again);
     } finally {
       running = null;
       await emit();

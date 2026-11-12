@@ -76,6 +76,7 @@ def _previous_exercise_scores(db: Session, session: m.WorkoutSession, exercise_i
         select(m.WorkoutSession.session_id, m.ExerciseSet.technique_score, m.ExerciseSet.total_reps)
         .join(m.ExerciseSet, m.ExerciseSet.session_id == m.WorkoutSession.session_id)
         .where(m.WorkoutSession.trainee_id == session.trainee_id,
+               m.WorkoutSession.session_id != session.session_id,  # SQL Server rounds DATETIME, so < alone may match itself
                m.WorkoutSession.started_at < session.started_at,
                m.WorkoutSession.status != "InProgress",
                m.ExerciseSet.exercise_id == exercise_id)
@@ -95,6 +96,7 @@ def _previous_session_scores(db: Session, session: m.WorkoutSession) -> list[flo
     vals = db.scalars(
         select(m.WorkoutSession.avg_technique_score)
         .where(m.WorkoutSession.trainee_id == session.trainee_id,
+               m.WorkoutSession.session_id != session.session_id,
                m.WorkoutSession.started_at < session.started_at,
                m.WorkoutSession.avg_technique_score.is_not(None))
         .order_by(m.WorkoutSession.started_at.desc()).limit(scoring.TREND_WINDOW)
