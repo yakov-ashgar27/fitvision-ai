@@ -1,0 +1,68 @@
+# FitVision AI – full stack: SQL Server 2022 Express, Redis, API, RQ worker and the web client.
+# Usage:  cp .env.example .env  &&  docker compose up --build   →  http://localhost:8080
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    platform: linux/amd64
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Express
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:-FitVision!2028}
+    volumes: [mssql:/var/opt/mssql]
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$${MSSQL_SA_PASSWORD}\" -Q 'SELECT 1' || /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P \"$${MSSQL_SA_PASSWORD}\" -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 10
+
+  api:
+    build: ./server
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: mssql+pyodbc://sa:${MSSQL_SA_PASSWORD:-FitVision!2028}@db:1433/fitvision?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes
+      REDIS_URL: redis://redis:6379/0
+      REPORTS_DIR: /data/reports
+      ENABLE_SCHEDULER: "1"
+    volumes: [reports:/data/reports]
+    depends_on:
+      db: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 10s
+      retries: 30
+      start_period: 30s
+
+  worker:
+    build: ./server
+    env_file:
+      - path: .env
+        required: false
+    command: ["rq", "worker", "--url", "redis://redis:6379/0", "fitvision"]
+    environment:
+      DATABASE_URL: mssql+pyodbc://sa:${MSSQL_SA_PASSWORD:-FitVision!2028}@db:1433/fitvision?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes
+      REDIS_URL: redis://redis:6379/0
+      REPORTS_DIR: /data/reports
+    volumes: [reports:/data/reports]
+    depends_on:
+      api: { condition: service_healthy }
+
+  web:
+    build: ./client
+    ports: ["8080:80"]
+    depends_on:
+      api: { condition: service_healthy }
+
+volumes:
+  mssql:
+  reports:
