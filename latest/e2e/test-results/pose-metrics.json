@@ -1,12 +1,12 @@
 {
   "fps": 2,
-  "p50": "706",
-  "p95": "4575",
-  "meta": "model: lite / GPU\nFPS: 2\nlatency p50/p95: 706 / 4575 ms\nlandmarks: 33\nמודל Lite (GPU) מוכן",
+  "p50": "519",
+  "p95": "5034",
+  "meta": "model: lite / GPU\nFPS: 2\nlatency p50/p95: 519 / 5034 ms\nlandmarks: 33\nמודל Lite (GPU) מוכן",
   "logs": [
-    "I1112 11:46:38.353999 2136208 gl_context.cc:407] GL version: 3.0 (OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))), renderer: WebKit WebGL",
-    "W1112 11:46:38.358000 2136208 gl_context.cc:1118] OpenGL error checking is disabled",
+    "I1112 11:51:25.400000 2136208 gl_context.cc:407] GL version: 3.0 (OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))), renderer: WebKit WebGL",
+    "W1112 11:51:25.401999 2136208 gl_context.cc:1118] OpenGL error checking is disabled",
     "Graph successfully started running.",
-    "W1112 11:46:42.932000 2136208 landmark_projection_calculator.cc:81] Using NORM_RECT without IMAGE_DIMENSIONS is only supported for the square ROI. Provide IMAGE_DIMENSIONS or use PROJECTION_MATRIX."
+    "W1112 11:51:30.440000 2136208 landmark_projection_calculator.cc:81] Using NORM_RECT without IMAGE_DIMENSIONS is only supported for the square ROI. Provide IMAGE_DIMENSIONS or use PROJECTION_MATRIX."
   ]
 }

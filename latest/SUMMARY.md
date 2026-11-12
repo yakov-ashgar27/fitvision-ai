@@ -1,8 +1,8 @@
-# CI 1fbbe34 on main
+# CI 4f82446 on main
 | job | result |
 | --- | --- |
 | server | success |
 | server-mssql | success |
 | client | success |
-| e2e | cancelled |
-| stack | cancelled |
+| e2e | success |
+| stack | success |
