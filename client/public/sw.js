@@ -1,5 +1,5 @@
 /* FitVision AI service worker: offline shell + long-lived cache for hashed assets, WASM and models. */
-const VERSION = "fv-v1";
+const VERSION = "fv-v2";
 const STATIC = `${VERSION}-static`;
 const SHELL = ["/", "/index.html", "/manifest.webmanifest", "/pose-worker.js"];
 
@@ -32,6 +32,17 @@ self.addEventListener("fetch", (e) => {
     return;
   }
   if (e.request.mode === "navigate") {
-    e.respondWith(fetch(e.request).catch(() => caches.match("/index.html")));
+    // Open instantly: if the server is slow (a free cloud server waking up), serve the cached app shell after 1.2 s
+    // and keep the fresh copy for next time. The app itself then shows "waking the server" while the API wakes.
+    const network = fetch(e.request).then((res) => {
+      if (res.ok) caches.open(STATIC).then((c) => c.put("/index.html", res.clone()));
+      return res;
+    });
+    const cached = new Promise((resolve) => setTimeout(() => caches.match("/index.html").then(resolve), 1200));
+    e.respondWith(
+      Promise.race([network, cached])
+        .then((r) => r || network)
+        .catch(() => caches.match("/index.html")),
+    );
   }
 });

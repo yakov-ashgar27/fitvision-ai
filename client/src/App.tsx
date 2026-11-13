@@ -1,5 +1,6 @@
 import { lazy, ReactNode, Suspense } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
+import WakeBanner from "./components/WakeBanner";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "./auth/AuthContext";
 import { Layout } from "./components/Layout";
@@ -48,6 +49,7 @@ function HomeRoute() {
 export default function App() {
   return (
     <ErrorBoundary>
+      <WakeBanner />
       <Suspense fallback={<SkeletonRows />}>
         <Routes>
           <Route path="/login" element={<Login />} />
