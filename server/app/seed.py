@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import os
 import random
+import secrets
 from datetime import UTC, date, datetime, timedelta
 
 from sqlalchemy import select
@@ -16,7 +17,7 @@ from . import models as m
 from .config import settings
 from .db import SessionLocal
 from .schemas import ErrorIn, RepIn, SetIn
-from .security import hash_password
+from .security import hash_password, verify_password
 from .services.reports import generate_report, ingest_set
 
 # BlazePose landmark indices (left side; the client mirrors to the right side when needed)
@@ -55,14 +56,38 @@ def _now() -> datetime:
     return datetime.now(UTC).replace(tzinfo=None)
 
 
+DEFAULT_ADMIN_PASSWORD = "Admin1234!"
+
+
+def _secure_admin_password(admin: m.User) -> None:
+    """The repository is public, so the default admin password must never stay on a public deployment.
+
+    * ADMIN_PASSWORD set: the admin account always uses it (rotate it from the hosting dashboard).
+    * On Render (the RENDER variable is set) without ADMIN_PASSWORD: a default password is replaced
+      with a random one, printed once to the service log, which only the owner can read.
+    Local runs and tests keep the documented default.
+    """
+    wanted = os.getenv("ADMIN_PASSWORD")
+    if wanted:
+        if not verify_password(wanted, admin.password_hash):
+            admin.password_hash = hash_password(wanted)
+        return
+    if os.getenv("RENDER") and verify_password(DEFAULT_ADMIN_PASSWORD, admin.password_hash):
+        new = secrets.token_urlsafe(12)
+        admin.password_hash = hash_password(new)
+        print(f"[security] default admin password replaced. Admin login: {admin.email} / {new}"
+              " (set ADMIN_PASSWORD in Render to choose your own)", flush=True)
+
+
 def seed_reference(db: Session) -> None:
     admin = db.scalar(select(m.User).where(m.User.role == "Admin"))
     if admin is None:
         admin = m.User(email=os.getenv("ADMIN_EMAIL", "admin@fitvision.app").lower(),
-                       password_hash=hash_password(os.getenv("ADMIN_PASSWORD", "Admin1234!")),
+                       password_hash=hash_password(os.getenv("ADMIN_PASSWORD", DEFAULT_ADMIN_PASSWORD)),
                        first_name="מנהל", last_name="מערכת", role="Admin", is_active=True, created_at=_now())
         db.add(admin)
         db.flush()
+    _secure_admin_password(admin)
     if db.scalar(select(m.Exercise.exercise_id).limit(1)) is None:
         for ex in EXERCISES:
             e = m.Exercise(created_by=admin.user_id, name=ex["name"], camera_view=ex["camera_view"],
