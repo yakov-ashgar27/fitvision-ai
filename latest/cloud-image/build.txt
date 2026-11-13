@@ -1,5 +1,5 @@
-#22 exporting manifest list sha256:75524f013c33eaf56448c8e02250f9d17e7d48470f1fd05e5882822e2685c9c1 done
+#22 exporting manifest list sha256:a17a1d772126260313fc58cc969794193a25d526c38224a98e0fefcb35c743d5 done
 #22 naming to docker.io/library/fv-cloud:latest done
 #22 unpacking to docker.io/library/fv-cloud:latest
-#22 unpacking to docker.io/library/fv-cloud:latest 10.6s done
-#22 DONE 52.4s
+#22 unpacking to docker.io/library/fv-cloud:latest 8.9s done
+#22 DONE 44.9s
