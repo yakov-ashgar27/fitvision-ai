@@ -2,20 +2,17 @@
 [WebServer] INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
 [WebServer] INFO  [alembic.runtime.migration] Running upgrade  -> 0001, Initial schema: the 17 tables of section 4.3 with the indexes of table 6.5.
 [WebServer] INFO  [alembic.runtime.migration] Running upgrade 0001 -> 0002, Calibrate the biceps-curl rules after the first real-phone trial (12.11.2026, chapter 10).
-[WebServer] INFO:     Started server process [3983]
+[WebServer] INFO:     Started server process [4028]
 [WebServer] INFO:     Waiting for application startup.
 [WebServer] INFO:     Application startup complete.
 [WebServer] INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 
-Running 5 tests using 1 worker
+Running 5 tests using 2 workers
 
-  ✓  1 [mobile] › e2e/mediapipe.spec.ts:10:1 › pose model detects a body from the camera in real time (19.3s)
-  ✓  2 [mobile] › e2e/workout.spec.ts:9:1 › trainee squat workout, live feedback and report (UC-1, TC-01, TC-02) (33.1s)
-  ✓  3 [mobile] › e2e/workout.spec.ts:41:1 › offline set is kept on the phone and synced later (TC-03, NFR-12) (32.1s)
-  ✓  4 [desktop] › e2e/trainer.spec.ts:5:1 › trainer reviews, exports and sends a report (2.6s)
-[WebServer] 2026-11-13 09:23:40,696 INFO fitvision.rum {"rum": "LCP", "value": 548.0, "page": "/login", "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Safari/537.36", "role": null}
-[WebServer] 2026-11-13 09:23:40,697 INFO fitvision.rum {"rum": "INP", "value": 40.0, "page": "/", "device": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.8127.18 Safari/537.36", "role": null}
-[WebServer] 2026-11-13 09:23:40,697 INFO fitvision.rum {"rum": "CLS", "value": 0.0, "page": "/", "device": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.8127.18 Safari/537.36", "role": null}
-  ✓  5 [desktop] › e2e/trainer.spec.ts:26:1 › trainee cannot open the trainer dashboard (RBAC in the UI and the API) (1.3s)
+  ✓  1 [mobile] › e2e/mediapipe.spec.ts:10:1 › pose model detects a body from the camera in real time (15.5s)
+  ✓  3 [desktop] › e2e/trainer.spec.ts:5:1 › trainer reviews, exports and sends a report (2.0s)
+  ✓  4 [desktop] › e2e/trainer.spec.ts:26:1 › trainee cannot open the trainer dashboard (RBAC in the UI and the API) (1.0s)
+  ✓  2 [mobile] › e2e/workout.spec.ts:9:1 › trainee squat workout, live feedback and report (UC-1, TC-01, TC-02) (32.2s)
+  ✓  5 [mobile] › e2e/workout.spec.ts:41:1 › offline set is kept on the phone and synced later (TC-03, NFR-12) (32.5s)
 
-  5 passed (1.6m)
+  5 passed (1.2m)

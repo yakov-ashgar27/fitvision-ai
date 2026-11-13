@@ -1,6 +1,11 @@
 
 [1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90m/home/runner/work/fitvision-ai/fitvision-ai/client[39m
 
+ [32m✓[39m src/engine/coach.test.ts[2m > [22mcoach (varied cues, first-trial feedback)[2m > [22mgives one cue per rule per rep, and never the same wording twice in a row
+ [32m✓[39m src/engine/coach.test.ts[2m > [22mcoach (varied cues, first-trial feedback)[2m > [22masks to finish the way down when the arm was not straightened
+ [32m✓[39m src/engine/coach.test.ts[2m > [22mcoach (varied cues, first-trial feedback)[2m > [22mmarks the last rep and the end of the set
+ [32m✓[39m src/engine/coach.test.ts[2m > [22mcoach (varied cues, first-trial feedback)[2m > [22mspeaks English when that cue language is chosen
+ [32m✓[39m src/offline/sync.test.ts[2m > [22moffline queue (NFR-12)[2m > [22mkeeps sets while offline and syncs them once, in order, when the network returns
  [32m✓[39m src/engine/engine.test.ts[2m > [22mgeometry[2m > [22mcomputes 2D and 3D angles
  [32m✓[39m src/engine/engine.test.ts[2m > [22mgeometry[2m > [22msmooths over 5 frames
  [32m✓[39m src/engine/engine.test.ts[2m > [22mcounting rule comes from data (NFR-13)[2m > [22muses the Bottom rule with a max angle
@@ -13,20 +18,15 @@
  [32m✓[39m src/engine/engine.test.ts[2m > [22mbiceps curl (side view)[2m > [22mcounts curls and flags the elbow drifting forward
  [32m✓[39m src/engine/engine.test.ts[2m > [22mshoulder press (front view)[2m > [22mcounts presses that lower to shoulder height
  [32m✓[39m src/engine/engine.test.ts[2m > [22mtracking[2m > [22mignores frames without a body and reports lost tracking
- [32m✓[39m src/offline/sync.test.ts[2m > [22moffline queue (NFR-12)[2m > [22mkeeps sets while offline and syncs them once, in order, when the network returns
- [32m✓[39m src/offline/sync.test.ts[2m > [22moffline queue (NFR-12)[2m > [22mlinks the summary to a report built by the background worker[33m 303[2mms[22m[39m
- [32m✓[39m src/engine/coach.test.ts[2m > [22mcoach (varied cues, first-trial feedback)[2m > [22mgives one cue per rule per rep, and never the same wording twice in a row
- [32m✓[39m src/engine/coach.test.ts[2m > [22mcoach (varied cues, first-trial feedback)[2m > [22masks to finish the way down when the arm was not straightened
- [32m✓[39m src/engine/coach.test.ts[2m > [22mcoach (varied cues, first-trial feedback)[2m > [22mmarks the last rep and the end of the set
- [32m✓[39m src/engine/coach.test.ts[2m > [22mcoach (varied cues, first-trial feedback)[2m > [22mspeaks English when that cue language is chosen
- [32m✓[39m src/pages/Login.test.tsx[2m > [22mLogin[2m > [22mshows the server's Hebrew error message
+ [32m✓[39m src/offline/sync.test.ts[2m > [22moffline queue (NFR-12)[2m > [22mlinks the summary to a report built by the background worker[33m 307[2mms[22m[39m
  [32m✓[39m src/pages/trainee/Setup.test.ts[2m > [22msetup body check (R-02)[2m > [22mfront view needs both sides
  [32m✓[39m src/pages/trainee/Setup.test.ts[2m > [22msetup body check (R-02)[2m > [22mside view is satisfied by the side facing the camera
  [32m✓[39m src/pages/trainee/Setup.test.ts[2m > [22msetup body check (R-02)[2m > [22mno person at all
+ [32m✓[39m src/pages/Login.test.tsx[2m > [22mLogin[2m > [22mshows the server's Hebrew error message
  [32m✓[39m src/components/Skeleton.test.tsx[2m > [22mSkeleton[2m > [22mrenders placeholders marked as busy
 
 [2m Test Files [22m [1m[32m6 passed[39m[22m[90m (6)[39m
 [2m      Tests [22m [1m[32m23 passed[39m[22m[90m (23)[39m
-[2m   Start at [22m 09:19:50
-[2m   Duration [22m 3.64s[2m (transform 248ms, setup 237ms, collect 501ms, tests 470ms, environment 1.44s, prepare 382ms)[22m
+[2m   Start at [22m 09:31:16
+[2m   Duration [22m 2.72s[2m (transform 464ms, setup 558ms, collect 1.00s, tests 698ms, environment 3.54s, prepare 608ms)[22m
 
